@@ -55,6 +55,18 @@ export class TestDataService {
       if (typeof item['exampleAnswer'] !== 'string') throw new Error(`Written question ${index + 1} needs an exampleAnswer.`);
       return { id: item['id'], prompt: item['prompt'], type: 'written', exampleAnswer: item['exampleAnswer'], explanation: typeof item['explanation'] === 'string' ? item['explanation'] : undefined };
     }
+    if (item['type'] === 'fill-blank') {
+      if (!Array.isArray(item['acceptedAnswers']) || !item['acceptedAnswers'].length || !item['acceptedAnswers'].every((answer) => typeof answer === 'string')) {
+        throw new Error(`Fill-in-the-blank question ${index + 1} needs an acceptedAnswers array.`);
+      }
+      return { id: item['id'], prompt: item['prompt'], type: 'fill-blank', acceptedAnswers: item['acceptedAnswers'] as string[], explanation: typeof item['explanation'] === 'string' ? item['explanation'] : undefined };
+    }
+    if (item['type'] === 'matching') {
+      if (!Array.isArray(item['pairs']) || item['pairs'].length < 2 || !item['pairs'].every((pair) => pair && typeof pair === 'object' && typeof (pair as Record<string, unknown>)['term'] === 'string' && typeof (pair as Record<string, unknown>)['definition'] === 'string')) {
+        throw new Error(`Matching question ${index + 1} needs at least two term and definition pairs.`);
+      }
+      return { id: item['id'], prompt: item['prompt'], type: 'matching', pairs: item['pairs'] as Array<{ term: string; definition: string }>, explanation: typeof item['explanation'] === 'string' ? item['explanation'] : undefined };
+    }
     if (!Array.isArray(item['options']) || item['options'].length < 2 || !item['options'].every((option) => typeof option === 'string')) {
       throw new Error(`Multiple-choice question ${index + 1} needs at least two options.`);
     }

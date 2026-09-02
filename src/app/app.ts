@@ -140,13 +140,18 @@ export class App implements OnInit, OnDestroy {
   protected isAnswered(question: TestQuestion): boolean {
     const answer = this.answerFor(question.id);
     if (question.type === 'multiple-choice') return answer.choice !== undefined;
+    if (question.type === 'fill-blank') return Boolean(answer.text?.trim()) && (this.selectedMode() === 'end' || answer.checked === true);
+    if (question.type === 'matching') return this.matchingReady(question) && (this.selectedMode() === 'end' || answer.checked === true);
     if (this.selectedMode() === 'instant') return answer.selfGrade !== undefined;
     return Boolean(answer.writtenComplete || answer.text?.trim());
   }
 
   protected isCorrect(question: TestQuestion): boolean {
     const answer = this.answerFor(question.id);
-    return question.type === 'multiple-choice' ? answer.choice === question.correctAnswer : answer.selfGrade === true;
+    if (question.type === 'multiple-choice') return answer.choice === question.correctAnswer;
+    if (question.type === 'fill-blank') return Boolean(answer.text && question.acceptedAnswers?.some((accepted) => this.normalizeAnswer(accepted) === this.normalizeAnswer(answer.text!)));
+    if (question.type === 'matching') return Boolean(question.pairs?.every((_, index) => answer.matches?.[index] === index));
+    return answer.selfGrade === true;
   }
 
   protected revealWritten(question: TestQuestion): void {
@@ -156,6 +161,37 @@ export class App implements OnInit, OnDestroy {
   protected updateWritten(question: TestQuestion, event: Event): void {
     const text = (event.target as HTMLTextAreaElement).value;
     this.setAnswer(question.id, { ...this.answerFor(question.id), text });
+  }
+
+  protected chooseMatch(question: TestQuestion, termIndex: number, event: Event): void {
+    if (this.selectedMode() === 'instant' && this.answerFor(question.id).checked) return;
+    const selected = Number((event.target as HTMLSelectElement).value);
+    const current = this.answerFor(question.id);
+    this.setAnswer(question.id, { ...current, matches: { ...current.matches, [termIndex]: selected }, checked: false });
+  }
+
+  protected matchingDefinitions(question: TestQuestion): Array<{ definition: string; originalIndex: number }> {
+    return (question.pairs ?? []).map((pair, originalIndex) => ({ definition: pair.definition, originalIndex })).reverse();
+  }
+
+  protected matchingReady(question: TestQuestion): boolean {
+    const matches = this.answerFor(question.id).matches;
+    return Boolean(question.pairs?.length && question.pairs.every((_, index) => matches?.[index] !== undefined && matches[index] >= 0));
+  }
+
+  protected matchRowCorrect(question: TestQuestion, termIndex: number): boolean {
+    return this.answerFor(question.id).matches?.[termIndex] === termIndex;
+  }
+
+  protected selectedDefinition(question: TestQuestion, termIndex: number): string {
+    const selected = this.answerFor(question.id).matches?.[termIndex];
+    return selected === undefined || selected < 0 ? 'No match' : question.pairs?.[selected]?.definition ?? 'No match';
+  }
+
+  protected checkObjective(question: TestQuestion): void {
+    if (question.type === 'fill-blank' && !this.answerFor(question.id).text?.trim()) return;
+    if (question.type === 'matching' && !this.matchingReady(question)) return;
+    this.setAnswer(question.id, { ...this.answerFor(question.id), checked: true });
   }
 
   protected togglePaperAnswer(question: TestQuestion): void {
@@ -265,6 +301,8 @@ export class App implements OnInit, OnDestroy {
       questions: [
         { id: 'q1', type: 'multiple-choice', prompt: 'Your question?', options: ['Option A', 'Option B'], correctAnswer: 0, explanation: 'Why this answer is correct.' },
         { id: 'q2', type: 'written', prompt: 'Write your response on paper.', exampleAnswer: 'A strong example response.', explanation: 'What to include.' },
+        { id: 'q3', type: 'fill-blank', prompt: 'The answer is _____.', acceptedAnswers: ['example answer'], explanation: 'Why this answer fits.' },
+        { id: 'q4', type: 'matching', prompt: 'Match each term with its definition.', pairs: [{ term: 'Term one', definition: 'Definition one' }, { term: 'Term two', definition: 'Definition two' }], explanation: 'Why these pairs belong together.' },
       ],
     }];
     const url = URL.createObjectURL(new Blob([JSON.stringify(example, null, 2)], { type: 'application/json' }));
@@ -292,10 +330,20 @@ export class App implements OnInit, OnDestroy {
   protected questionNumber(question: TestQuestion): number { return (this.activeTest()?.questions.indexOf(question) ?? 0) + 1; }
   protected progressPercent(): number { return ((this.currentIndex() + 1) / (this.activeTest()?.questions.length || 1)) * 100; }
   protected optionLetter(index: number): string { return String.fromCharCode(65 + index); }
+  protected questionTypeLabel(question: TestQuestion): string {
+    return ({ 'multiple-choice': 'Choose one answer', written: 'Written response', matching: 'Match the pairs', 'fill-blank': 'Fill in the blank' })[question.type];
+  }
+  protected questionTypeSymbol(question: TestQuestion): string {
+    return ({ 'multiple-choice': '✓', written: '✎', matching: '↔', 'fill-blank': '＿' })[question.type];
+  }
   protected formatDate(value: string): string { return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(value)); }
   protected resultMessage(percentage: number): string { return percentage >= 90 ? 'Beautiful work — you’ve got this.' : percentage >= 70 ? 'Good progress. One more pass will make it stick.' : 'A solid first step. Review the notes and try again.'; }
 
   private setAnswer(questionId: string, answer: QuestionAnswer): void { this.answers.update((answers) => ({ ...answers, [questionId]: answer })); }
+
+  private normalizeAnswer(value: string): string {
+    return value.normalize('NFKC').trim().toLocaleLowerCase().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
+  }
 
   private calculateStreak(attempts: TestAttempt[]): number {
     if (!attempts.length) return 0;

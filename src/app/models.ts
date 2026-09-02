@@ -1,4 +1,4 @@
-export type QuestionType = 'multiple-choice' | 'written';
+export type QuestionType = 'multiple-choice' | 'written' | 'matching' | 'fill-blank';
 export type FeedbackMode = 'instant' | 'end';
 export type AppPage = 'library' | 'history' | 'taking' | 'written-review' | 'results';
 
@@ -10,6 +10,8 @@ export interface TestQuestion {
   correctAnswer?: number;
   explanation?: string;
   exampleAnswer?: string;
+  acceptedAnswers?: string[];
+  pairs?: Array<{ term: string; definition: string }>;
 }
 
 export interface TestDefinition {
@@ -29,6 +31,8 @@ export interface QuestionAnswer {
   writtenComplete?: boolean;
   revealed?: boolean;
   selfGrade?: boolean;
+  checked?: boolean;
+  matches?: Record<number, number>;
 }
 
 export interface TestAttempt {

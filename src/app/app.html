@@ -129,7 +129,7 @@
         <div class="question-meta"><span>{{ test.subject }}</span><i></i><span>{{ chapterSummary(test) }}</span></div>
         <div class="question-count"><span>Question {{ currentIndex() + 1 }}</span> of {{ test.questions.length }}</div>
         <section class="question-card">
-          <div class="type-label"><span>{{ question.type === 'written' ? '✎' : '✓' }}</span>{{ question.type === 'written' ? 'Written response' : 'Choose one answer' }}</div>
+          <div class="type-label"><span>{{ questionTypeSymbol(question) }}</span>{{ questionTypeLabel(question) }}</div>
           <h1>{{ question.prompt }}</h1>
 
           @if (question.type === 'multiple-choice') {
@@ -147,6 +147,40 @@
             </div>
             @if (selectedMode() === 'instant' && answerFor(question.id).choice !== undefined) {
               <div class="feedback" [class.positive]="isCorrect(question)"><span>{{ isCorrect(question) ? '✓' : '!' }}</span><div><strong>{{ isCorrect(question) ? 'Exactly right' : 'Not quite — keep this one' }}</strong><p>{{ question.explanation }}</p></div></div>
+            }
+          } @else if (question.type === 'fill-blank') {
+            <div class="fill-blank-area">
+              <label [for]="'fill-' + question.id">Your answer</label>
+              <div class="fill-input" [class.correct]="selectedMode() === 'instant' && answerFor(question.id).checked && isCorrect(question)" [class.wrong]="selectedMode() === 'instant' && answerFor(question.id).checked && !isCorrect(question)">
+                <input [id]="'fill-' + question.id" type="text" [value]="answerFor(question.id).text ?? ''" (input)="updateWritten(question, $event)" [disabled]="selectedMode() === 'instant' && answerFor(question.id).checked" placeholder="Type the missing word or phrase" autocomplete="off" />
+                @if (selectedMode() === 'instant' && answerFor(question.id).checked) { <span>{{ isCorrect(question) ? '✓' : '×' }}</span> }
+              </div>
+              @if (selectedMode() === 'instant' && !answerFor(question.id).checked) { <button class="objective-check" type="button" [disabled]="!answerFor(question.id).text?.trim()" (click)="checkObjective(question)">Check my answer</button> }
+            </div>
+            @if (selectedMode() === 'instant' && answerFor(question.id).checked) {
+              <div class="feedback" [class.positive]="isCorrect(question)"><span>{{ isCorrect(question) ? '✓' : '!' }}</span><div><strong>{{ isCorrect(question) ? 'Exactly right' : 'Not quite — the answer is “' + question.acceptedAnswers?.[0] + '”' }}</strong><p>{{ question.explanation }}</p></div></div>
+            }
+          } @else if (question.type === 'matching') {
+            <div class="matching-board">
+              <div class="matching-head"><span>TERMS</span><span>DEFINITIONS</span></div>
+              @for (pair of question.pairs; track pair.term) {
+                <div class="matching-row" [class.correct]="selectedMode() === 'instant' && answerFor(question.id).checked && matchRowCorrect(question, $index)" [class.wrong]="selectedMode() === 'instant' && answerFor(question.id).checked && !matchRowCorrect(question, $index)">
+                  <div class="match-term"><span>{{ $index + 1 }}</span><strong>{{ pair.term }}</strong></div>
+                  <span class="match-arrow">→</span>
+                  <div class="match-select">
+                    <select [attr.aria-label]="'Definition for ' + pair.term" [value]="answerFor(question.id).matches?.[$index] ?? ''" (change)="chooseMatch(question, $index, $event)" [disabled]="selectedMode() === 'instant' && answerFor(question.id).checked">
+                      <option value="">Choose a definition</option>
+                      @for (definition of matchingDefinitions(question); track definition.originalIndex) { <option [value]="definition.originalIndex">{{ definition.definition }}</option> }
+                    </select>
+                    @if (selectedMode() === 'instant' && answerFor(question.id).checked) { <span>{{ matchRowCorrect(question, $index) ? '✓' : '×' }}</span> }
+                  </div>
+                  @if (selectedMode() === 'instant' && answerFor(question.id).checked && !matchRowCorrect(question, $index)) { <p class="match-correction">Correct: {{ pair.definition }}</p> }
+                </div>
+              }
+            </div>
+            @if (selectedMode() === 'instant' && !answerFor(question.id).checked) { <button class="objective-check" type="button" [disabled]="!matchingReady(question)" (click)="checkObjective(question)">Check all matches</button> }
+            @if (selectedMode() === 'instant' && answerFor(question.id).checked) {
+              <div class="feedback" [class.positive]="isCorrect(question)"><span>{{ isCorrect(question) ? '✓' : '!' }}</span><div><strong>{{ isCorrect(question) ? 'Every pair is correct' : 'Some pairs need another look' }}</strong><p>{{ question.explanation }}</p></div></div>
             }
           } @else {
             @if (selectedMode() === 'instant') {
@@ -203,8 +237,12 @@
           <div class="section-heading"><div><h2>Answer review</h2><p>Your score is saved automatically on this device.</p></div><span>{{ score.score }} correct · {{ score.total - score.score }} to review</span></div>
           <div class="review-list">
             @for (question of test.questions; track question.id) {
-              <article [class.correct]="isCorrect(question)"><span class="review-status">{{ isCorrect(question) ? '✓' : '×' }}</span><div><small>QUESTION {{ $index + 1 }} · {{ question.type === 'written' ? 'WRITTEN' : 'MULTIPLE CHOICE' }}</small><h3>{{ question.prompt }}</h3>
+              <article [class.correct]="isCorrect(question)"><span class="review-status">{{ isCorrect(question) ? '✓' : '×' }}</span><div><small>QUESTION {{ $index + 1 }} · {{ questionTypeLabel(question).toUpperCase() }}</small><h3>{{ question.prompt }}</h3>
                 @if (question.type === 'multiple-choice') { <p><b>Your answer:</b> {{ answerFor(question.id).choice === undefined ? 'No answer' : question.options?.[answerFor(question.id).choice!] }}</p><p class="correct-answer"><b>Correct answer:</b> {{ question.options?.[question.correctAnswer!] }}</p> }
+                @else if (question.type === 'fill-blank') { <p><b>Your answer:</b> {{ answerFor(question.id).text }}</p><p class="correct-answer"><b>Accepted answer:</b> {{ question.acceptedAnswers?.[0] }}</p> }
+                @else if (question.type === 'matching') {
+                  <div class="result-pairs">@for (pair of question.pairs; track pair.term) { <p [class.good]="matchRowCorrect(question, $index)"><b>{{ pair.term }}:</b> {{ selectedDefinition(question, $index) }} @if (!matchRowCorrect(question, $index)) { <span>Correct: {{ pair.definition }}</span> }</p> }</div>
+                }
                 @else { <p><b>Your check:</b> {{ isCorrect(question) ? 'I got it' : 'Needs practice' }}</p><p class="correct-answer"><b>Example:</b> {{ question.exampleAnswer }}</p> }
                 @if (question.explanation) { <p class="explanation">{{ question.explanation }}</p> }
               </div></article>
