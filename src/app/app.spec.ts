@@ -24,12 +24,21 @@ describe('App', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('renders the library and its loaded tests', () => {
+  it('renders subjects first and reveals tests after a subject is selected', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('Ready to make it stick?');
-    expect(compiled.textContent).toContain('Cells');
+    expect(compiled.textContent).toContain('Your subjects');
     expect(compiled.textContent).toContain('Biology');
+    expect(compiled.textContent).not.toContain('Which organelle makes ATP?');
+
+    const biology = [...compiled.querySelectorAll<HTMLButtonElement>('.subject-card')]
+      .find((button) => button.textContent?.includes('Biology'));
+    biology?.click();
+    fixture.detectChanges();
+
+    expect(compiled.textContent).toContain('Biology tests');
+    expect(compiled.textContent).toContain('Cells');
   });
 });

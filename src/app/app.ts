@@ -18,7 +18,7 @@ export class App implements OnInit, OnDestroy {
   protected readonly loading = signal(true);
   protected readonly loadError = signal('');
   protected readonly search = signal('');
-  protected readonly selectedSubject = signal('All subjects');
+  protected readonly selectedSubject = signal<string | null>(null);
   protected readonly listView = signal(false);
   protected readonly chooserTest = signal<TestDefinition | null>(null);
   protected readonly selectedMode = signal<FeedbackMode>('instant');
@@ -33,11 +33,26 @@ export class App implements OnInit, OnDestroy {
   protected readonly mobileMenuOpen = signal(false);
   private readonly webMcpLifecycle = new AbortController();
 
-  protected readonly subjects = computed(() => ['All subjects', ...new Set(this.tests().map((test) => test.subject))]);
+  protected readonly subjects = computed(() => {
+    const grouped = new Map<string, TestDefinition[]>();
+    for (const test of this.tests()) grouped.set(test.subject, [...(grouped.get(test.subject) ?? []), test]);
+    return [...grouped.entries()].map(([name, tests]) => ({
+      name,
+      tone: tests[0].tone,
+      tests: tests.length,
+      questions: tests.reduce((total, test) => total + test.questions.length, 0),
+      chapters: new Set(tests.flatMap((test) => test.chapters)).size,
+      practiced: tests.filter((test) => this.latestFor(test.id)).length,
+    }));
+  });
+  protected readonly filteredSubjects = computed(() => {
+    const query = this.search().trim().toLowerCase();
+    return this.subjects().filter((subject) => !query || subject.name.toLowerCase().includes(query));
+  });
   protected readonly filteredTests = computed(() => {
     const query = this.search().trim().toLowerCase();
     return this.tests().filter((test) => {
-      const matchesSubject = this.selectedSubject() === 'All subjects' || test.subject === this.selectedSubject();
+      const matchesSubject = test.subject === this.selectedSubject();
       const searchable = `${test.title} ${test.subject} ${test.chapters.join(' ')}`.toLowerCase();
       return matchesSubject && (!query || searchable.includes(query));
     });
@@ -63,6 +78,7 @@ export class App implements OnInit, OnDestroy {
 
   protected navigate(page: 'library' | 'history'): void {
     this.page.set(page);
+    if (page === 'library') { this.selectedSubject.set(null); this.search.set(''); }
     this.mobileMenuOpen.set(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -71,7 +87,17 @@ export class App implements OnInit, OnDestroy {
     this.search.set((event.target as HTMLInputElement).value);
   }
 
-  protected chooseSubject(subject: string): void { this.selectedSubject.set(subject); }
+  protected chooseSubject(subject: string): void {
+    this.selectedSubject.set(subject);
+    this.search.set('');
+    document.getElementById('library')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  }
+
+  protected showSubjects(): void {
+    this.selectedSubject.set(null);
+    this.search.set('');
+    document.getElementById('library')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  }
 
   protected openTestSetup(test: TestDefinition): void {
     this.chooserTest.set(test);

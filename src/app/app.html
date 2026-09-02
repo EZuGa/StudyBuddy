@@ -35,42 +35,65 @@
         </section>
 
         <section class="library" id="library">
-          <div class="section-heading">
-            <div><h2>Your test library</h2><p>{{ filteredTests().length }} {{ filteredTests().length === 1 ? 'test' : 'tests' }} ready to practice</p></div>
-            <div class="view-switch" aria-label="Change view"><button [class.selected]="!listView()" type="button" (click)="listView.set(false)" aria-label="Grid view">▦</button><button [class.selected]="listView()" type="button" (click)="listView.set(true)" aria-label="List view">☷</button></div>
-          </div>
-          <div class="toolbar">
-            <label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input type="search" [value]="search()" (input)="updateSearch($event)" placeholder="Search your tests" /></label>
-            @for (subject of subjects(); track subject) { <button class="filter-button" [class.active]="selectedSubject() === subject" type="button" (click)="chooseSubject(subject)">{{ subject }}</button> }
-          </div>
-
           @if (loading()) {
+            <div class="section-heading"><div><h2>Your subjects</h2><p>Choose a subject to see its tests</p></div></div>
             <div class="loading-grid" aria-label="Loading tests">@for (item of [1,2,3,4]; track item) { <span></span> }</div>
           } @else if (loadError()) {
             <div class="empty-state error-state"><span>!</span><h3>Library unavailable</h3><p>{{ loadError() }}</p></div>
-          } @else if (!filteredTests().length) {
-            <div class="empty-state"><span>⌕</span><h3>No matching tests</h3><p>Try another subject or a shorter search.</p><button type="button" (click)="search.set(''); selectedSubject.set('All subjects')">Clear filters</button></div>
-          } @else {
-            <div class="test-grid" [class.list-view]="listView()">
-              @for (test of filteredTests(); track test.id) {
-                <article class="test-card">
-                  <div class="card-top">
-                    <span [class]="'subject-icon ' + test.tone">{{ subjectSymbol(test.subject) }}</span>
-                    @if (isImported(test.id)) { <span class="session-tag">Session import</span> }
-                    @else if (latestFor(test.id); as latest) { <span class="last-score" [class.strong]="latest.percentage >= 80">Last {{ latest.percentage }}%</span> }
-                    @else { <span class="not-started">Not attempted</span> }
-                  </div>
-                  <div class="card-copy">
-                    <div class="subject-row"><p class="subject">{{ test.subject }}</p>@if (test.kind === 'midterm') { <span>Midterm</span> }</div>
-                    <h3>{{ test.title }}</h3><p class="chapters">{{ chapterSummary(test) }}</p>
-                  </div>
-                  <div class="card-bottom">
-                    <div class="metadata"><span>{{ test.questions.length }} questions</span><i></i><span>~{{ test.minutes }} min</span>@if (bestFor(test.id); as best) { <i></i><span>Best {{ best.percentage }}%</span> }</div>
-                    <button type="button" class="start-button" (click)="openTestSetup(test)">{{ latestFor(test.id) ? 'Practice again' : 'Start test' }} <span>→</span></button>
-                  </div>
-                </article>
-              }
+          } @else if (!selectedSubject()) {
+            <div class="section-heading">
+              <div><h2>Your subjects</h2><p>{{ subjects().length }} {{ subjects().length === 1 ? 'subject' : 'subjects' }} in your library</p></div>
             </div>
+            <div class="toolbar subject-toolbar">
+              <label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input type="search" [value]="search()" (input)="updateSearch($event)" placeholder="Search subjects" /></label>
+            </div>
+            @if (!filteredSubjects().length) {
+              <div class="empty-state"><span>⌕</span><h3>No matching subjects</h3><p>Try a shorter search.</p><button type="button" (click)="search.set('')">Clear search</button></div>
+            } @else {
+              <div class="subject-grid">
+                @for (subject of filteredSubjects(); track subject.name) {
+                  <button type="button" [class]="'subject-card ' + subject.tone" (click)="chooseSubject(subject.name)">
+                    <div class="subject-card-top"><span class="subject-card-icon">{{ subjectSymbol(subject.name) }}</span><span class="subject-arrow">→</span></div>
+                    <p>SUBJECT</p><h3>{{ subject.name }}</h3>
+                    <div class="subject-details"><span><strong>{{ subject.tests }}</strong> {{ subject.tests === 1 ? 'test' : 'tests' }}</span><i></i><span><strong>{{ subject.questions }}</strong> questions</span></div>
+                    <div class="subject-progress"><div><span>{{ subject.practiced }} of {{ subject.tests }} practiced</span><span>{{ subject.chapters }} {{ subject.chapters === 1 ? 'chapter' : 'chapters' }}</span></div><span class="progress-track"><i [style.width.%]="subject.tests ? subject.practiced / subject.tests * 100 : 0"></i></span></div>
+                  </button>
+                }
+              </div>
+            }
+          } @else {
+            <button class="back-to-subjects" type="button" (click)="showSubjects()">← All subjects</button>
+            <div class="section-heading subject-test-heading">
+              <div><p class="eyebrow">{{ selectedSubject() }}</p><h2>{{ selectedSubject() }} tests</h2><p>{{ filteredTests().length }} {{ filteredTests().length === 1 ? 'test' : 'tests' }} ready to practice</p></div>
+              <div class="view-switch" aria-label="Change view"><button [class.selected]="!listView()" type="button" (click)="listView.set(false)" aria-label="Grid view">▦</button><button [class.selected]="listView()" type="button" (click)="listView.set(true)" aria-label="List view">☷</button></div>
+            </div>
+            <div class="toolbar">
+              <label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input type="search" [value]="search()" (input)="updateSearch($event)" placeholder="Search {{ selectedSubject() }} tests" /></label>
+            </div>
+            @if (!filteredTests().length) {
+              <div class="empty-state"><span>⌕</span><h3>No matching tests</h3><p>Try a shorter search.</p><button type="button" (click)="search.set('')">Clear search</button></div>
+            } @else {
+              <div class="test-grid" [class.list-view]="listView()">
+                @for (test of filteredTests(); track test.id) {
+                  <article class="test-card">
+                    <div class="card-top">
+                      <span [class]="'subject-icon ' + test.tone">{{ subjectSymbol(test.subject) }}</span>
+                      @if (isImported(test.id)) { <span class="session-tag">Session import</span> }
+                      @else if (latestFor(test.id); as latest) { <span class="last-score" [class.strong]="latest.percentage >= 80">Last {{ latest.percentage }}%</span> }
+                      @else { <span class="not-started">Not attempted</span> }
+                    </div>
+                    <div class="card-copy">
+                      <div class="subject-row"><p class="subject">{{ test.subject }}</p>@if (test.kind === 'midterm') { <span>Midterm</span> }</div>
+                      <h3>{{ test.title }}</h3><p class="chapters">{{ chapterSummary(test) }}</p>
+                    </div>
+                    <div class="card-bottom">
+                      <div class="metadata"><span>{{ test.questions.length }} questions</span><i></i><span>~{{ test.minutes }} min</span>@if (bestFor(test.id); as best) { <i></i><span>Best {{ best.percentage }}%</span> }</div>
+                      <button type="button" class="start-button" (click)="openTestSetup(test)">{{ latestFor(test.id) ? 'Practice again' : 'Start test' }} <span>→</span></button>
+                    </div>
+                  </article>
+                }
+              </div>
+            }
           }
         </section>
       } @else {
