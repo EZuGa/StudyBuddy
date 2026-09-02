@@ -4,6 +4,7 @@ export type AppPage = 'library' | 'history' | 'taking' | 'written-review' | 'res
 
 export interface TestQuestion {
   id: string;
+  number?: string;
   type: QuestionType;
   prompt: string;
   options?: string[];

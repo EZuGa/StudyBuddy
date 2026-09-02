@@ -1,11 +1,16 @@
 import { Injectable, signal } from '@angular/core';
 import { TestAttempt } from './models';
 
-const STORAGE_KEY = 'studydeck-score-history-v1';
+const STORAGE_KEY = 'studydeck-score-history-v2';
+const LEGACY_STORAGE_KEY = 'studydeck-score-history-v1';
 
 @Injectable({ providedIn: 'root' })
 export class ProgressService {
   readonly attempts = signal<TestAttempt[]>(this.read());
+
+  constructor() {
+    try { localStorage.removeItem(LEGACY_STORAGE_KEY); } catch { /* Ignore unavailable storage. */ }
+  }
 
   addAttempt(attempt: TestAttempt): void {
     const next = [attempt, ...this.attempts()];

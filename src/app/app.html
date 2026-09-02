@@ -87,7 +87,7 @@
                       <h3>{{ test.title }}</h3><p class="chapters">{{ chapterSummary(test) }}</p>
                     </div>
                     <div class="card-bottom">
-                      <div class="metadata"><span>{{ test.questions.length }} questions</span><i></i><span>~{{ test.minutes }} min</span>@if (bestFor(test.id); as best) { <i></i><span>Best {{ best.percentage }}%</span> }</div>
+                      <div class="metadata"><span>{{ questionUnitCount(test) }} questions</span><i></i><span>~{{ test.minutes }} min</span>@if (bestFor(test.id); as best) { <i></i><span>Best {{ best.percentage }}%</span> }</div>
                       <button type="button" class="start-button" (click)="openTestSetup(test)">{{ latestFor(test.id) ? 'Practice again' : 'Start test' }} <span>→</span></button>
                     </div>
                   </article>
@@ -127,7 +127,7 @@
     @if (currentQuestion(); as question) {
       <main class="question-area">
         <div class="question-meta"><span>{{ test.subject }}</span><i></i><span>{{ chapterSummary(test) }}</span></div>
-        <div class="question-count"><span>Question {{ currentIndex() + 1 }}</span> of {{ test.questions.length }}</div>
+        <div class="question-count"><span>Question {{ questionNumber(question) }}</span> of {{ questionUnitCount(test) }}</div>
         <section class="question-card">
           <div class="type-label"><span>{{ questionTypeSymbol(question) }}</span>{{ questionTypeLabel(question) }}</div>
           <h1>{{ question.prompt }}</h1>
@@ -237,7 +237,7 @@
           <div class="section-heading"><div><h2>Answer review</h2><p>Your score is saved automatically on this device.</p></div><span>{{ score.score }} correct · {{ score.total - score.score }} to review</span></div>
           <div class="review-list">
             @for (question of test.questions; track question.id) {
-              <article [class.correct]="isCorrect(question)"><span class="review-status">{{ isCorrect(question) ? '✓' : '×' }}</span><div><small>QUESTION {{ $index + 1 }} · {{ questionTypeLabel(question).toUpperCase() }}</small><h3>{{ question.prompt }}</h3>
+              <article [class.correct]="isCorrect(question)"><span class="review-status">{{ isCorrect(question) ? '✓' : '×' }}</span><div><small>QUESTION {{ questionNumber(question) }} · {{ questionTypeLabel(question).toUpperCase() }}</small><h3>{{ question.prompt }}</h3>
                 @if (question.type === 'multiple-choice') { <p><b>Your answer:</b> {{ answerFor(question.id).choice === undefined ? 'No answer' : question.options?.[answerFor(question.id).choice!] }}</p><p class="correct-answer"><b>Correct answer:</b> {{ question.options?.[question.correctAnswer!] }}</p> }
                 @else if (question.type === 'fill-blank') { <p><b>Your answer:</b> {{ answerFor(question.id).text }}</p><p class="correct-answer"><b>Accepted answer:</b> {{ question.acceptedAnswers?.[0] }}</p> }
                 @else if (question.type === 'matching') {
@@ -263,7 +263,7 @@
         <button type="button" [class.selected]="selectedMode() === 'instant'" (click)="selectedMode.set('instant')"><span class="mode-icon learn">✓</span><div><strong>Learn as you go</strong><p>See the right answer and a quick explanation after each question.</p><small>Best for learning</small></div><i>{{ selectedMode() === 'instant' ? '●' : '' }}</i></button>
         <button type="button" [class.selected]="selectedMode() === 'end'" (click)="selectedMode.set('end')"><span class="mode-icon exam">◷</span><div><strong>Check at the end</strong><p>Work through the full test before any answers are revealed.</p><small>Best for exam practice</small></div><i>{{ selectedMode() === 'end' ? '●' : '' }}</i></button>
       </div>
-      <div class="mode-summary"><span>{{ test.questions.length }} questions</span><i></i><span>About {{ test.minutes }} minutes</span><i></i><span>{{ test.questions.filter(question => question.type === 'written').length }} written</span></div>
+      <div class="mode-summary"><span>{{ questionUnitCount(test) }} questions</span><i></i><span>About {{ test.minutes }} minutes</span><i></i><span>{{ test.questions.filter(question => question.type === 'written').length }} written</span></div>
       <button class="primary-button start-mode" type="button" (click)="startChosenTest()">Start {{ selectedMode() === 'instant' ? 'learning' : 'test' }} <span>→</span></button>
     </section>
   </div>

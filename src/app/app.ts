@@ -40,7 +40,7 @@ export class App implements OnInit, OnDestroy {
       name,
       tone: tests[0].tone,
       tests: tests.length,
-      questions: tests.reduce((total, test) => total + test.questions.length, 0),
+      questions: tests.reduce((total, test) => total + this.questionUnitCount(test), 0),
       chapters: new Set(tests.flatMap((test) => test.chapters)).size,
       practiced: tests.filter((test) => this.latestFor(test.id)).length,
     }));
@@ -244,15 +244,16 @@ export class App implements OnInit, OnDestroy {
   private completeTest(): void {
     const test = this.activeTest();
     if (!test) return;
-    const score = test.questions.filter((question) => this.isCorrect(question)).length;
+    const score = test.questions.reduce((total, question) => total + this.correctUnits(question), 0);
+    const total = this.questionUnitCount(test);
     const attempt: TestAttempt = {
       id: `${test.id}-${Date.now()}`,
       testId: test.id,
       testTitle: test.title,
       subject: test.subject,
       score,
-      total: test.questions.length,
-      percentage: Math.round((score / test.questions.length) * 100),
+      total,
+      percentage: Math.round((score / total) * 100),
       mode: this.selectedMode(),
       completedAt: new Date().toISOString(),
     };
@@ -327,7 +328,8 @@ export class App implements OnInit, OnDestroy {
     return '✦';
   }
 
-  protected questionNumber(question: TestQuestion): number { return (this.activeTest()?.questions.indexOf(question) ?? 0) + 1; }
+  protected questionNumber(question: TestQuestion): string { return question.number ?? String((this.activeTest()?.questions.indexOf(question) ?? 0) + 1); }
+  protected questionUnitCount(test: TestDefinition): number { return test.questions.reduce((total, question) => total + (question.type === 'matching' ? question.pairs?.length ?? 1 : 1), 0); }
   protected progressPercent(): number { return ((this.currentIndex() + 1) / (this.activeTest()?.questions.length || 1)) * 100; }
   protected optionLetter(index: number): string { return String.fromCharCode(65 + index); }
   protected questionTypeLabel(question: TestQuestion): string {
@@ -343,6 +345,11 @@ export class App implements OnInit, OnDestroy {
 
   private normalizeAnswer(value: string): string {
     return value.normalize('NFKC').trim().toLocaleLowerCase().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
+  }
+
+  private correctUnits(question: TestQuestion): number {
+    if (question.type === 'matching') return question.pairs?.filter((_, index) => this.matchRowCorrect(question, index)).length ?? 0;
+    return this.isCorrect(question) ? 1 : 0;
   }
 
   private calculateStreak(attempts: TestAttempt[]): number {
@@ -367,7 +374,7 @@ export class App implements OnInit, OnDestroy {
         description: 'List the tests currently available in the StudyDeck library, including subject, chapters, and question count.',
         inputSchema: { type: 'object', properties: {}, additionalProperties: false },
         annotations: { readOnlyHint: true, untrustedContentHint: false },
-        execute: () => ({ tests: this.tests().map((test) => ({ id: test.id, title: test.title, subject: test.subject, chapters: test.chapters, questions: test.questions.length })) }),
+        execute: () => ({ tests: this.tests().map((test) => ({ id: test.id, title: test.title, subject: test.subject, chapters: test.chapters, questions: this.questionUnitCount(test) })) }),
       }, options)).catch(reportError);
       void Promise.resolve(context.registerTool({
         name: 'start_studydeck_test',
