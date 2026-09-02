@@ -1,0 +1,67 @@
+[
+  {
+    "id": "biology-cell-structure",
+    "subject": "Biology",
+    "title": "Cell structure & function",
+    "chapters": ["Chapter 3"],
+    "kind": "chapter",
+    "minutes": 12,
+    "tone": "sage",
+    "questions": [
+      { "id": "bio-1", "type": "multiple-choice", "prompt": "Which organelle is primarily responsible for producing ATP in a eukaryotic cell?", "options": ["Nucleus", "Mitochondrion", "Golgi apparatus", "Lysosome"], "correctAnswer": 1, "explanation": "Mitochondria release energy from nutrients and use it to make ATP through cellular respiration." },
+      { "id": "bio-2", "type": "multiple-choice", "prompt": "What is the main function of the cell membrane?", "options": ["Store genetic information", "Control what enters and leaves the cell", "Produce ribosomes", "Break down glucose"], "correctAnswer": 1, "explanation": "The selectively permeable membrane regulates movement of substances into and out of the cell." },
+      { "id": "bio-3", "type": "written", "prompt": "On paper, compare the roles of the nucleus and ribosomes in protein production.", "exampleAnswer": "The nucleus stores DNA and transcribes a gene into messenger RNA. The mRNA travels to a ribosome, where its code is translated and amino acids are joined into a protein.", "explanation": "A strong response connects DNA transcription in the nucleus to translation at the ribosome." },
+      { "id": "bio-4", "type": "multiple-choice", "prompt": "Plant cells have which structure that animal cells do not?", "options": ["Cell membrane", "Cytoplasm", "Cell wall", "Ribosomes"], "correctAnswer": 2, "explanation": "The rigid cellulose cell wall supports and protects plant cells." },
+      { "id": "bio-5", "type": "multiple-choice", "prompt": "Diffusion moves particles from an area of…", "options": ["Low concentration to high concentration", "High concentration to low concentration", "Equal concentration to low concentration", "Low pressure to high pressure only"], "correctAnswer": 1, "explanation": "Net diffusion follows the concentration gradient, from higher to lower concentration." }
+    ]
+  },
+  {
+    "id": "chemistry-atoms-bonds",
+    "subject": "Chemistry",
+    "title": "Atoms and chemical bonds",
+    "chapters": ["Chapter 2", "Chapter 3"],
+    "kind": "chapter",
+    "minutes": 10,
+    "tone": "sky",
+    "questions": [
+      { "id": "chem-1", "type": "multiple-choice", "prompt": "Which particle determines an element’s atomic number?", "options": ["Electron", "Neutron", "Proton", "Ion"], "correctAnswer": 2, "explanation": "Every atom of an element has the same number of protons; this number is its atomic number." },
+      { "id": "chem-2", "type": "multiple-choice", "prompt": "A covalent bond forms when atoms…", "options": ["Share electrons", "Transfer protons", "Lose all neutrons", "Share nuclei"], "correctAnswer": 0, "explanation": "Covalent bonds form through shared pairs of valence electrons." },
+      { "id": "chem-3", "type": "written", "prompt": "Draw or describe how sodium and chlorine form an ionic bond.", "exampleAnswer": "Sodium transfers its one valence electron to chlorine. Sodium becomes Na⁺, chlorine becomes Cl⁻, and the oppositely charged ions attract to form NaCl.", "explanation": "The key ideas are electron transfer, ion formation, and electrostatic attraction." },
+      { "id": "chem-4", "type": "multiple-choice", "prompt": "An atom with eight protons and ten electrons has what overall charge?", "options": ["2+", "1+", "Neutral", "2−"], "correctAnswer": 3, "explanation": "Two more electrons than protons produces a net charge of 2−." },
+      { "id": "chem-5", "type": "multiple-choice", "prompt": "Which electrons are most involved in chemical bonding?", "options": ["Core electrons", "Valence electrons", "Paired neutrons", "Inner protons"], "correctAnswer": 1, "explanation": "Valence electrons occupy the outermost shell and participate in bonds." }
+    ]
+  },
+  {
+    "id": "history-industrial-revolution",
+    "subject": "World History",
+    "title": "The Industrial Revolution",
+    "chapters": ["Chapter 7"],
+    "kind": "chapter",
+    "minutes": 14,
+    "tone": "amber",
+    "questions": [
+      { "id": "hist-1", "type": "multiple-choice", "prompt": "Where did the Industrial Revolution begin?", "options": ["France", "Great Britain", "United States", "Germany"], "correctAnswer": 1, "explanation": "Great Britain’s coal, capital, waterways, and agricultural changes helped industrialization begin there." },
+      { "id": "hist-2", "type": "multiple-choice", "prompt": "Which industry was transformed early by mechanization?", "options": ["Textiles", "Aviation", "Telecommunications", "Automobiles"], "correctAnswer": 0, "explanation": "Inventions such as the spinning jenny and power loom rapidly changed textile production." },
+      { "id": "hist-3", "type": "written", "prompt": "Explain one way industrialization changed daily life for urban workers.", "exampleAnswer": "Many people moved from rural communities to crowded industrial cities and worked long, scheduled shifts in factories. Wages created new opportunities, but housing and working conditions were often dangerous.", "explanation": "A complete answer names a change and explains its effect on workers." },
+      { "id": "hist-4", "type": "multiple-choice", "prompt": "The steam engine most directly helped factories by providing…", "options": ["A reliable power source", "Free raw materials", "Safer housing", "Universal education"], "correctAnswer": 0, "explanation": "Steam power allowed factories and transport to operate beyond locations with water power." },
+      { "id": "hist-5", "type": "written", "prompt": "On paper, give one benefit and one cost of the Industrial Revolution.", "exampleAnswer": "A benefit was the mass production of cheaper goods and expanding transportation. A cost was harsh factory labor and severe pollution in rapidly growing cities.", "explanation": "Other well-supported social, economic, or environmental examples also work." }
+    ]
+  },
+  {
+    "id": "math-algebra-midterm",
+    "subject": "Mathematics",
+    "title": "Algebra midterm review",
+    "chapters": ["Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5"],
+    "kind": "midterm",
+    "minutes": 20,
+    "tone": "lilac",
+    "questions": [
+      { "id": "math-1", "type": "multiple-choice", "prompt": "Solve 3x + 5 = 20.", "options": ["x = 3", "x = 5", "x = 8", "x = 15"], "correctAnswer": 1, "explanation": "Subtract 5 to get 3x = 15, then divide by 3." },
+      { "id": "math-2", "type": "multiple-choice", "prompt": "What is the slope of the line through (1, 2) and (4, 11)?", "options": ["1", "2", "3", "4"], "correctAnswer": 2, "explanation": "Slope = (11 − 2) ÷ (4 − 1) = 9 ÷ 3 = 3." },
+      { "id": "math-3", "type": "written", "prompt": "On paper, factor x² + 7x + 12 and show your reasoning.", "exampleAnswer": "Find two numbers that multiply to 12 and add to 7: 3 and 4. Therefore x² + 7x + 12 = (x + 3)(x + 4).", "explanation": "Expanding the two factors should return the original expression." },
+      { "id": "math-4", "type": "multiple-choice", "prompt": "Simplify 2(3x − 4) + x.", "options": ["6x − 8", "7x − 4", "7x − 8", "5x − 8"], "correctAnswer": 2, "explanation": "Distribute first: 6x − 8 + x, then combine like terms to get 7x − 8." },
+      { "id": "math-5", "type": "multiple-choice", "prompt": "Which point lies on y = 2x + 1?", "options": ["(0, 0)", "(1, 3)", "(2, 2)", "(3, 5)"], "correctAnswer": 1, "explanation": "Substituting x = 1 gives y = 2(1) + 1 = 3." },
+      { "id": "math-6", "type": "written", "prompt": "Solve the system y = x + 2 and y = −x + 8 on paper.", "exampleAnswer": "Set the expressions equal: x + 2 = −x + 8. Then 2x = 6, so x = 3. Substitute to get y = 5. The solution is (3, 5).", "explanation": "The intersection point must satisfy both equations." }
+    ]
+  }
+]

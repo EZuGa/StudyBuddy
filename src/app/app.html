@@ -1,0 +1,222 @@
+@if (page() === 'library' || page() === 'history') {
+  <div class="app-shell">
+    <aside class="sidebar">
+      <button class="brand" type="button" (click)="navigate('library')" aria-label="StudyDeck home"><span class="brand-mark">S</span><span>StudyDeck</span></button>
+      <nav aria-label="Main navigation">
+        <button class="nav-item" [class.active]="page() === 'library'" type="button" (click)="navigate('library')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5v-16ZM20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5a2.5 2.5 0 0 1 2.5 2.5v-16Z"/></svg>Test library</button>
+        <button class="nav-item" [class.active]="page() === 'history'" type="button" (click)="navigate('history')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m6 10V5m6 14v-7m4 7H2"/></svg>Score history</button>
+        <button class="nav-item" type="button" (click)="openImport()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m0 0 4 4m-4-4L8 7M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/></svg>Import tests</button>
+      </nav>
+      <div class="study-note"><span class="note-icon">✦</span><strong>Study tip</strong><p>Immediate feedback helps when you’re learning something new.</p></div>
+      <div class="profile"><span class="avatar">MS</span><div><strong>My study space</strong><small>Scores stored on this device</small></div></div>
+    </aside>
+
+    <main class="main-content">
+      <header class="mobile-header">
+        <button class="brand" type="button" (click)="navigate('library')"><span class="brand-mark">S</span><span>StudyDeck</span></button>
+        <button class="menu-button" type="button" (click)="mobileMenuOpen.set(!mobileMenuOpen())" [attr.aria-expanded]="mobileMenuOpen()" aria-label="Open menu"><span></span><span></span><span></span></button>
+      </header>
+      @if (mobileMenuOpen()) {
+        <div class="mobile-nav">
+          <button type="button" (click)="navigate('library')">Test library</button><button type="button" (click)="navigate('history')">Score history</button><button type="button" (click)="openImport()">Import tests</button>
+        </div>
+      }
+
+      @if (page() === 'library') {
+        <section class="intro">
+          <div><p class="eyebrow">YOUR STUDY SPACE</p><h1>Ready to make it stick?</h1><p>Pick a test, choose how you want feedback, and see what you’ve mastered.</p></div>
+          <button class="primary-button" type="button" (click)="openImport()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Import a test</button>
+        </section>
+
+        <section class="stats" aria-label="Study summary">
+          <article><span class="stat-icon coral">✓</span><div><strong>{{ attempts().length }}</strong><small>Tests completed</small></div></article>
+          <article><span class="stat-icon sage">↗</span><div><strong>{{ averageScore() === null ? '—' : averageScore() + '%' }}</strong><small>Average score</small></div></article>
+          <article><span class="stat-icon amber">◆</span><div><strong>{{ streak() }} {{ streak() === 1 ? 'day' : 'days' }}</strong><small>Current streak</small></div></article>
+        </section>
+
+        <section class="library" id="library">
+          <div class="section-heading">
+            <div><h2>Your test library</h2><p>{{ filteredTests().length }} {{ filteredTests().length === 1 ? 'test' : 'tests' }} ready to practice</p></div>
+            <div class="view-switch" aria-label="Change view"><button [class.selected]="!listView()" type="button" (click)="listView.set(false)" aria-label="Grid view">▦</button><button [class.selected]="listView()" type="button" (click)="listView.set(true)" aria-label="List view">☷</button></div>
+          </div>
+          <div class="toolbar">
+            <label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input type="search" [value]="search()" (input)="updateSearch($event)" placeholder="Search your tests" /></label>
+            @for (subject of subjects(); track subject) { <button class="filter-button" [class.active]="selectedSubject() === subject" type="button" (click)="chooseSubject(subject)">{{ subject }}</button> }
+          </div>
+
+          @if (loading()) {
+            <div class="loading-grid" aria-label="Loading tests">@for (item of [1,2,3,4]; track item) { <span></span> }</div>
+          } @else if (loadError()) {
+            <div class="empty-state error-state"><span>!</span><h3>Library unavailable</h3><p>{{ loadError() }}</p></div>
+          } @else if (!filteredTests().length) {
+            <div class="empty-state"><span>⌕</span><h3>No matching tests</h3><p>Try another subject or a shorter search.</p><button type="button" (click)="search.set(''); selectedSubject.set('All subjects')">Clear filters</button></div>
+          } @else {
+            <div class="test-grid" [class.list-view]="listView()">
+              @for (test of filteredTests(); track test.id) {
+                <article class="test-card">
+                  <div class="card-top">
+                    <span [class]="'subject-icon ' + test.tone">{{ subjectSymbol(test.subject) }}</span>
+                    @if (isImported(test.id)) { <span class="session-tag">Session import</span> }
+                    @else if (latestFor(test.id); as latest) { <span class="last-score" [class.strong]="latest.percentage >= 80">Last {{ latest.percentage }}%</span> }
+                    @else { <span class="not-started">Not attempted</span> }
+                  </div>
+                  <div class="card-copy">
+                    <div class="subject-row"><p class="subject">{{ test.subject }}</p>@if (test.kind === 'midterm') { <span>Midterm</span> }</div>
+                    <h3>{{ test.title }}</h3><p class="chapters">{{ chapterSummary(test) }}</p>
+                  </div>
+                  <div class="card-bottom">
+                    <div class="metadata"><span>{{ test.questions.length }} questions</span><i></i><span>~{{ test.minutes }} min</span>@if (bestFor(test.id); as best) { <i></i><span>Best {{ best.percentage }}%</span> }</div>
+                    <button type="button" class="start-button" (click)="openTestSetup(test)">{{ latestFor(test.id) ? 'Practice again' : 'Start test' }} <span>→</span></button>
+                  </div>
+                </article>
+              }
+            </div>
+          }
+        </section>
+      } @else {
+        <section class="history-view">
+          <div class="history-heading"><div><p class="eyebrow">YOUR PROGRESS</p><h1>Score history</h1><p>Every completed test, newest first.</p></div><button class="secondary-button" type="button" (click)="navigate('library')">Browse tests</button></div>
+          @if (!attempts().length) {
+            <div class="empty-history"><span class="history-illustration">↗</span><h2>Your first score will land here</h2><p>Complete any test to begin building your study history.</p><button class="primary-button" type="button" (click)="navigate('library')">Choose a test</button></div>
+          } @else {
+            <div class="history-summary"><div><strong>{{ attempts().length }}</strong><span>Total attempts</span></div><div><strong>{{ averageScore() }}%</strong><span>Overall average</span></div><div><strong>{{ streak() }}</strong><span>Day streak</span></div></div>
+            <div class="history-list">
+              @for (attempt of attempts(); track attempt.id) {
+                <article>
+                  <div class="history-score" [class.high]="attempt.percentage >= 80"><strong>{{ attempt.percentage }}</strong><span>%</span></div>
+                  <div class="history-copy"><p>{{ attempt.subject }}</p><h3>{{ attempt.testTitle }}</h3><small>{{ formatDate(attempt.completedAt) }} · {{ attempt.mode === 'instant' ? 'Learn mode' : 'Exam mode' }}</small></div>
+                  <div class="history-result"><strong>{{ attempt.score }}/{{ attempt.total }}</strong><span>correct</span></div>
+                  @if (tests().find(test => test.id === attempt.testId); as test) { <button type="button" class="history-action" (click)="openTestSetup(test)">Try again →</button> }
+                </article>
+              }
+            </div>
+          }
+        </section>
+      }
+    </main>
+  </div>
+}
+
+@if (page() === 'taking' && activeTest(); as test) {
+  <div class="focus-shell">
+    <header class="test-header"><button class="brand" type="button" (click)="exitTest()"><span class="brand-mark">S</span><span>StudyDeck</span></button><div><span>{{ selectedMode() === 'instant' ? 'Learn mode' : 'Exam mode' }}</span><button type="button" (click)="exitTest()" aria-label="Leave test">×</button></div></header>
+    <div class="test-progress"><span [style.width.%]="progressPercent()"></span></div>
+    @if (currentQuestion(); as question) {
+      <main class="question-area">
+        <div class="question-meta"><span>{{ test.subject }}</span><i></i><span>{{ chapterSummary(test) }}</span></div>
+        <div class="question-count"><span>Question {{ currentIndex() + 1 }}</span> of {{ test.questions.length }}</div>
+        <section class="question-card">
+          <div class="type-label"><span>{{ question.type === 'written' ? '✎' : '✓' }}</span>{{ question.type === 'written' ? 'Written response' : 'Choose one answer' }}</div>
+          <h1>{{ question.prompt }}</h1>
+
+          @if (question.type === 'multiple-choice') {
+            <div class="options">
+              @for (option of question.options; track $index) {
+                <button type="button"
+                  [class.selected]="answerFor(question.id).choice === $index"
+                  [class.correct]="selectedMode() === 'instant' && answerFor(question.id).choice !== undefined && question.correctAnswer === $index"
+                  [class.wrong]="selectedMode() === 'instant' && answerFor(question.id).choice === $index && question.correctAnswer !== $index"
+                  [disabled]="selectedMode() === 'instant' && answerFor(question.id).choice !== undefined"
+                  (click)="chooseAnswer(question, $index)">
+                  <span class="option-letter">{{ optionLetter($index) }}</span><span>{{ option }}</span><span class="answer-mark">{{ selectedMode() === 'instant' && answerFor(question.id).choice !== undefined && question.correctAnswer === $index ? '✓' : (selectedMode() === 'instant' && answerFor(question.id).choice === $index ? '×' : '') }}</span>
+                </button>
+              }
+            </div>
+            @if (selectedMode() === 'instant' && answerFor(question.id).choice !== undefined) {
+              <div class="feedback" [class.positive]="isCorrect(question)"><span>{{ isCorrect(question) ? '✓' : '!' }}</span><div><strong>{{ isCorrect(question) ? 'Exactly right' : 'Not quite — keep this one' }}</strong><p>{{ question.explanation }}</p></div></div>
+            }
+          } @else {
+            @if (selectedMode() === 'instant') {
+              <div class="paper-prompt"><span>✎</span><div><strong>Work this one out by hand</strong><p>Write your response on paper first. Then reveal the example and compare.</p></div></div>
+              @if (!answerFor(question.id).revealed) {
+                <button class="reveal-button" type="button" (click)="revealWritten(question)">I’ve answered — show the example</button>
+              } @else {
+                <div class="model-answer"><p>EXAMPLE ANSWER</p><div>{{ question.exampleAnswer }}</div></div>
+                <div class="self-check"><p>How did your answer compare?</p><div><button type="button" [class.selected]="answerFor(question.id).selfGrade === false" (click)="selfGrade(question, false)">Needs practice</button><button class="got-it" type="button" [class.selected]="answerFor(question.id).selfGrade === true" (click)="selfGrade(question, true)">✓ I got it</button></div></div>
+              }
+            } @else {
+              <div class="writing-area"><label for="written-answer">Type here, or work on paper</label><textarea id="written-answer" rows="7" [value]="answerFor(question.id).text ?? ''" (input)="updateWritten(question, $event)" placeholder="Optional: type your answer here…"></textarea><button type="button" class="paper-toggle" [class.active]="answerFor(question.id).writtenComplete" (click)="togglePaperAnswer(question)"><span>{{ answerFor(question.id).writtenComplete ? '✓' : '' }}</span>I answered this on paper</button></div>
+            }
+          }
+        </section>
+        <footer class="question-footer">
+          <button class="back-button" type="button" [disabled]="currentIndex() === 0" (click)="previousQuestion()">← Back</button>
+          <div class="question-dots" aria-hidden="true">@for (item of test.questions; track item.id) { <span [class.current]="$index === currentIndex()" [class.done]="$index < currentIndex()"></span> }</div>
+          <button class="next-button" type="button" [disabled]="!isAnswered(question)" (click)="nextQuestion()">{{ currentIndex() === test.questions.length - 1 ? (selectedMode() === 'end' && writtenQuestions().length ? 'Review answers' : 'Finish test') : 'Next question' }} <span>→</span></button>
+        </footer>
+      </main>
+    }
+  </div>
+}
+
+@if (page() === 'written-review' && activeTest(); as test) {
+  <div class="focus-shell review-shell">
+    <header class="test-header"><button class="brand" type="button" (click)="exitTest()"><span class="brand-mark">S</span><span>StudyDeck</span></button><div><span>Self-check</span><button type="button" (click)="exitTest()" aria-label="Leave test">×</button></div></header>
+    @if (reviewQuestion(); as question) {
+      <main class="review-area">
+        <p class="eyebrow">WRITTEN ANSWER {{ reviewIndex() + 1 }} OF {{ writtenQuestions().length }}</p><h1>Compare your work</h1><p class="review-intro">Be honest with yourself — this is how the score stays useful.</p>
+        <section class="review-card">
+          <div class="review-block"><span>QUESTION {{ questionNumber(question) }}</span><p>{{ question.prompt }}</p></div>
+          <div class="review-block your-answer"><span>YOUR ANSWER</span><p>{{ answerFor(question.id).text?.trim() || 'Answered on paper' }}</p></div>
+          <div class="review-block example"><span>EXAMPLE ANSWER</span><p>{{ question.exampleAnswer }}</p>@if (question.explanation) { <small>{{ question.explanation }}</small> }</div>
+        </section>
+        <div class="review-actions"><p>Did your response include the key idea?</p><div><button type="button" (click)="gradeReview(false)">Needs practice</button><button class="primary-button" type="button" (click)="gradeReview(true)">✓ Yes, I got it</button></div></div>
+      </main>
+    }
+  </div>
+}
+
+@if (page() === 'results' && activeTest(); as test) {
+  <div class="results-shell">
+    <header class="test-header"><button class="brand" type="button" (click)="navigate('library')"><span class="brand-mark">S</span><span>StudyDeck</span></button><button class="text-button" type="button" (click)="exitTest()">Back to library</button></header>
+    @if (result(); as score) {
+      <main class="results-area">
+        <section class="result-hero">
+          <div class="score-ring" [class.great]="score.percentage >= 80"><div><strong>{{ score.score }}</strong><span>/ {{ score.total }}</span></div><small>correct</small></div>
+          <p class="eyebrow">TEST COMPLETE</p><h1>{{ resultMessage(score.percentage) }}</h1><p>{{ test.title }} · {{ score.percentage }}%</p>
+          <div class="result-actions"><button class="primary-button" type="button" (click)="retryTest()">Practice again</button><button class="secondary-button" type="button" (click)="exitTest()">Choose another test</button></div>
+        </section>
+        <section class="answer-review">
+          <div class="section-heading"><div><h2>Answer review</h2><p>Your score is saved automatically on this device.</p></div><span>{{ score.score }} correct · {{ score.total - score.score }} to review</span></div>
+          <div class="review-list">
+            @for (question of test.questions; track question.id) {
+              <article [class.correct]="isCorrect(question)"><span class="review-status">{{ isCorrect(question) ? '✓' : '×' }}</span><div><small>QUESTION {{ $index + 1 }} · {{ question.type === 'written' ? 'WRITTEN' : 'MULTIPLE CHOICE' }}</small><h3>{{ question.prompt }}</h3>
+                @if (question.type === 'multiple-choice') { <p><b>Your answer:</b> {{ answerFor(question.id).choice === undefined ? 'No answer' : question.options?.[answerFor(question.id).choice!] }}</p><p class="correct-answer"><b>Correct answer:</b> {{ question.options?.[question.correctAnswer!] }}</p> }
+                @else { <p><b>Your check:</b> {{ isCorrect(question) ? 'I got it' : 'Needs practice' }}</p><p class="correct-answer"><b>Example:</b> {{ question.exampleAnswer }}</p> }
+                @if (question.explanation) { <p class="explanation">{{ question.explanation }}</p> }
+              </div></article>
+            }
+          </div>
+        </section>
+      </main>
+    }
+  </div>
+}
+
+@if (chooserTest(); as test) {
+  <div class="modal-backdrop" role="presentation">
+    <section class="mode-modal" role="dialog" aria-modal="true" aria-labelledby="mode-title">
+      <button class="modal-close" type="button" (click)="closeTestSetup()" aria-label="Close">×</button>
+      <p class="eyebrow">{{ test.subject }} · {{ chapterSummary(test) }}</p><h2 id="mode-title">How do you want to practice?</h2><p class="modal-intro">Choose when StudyDeck should reveal the answers.</p>
+      <div class="mode-options">
+        <button type="button" [class.selected]="selectedMode() === 'instant'" (click)="selectedMode.set('instant')"><span class="mode-icon learn">✓</span><div><strong>Learn as you go</strong><p>See the right answer and a quick explanation after each question.</p><small>Best for learning</small></div><i>{{ selectedMode() === 'instant' ? '●' : '' }}</i></button>
+        <button type="button" [class.selected]="selectedMode() === 'end'" (click)="selectedMode.set('end')"><span class="mode-icon exam">◷</span><div><strong>Check at the end</strong><p>Work through the full test before any answers are revealed.</p><small>Best for exam practice</small></div><i>{{ selectedMode() === 'end' ? '●' : '' }}</i></button>
+      </div>
+      <div class="mode-summary"><span>{{ test.questions.length }} questions</span><i></i><span>About {{ test.minutes }} minutes</span><i></i><span>{{ test.questions.filter(question => question.type === 'written').length }} written</span></div>
+      <button class="primary-button start-mode" type="button" (click)="startChosenTest()">Start {{ selectedMode() === 'instant' ? 'learning' : 'test' }} <span>→</span></button>
+    </section>
+  </div>
+}
+
+@if (importOpen()) {
+  <div class="modal-backdrop" role="presentation">
+    <section class="import-modal" role="dialog" aria-modal="true" aria-labelledby="import-title">
+      <button class="modal-close" type="button" (click)="closeImport()" aria-label="Close">×</button>
+      <span class="import-icon">↥</span><p class="eyebrow">ADD TO YOUR LIBRARY</p><h2 id="import-title">Import a test</h2><p class="modal-intro">Choose a StudyDeck JSON file. You can import one test or a whole collection.</p>
+      <label class="drop-zone"><input type="file" accept="application/json,.json" (change)="importFile($event)" /><span>＋</span><strong>Choose a JSON file</strong><small>Maximum 2 MB recommended</small></label>
+      @if (importStatus(); as status) { <div [class]="'import-status ' + status.tone"><span>{{ status.tone === 'success' ? '✓' : '!' }}</span>{{ status.text }}</div> }
+      <div class="storage-note"><span>i</span><p><strong>A quick note about saving</strong>Imported tests stay until this page is refreshed. A browser cannot write into the project folder. To keep one permanently, add it to <code>public/tests/tests.json</code>. Scores are saved in this browser.</p></div>
+      <button class="template-button" type="button" (click)="downloadTemplate()">↓ Download a test template</button>
+    </section>
+  </div>
+}
