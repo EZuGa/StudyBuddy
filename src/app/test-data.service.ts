@@ -71,7 +71,15 @@ export class TestDataService {
     if (!Array.isArray(item['options']) || item['options'].length < 2 || !item['options'].every((option) => typeof option === 'string')) {
       throw new Error(`Multiple-choice question ${index + 1} needs at least two options.`);
     }
-    if (typeof item['correctAnswer'] !== 'number' || item['correctAnswer'] < 0 || item['correctAnswer'] >= item['options'].length) {
+    if (item['type'] === 'multiple-select') {
+      const answers = item['correctAnswers'];
+      const optionCount = item['options'].length;
+      if (!Array.isArray(answers) || !answers.length || new Set(answers).size !== answers.length || !answers.every((answer) => Number.isInteger(answer) && answer >= 0 && answer < optionCount)) {
+        throw new Error(`Multiple-select question ${index + 1} needs unique, valid correctAnswers indices.`);
+      }
+      return { id: item['id'], number, prompt: item['prompt'], type: 'multiple-select', options: item['options'] as string[], correctAnswers: answers as number[], explanation: typeof item['explanation'] === 'string' ? item['explanation'] : undefined };
+    }
+    if (typeof item['correctAnswer'] !== 'number' || !Number.isInteger(item['correctAnswer']) || item['correctAnswer'] < 0 || item['correctAnswer'] >= item['options'].length) {
       throw new Error(`Multiple-choice question ${index + 1} has an invalid correctAnswer.`);
     }
     return { id: item['id'], number, prompt: item['prompt'], type: 'multiple-choice', options: item['options'] as string[], correctAnswer: item['correctAnswer'], explanation: typeof item['explanation'] === 'string' ? item['explanation'] : undefined };

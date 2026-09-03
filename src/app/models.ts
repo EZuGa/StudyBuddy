@@ -1,4 +1,4 @@
-export type QuestionType = 'multiple-choice' | 'written' | 'matching' | 'fill-blank';
+export type QuestionType = 'multiple-choice' | 'multiple-select' | 'written' | 'matching' | 'fill-blank';
 export type FeedbackMode = 'instant' | 'end';
 export type AppPage = 'library' | 'history' | 'taking' | 'written-review' | 'results';
 
@@ -9,6 +9,7 @@ export interface TestQuestion {
   prompt: string;
   options?: string[];
   correctAnswer?: number;
+  correctAnswers?: number[];
   explanation?: string;
   exampleAnswer?: string;
   acceptedAnswers?: string[];
@@ -28,6 +29,7 @@ export interface TestDefinition {
 
 export interface QuestionAnswer {
   choice?: number;
+  choices?: number[];
   text?: string;
   writtenComplete?: boolean;
   revealed?: boolean;

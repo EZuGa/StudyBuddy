@@ -148,6 +148,26 @@
             @if (selectedMode() === 'instant' && answerFor(question.id).choice !== undefined) {
               <div class="feedback" [class.positive]="isCorrect(question)"><span>{{ isCorrect(question) ? '✓' : '!' }}</span><div><strong>{{ isCorrect(question) ? 'Exactly right' : 'Not quite — keep this one' }}</strong><p>{{ question.explanation }}</p></div></div>
             }
+          } @else if (question.type === 'multiple-select') {
+            <p class="multi-select-hint">Select every correct option. Each question earns one point only when your full selection matches.</p>
+            <div class="options multi-select-options" role="group" aria-label="Choose all correct answers">
+              @for (option of question.options; track $index) {
+                <button type="button" role="checkbox"
+                  [attr.aria-checked]="answerFor(question.id).choices?.includes($index) ?? false"
+                  [class.selected]="answerFor(question.id).choices?.includes($index)"
+                  [class.correct]="selectedMode() === 'instant' && answerFor(question.id).checked && question.correctAnswers?.includes($index)"
+                  [class.wrong]="selectedMode() === 'instant' && answerFor(question.id).checked && answerFor(question.id).choices?.includes($index) && !question.correctAnswers?.includes($index)"
+                  [disabled]="selectedMode() === 'instant' && answerFor(question.id).checked"
+                  (click)="toggleChoice(question, $index)">
+                  <span class="option-letter">{{ optionLetter($index) }}</span><span>{{ option }}</span>
+                  <span class="selection-box" aria-hidden="true">{{ answerFor(question.id).choices?.includes($index) ? '✓' : '' }}</span>
+                </button>
+              }
+            </div>
+            @if (selectedMode() === 'instant' && !answerFor(question.id).checked) { <button class="objective-check" type="button" [disabled]="!answerFor(question.id).choices?.length" (click)="checkObjective(question)">Check my selections</button> }
+            @if (selectedMode() === 'instant' && answerFor(question.id).checked) {
+              <div class="feedback" [class.positive]="isCorrect(question)"><span>{{ isCorrect(question) ? '✓' : '!' }}</span><div><strong>{{ isCorrect(question) ? 'Every selection is correct' : 'Not quite — the correct options are highlighted in green' }}</strong><p>{{ question.explanation }}</p></div></div>
+            }
           } @else if (question.type === 'fill-blank') {
             <div class="fill-blank-area">
               <label [for]="'fill-' + question.id">Your answer</label>
@@ -239,6 +259,7 @@
             @for (question of test.questions; track question.id) {
               <article [class.correct]="isCorrect(question)"><span class="review-status">{{ isCorrect(question) ? '✓' : '×' }}</span><div><small>QUESTION {{ questionNumber(question) }} · {{ questionTypeLabel(question).toUpperCase() }}</small><h3>{{ question.prompt }}</h3>
                 @if (question.type === 'multiple-choice') { <p><b>Your answer:</b> {{ answerFor(question.id).choice === undefined ? 'No answer' : question.options?.[answerFor(question.id).choice!] }}</p><p class="correct-answer"><b>Correct answer:</b> {{ question.options?.[question.correctAnswer!] }}</p> }
+                @else if (question.type === 'multiple-select') { <p><b>Your selections:</b> {{ choiceSummary(question, answerFor(question.id).choices) }}</p><p class="correct-answer"><b>Correct selections:</b> {{ choiceSummary(question, question.correctAnswers) }}</p> }
                 @else if (question.type === 'fill-blank') { <p><b>Your answer:</b> {{ answerFor(question.id).text }}</p><p class="correct-answer"><b>Accepted answer:</b> {{ question.acceptedAnswers?.[0] }}</p> }
                 @else if (question.type === 'matching') {
                   <div class="result-pairs">@for (pair of question.pairs; track pair.term) { <p [class.good]="matchRowCorrect(question, $index)"><b>{{ pair.term }}:</b> {{ selectedDefinition(question, $index) }} @if (!matchRowCorrect(question, $index)) { <span>Correct: {{ pair.definition }}</span> }</p> }</div>

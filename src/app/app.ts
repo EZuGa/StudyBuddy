@@ -140,6 +140,7 @@ export class App implements OnInit, OnDestroy {
   protected isAnswered(question: TestQuestion): boolean {
     const answer = this.answerFor(question.id);
     if (question.type === 'multiple-choice') return answer.choice !== undefined;
+    if (question.type === 'multiple-select') return Boolean(answer.choices?.length) && (this.selectedMode() === 'end' || answer.checked === true);
     if (question.type === 'fill-blank') return Boolean(answer.text?.trim()) && (this.selectedMode() === 'end' || answer.checked === true);
     if (question.type === 'matching') return this.matchingReady(question) && (this.selectedMode() === 'end' || answer.checked === true);
     if (this.selectedMode() === 'instant') return answer.selfGrade !== undefined;
@@ -149,6 +150,10 @@ export class App implements OnInit, OnDestroy {
   protected isCorrect(question: TestQuestion): boolean {
     const answer = this.answerFor(question.id);
     if (question.type === 'multiple-choice') return answer.choice === question.correctAnswer;
+    if (question.type === 'multiple-select') {
+      const choices = new Set(answer.choices ?? []);
+      return Boolean(question.correctAnswers?.length && choices.size === question.correctAnswers.length && question.correctAnswers.every((index) => choices.has(index)));
+    }
     if (question.type === 'fill-blank') return Boolean(answer.text && question.acceptedAnswers?.some((accepted) => this.normalizeAnswer(accepted) === this.normalizeAnswer(answer.text!)));
     if (question.type === 'matching') return Boolean(question.pairs?.every((_, index) => answer.matches?.[index] === index));
     return answer.selfGrade === true;
@@ -189,6 +194,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected checkObjective(question: TestQuestion): void {
+    if (question.type === 'multiple-select' && !this.answerFor(question.id).choices?.length) return;
     if (question.type === 'fill-blank' && !this.answerFor(question.id).text?.trim()) return;
     if (question.type === 'matching' && !this.matchingReady(question)) return;
     this.setAnswer(question.id, { ...this.answerFor(question.id), checked: true });
@@ -197,6 +203,19 @@ export class App implements OnInit, OnDestroy {
   protected togglePaperAnswer(question: TestQuestion): void {
     const current = this.answerFor(question.id);
     this.setAnswer(question.id, { ...current, writtenComplete: !current.writtenComplete });
+  }
+
+  protected toggleChoice(question: TestQuestion, optionIndex: number): void {
+    const current = this.answerFor(question.id);
+    if (this.selectedMode() === 'instant' && current.checked) return;
+    const choices = new Set(current.choices ?? []);
+    if (choices.has(optionIndex)) choices.delete(optionIndex);
+    else choices.add(optionIndex);
+    this.setAnswer(question.id, { ...current, choices: [...choices].sort((a, b) => a - b), checked: false });
+  }
+
+  protected choiceSummary(question: TestQuestion, indices: number[] | undefined): string {
+    return indices?.length ? indices.map((index) => `${this.optionLetter(index)}. ${question.options?.[index]}`).join('; ') : 'No answer';
   }
 
   protected selfGrade(question: TestQuestion, correct: boolean): void {
@@ -304,6 +323,7 @@ export class App implements OnInit, OnDestroy {
         { id: 'q2', type: 'written', prompt: 'Write your response on paper.', exampleAnswer: 'A strong example response.', explanation: 'What to include.' },
         { id: 'q3', type: 'fill-blank', prompt: 'The answer is _____.', acceptedAnswers: ['example answer'], explanation: 'Why this answer fits.' },
         { id: 'q4', type: 'matching', prompt: 'Match each term with its definition.', pairs: [{ term: 'Term one', definition: 'Definition one' }, { term: 'Term two', definition: 'Definition two' }], explanation: 'Why these pairs belong together.' },
+        { id: 'q5', type: 'multiple-select', prompt: 'Select all correct statements.', options: ['Correct statement', 'Another correct statement', 'Incorrect statement'], correctAnswers: [0, 1], explanation: 'Select every correct option and no incorrect options.' },
       ],
     }];
     const url = URL.createObjectURL(new Blob([JSON.stringify(example, null, 2)], { type: 'application/json' }));
@@ -333,10 +353,10 @@ export class App implements OnInit, OnDestroy {
   protected progressPercent(): number { return ((this.currentIndex() + 1) / (this.activeTest()?.questions.length || 1)) * 100; }
   protected optionLetter(index: number): string { return String.fromCharCode(65 + index); }
   protected questionTypeLabel(question: TestQuestion): string {
-    return ({ 'multiple-choice': 'Choose one answer', written: 'Written response', matching: 'Match the pairs', 'fill-blank': 'Fill in the blank' })[question.type];
+    return ({ 'multiple-choice': 'Choose one answer', 'multiple-select': 'Choose all correct answers', written: 'Written response', matching: 'Match the pairs', 'fill-blank': 'Fill in the blank' })[question.type];
   }
   protected questionTypeSymbol(question: TestQuestion): string {
-    return ({ 'multiple-choice': '✓', written: '✎', matching: '↔', 'fill-blank': '＿' })[question.type];
+    return ({ 'multiple-choice': '✓', 'multiple-select': '☑', written: '✎', matching: '↔', 'fill-blank': '＿' })[question.type];
   }
   protected formatDate(value: string): string { return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(value)); }
   protected resultMessage(percentage: number): string { return percentage >= 90 ? 'Beautiful work — you’ve got this.' : percentage >= 70 ? 'Good progress. One more pass will make it stick.' : 'A solid first step. Review the notes and try again.'; }

@@ -60,5 +60,1414 @@
       { "id": "net-44", "number": "44", "type": "written", "prompt": "A company grows from 20 employees in one office to 150 employees across three buildings in different cities. What network type should it migrate to, and what hardware is needed to connect the locations?", "exampleAnswer": "The company should use a WAN or internetwork design, with a separate LAN at each location. Routers are needed to connect the geographically separated LANs, provide logical separation, and reduce large broadcast domains while allowing communication.", "explanation": "Identify a WAN or internetwork design and routers as the connecting devices." },
       { "id": "net-45", "number": "45", "type": "written", "prompt": "Explain the difference between a packet and a frame. What addresses does each contain, and at which communication layer is each created?", "exampleAnswer": "A packet contains source and destination IP addresses and is created at the network protocol layer. A frame wraps a packet with source and destination MAC addresses plus error-checking information and is created at the network interface layer before transmission as bits.", "explanation": "Distinguish logical IP addressing in packets from physical MAC addressing and error checking in frames." }
     ]
+  },
+  {
+    "id": "networking-chapter-2",
+    "subject": "Networking",
+    "title": "Chapter 2: Network Hardware Essentials",
+    "chapters": [
+      "Chapter 2"
+    ],
+    "kind": "chapter",
+    "minutes": 120,
+    "tone": "sky",
+    "questions": [
+      {
+        "id": "net-ch2-1",
+        "number": "1",
+        "type": "multiple-choice",
+        "prompt": "Why were repeaters introduced into early daisy-chained networks?",
+        "options": [
+          "To assign IP addresses automatically",
+          "To extend the usable distance by regenerating weakened bit signals",
+          "To select the best path between networks",
+          "To divide one broadcast domain into several domains"
+        ],
+        "correctAnswer": 1,
+        "explanation": "A repeater regenerates weakened bit signals so the network can cover a greater distance."
+      },
+      {
+        "id": "net-ch2-2",
+        "number": "2",
+        "type": "multiple-choice",
+        "prompt": "Which statement most accurately distinguishes regeneration from amplification in the chapter?",
+        "options": [
+          "Regeneration repeats a weakened signal at its original strength rather than merely making the distorted signal louder.",
+          "Regeneration converts frames into packets, whereas amplification converts packets into frames.",
+          "Regeneration occurs only in switches; amplification occurs only in hubs.",
+          "There is no difference between the two terms."
+        ],
+        "correctAnswer": 0,
+        "explanation": "The chapter stresses that a repeater recreates the signal at original strength; it does not simply amplify its weakened/distorted form."
+      },
+      {
+        "id": "net-ch2-3",
+        "number": "3",
+        "type": "multiple-choice",
+        "prompt": "A multiport repeater used as the central connection point for computers is normally called a:",
+        "options": [
+          "Router",
+          "Bridge",
+          "Hub",
+          "Wireless controller"
+        ],
+        "correctAnswer": 2,
+        "explanation": "A multiport repeater serving as a central connection device is a hub."
+      },
+      {
+        "id": "net-ch2-4",
+        "number": "4",
+        "type": "multiple-choice",
+        "prompt": "A hub receives bit signals on port 3. What does it normally do next?",
+        "options": [
+          "Reads the destination IP address and selects a route",
+          "Cleans and regenerates the signals, then sends them through every other connected port",
+          "Reads the destination MAC address and sends the frame only through the matching port",
+          "Drops the signals unless they are broadcasts"
+        ],
+        "correctAnswer": 1,
+        "explanation": "A hub cleans, regenerates, and repeats bit signals to every other connected port; it does not inspect frame addresses."
+      },
+      {
+        "id": "net-ch2-5",
+        "number": "5",
+        "type": "multiple-choice",
+        "prompt": "Why are powered hubs sometimes described as active hubs?",
+        "options": [
+          "They actively create IP routes.",
+          "They require power to clean and regenerate signals.",
+          "They can operate in full-duplex mode.",
+          "They dynamically assign bandwidth."
+        ],
+        "correctAnswer": 1,
+        "explanation": "Repeaters and hubs require power to process/regenerate signals, hence the older term active hub."
+      },
+      {
+        "id": "net-ch2-6",
+        "number": "6",
+        "type": "multiple-choice",
+        "prompt": "Which quantity describes the maximum data-carrying capacity of a network connection per unit of time?",
+        "options": [
+          "Goodput",
+          "Latency",
+          "Bandwidth",
+          "Buffering"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Bandwidth is the maximum capacity, normally rated in bits per second."
+      },
+      {
+        "id": "net-ch2-7",
+        "number": "7",
+        "type": "multiple-choice",
+        "prompt": "Which quantity measures the actual data transferred over time and includes protocol headers?",
+        "options": [
+          "Throughput",
+          "Goodput",
+          "Propagation delay",
+          "Bandwidth ceiling"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Throughput is actual transfer over time and includes headers plus real-world delays."
+      },
+      {
+        "id": "net-ch2-8",
+        "number": "8",
+        "type": "multiple-choice",
+        "prompt": "Which quantity excludes protocol headers and counts only useful transferred data?",
+        "options": [
+          "Latency",
+          "Throughput",
+          "Bandwidth",
+          "Goodput"
+        ],
+        "correctAnswer": 3,
+        "explanation": "Goodput counts useful payload only and excludes protocol overhead."
+      },
+      {
+        "id": "net-ch2-9",
+        "number": "9",
+        "type": "multiple-choice",
+        "prompt": "A 1,000-byte file is delivered in one second using a transmission that includes 60 bytes of headers. Using the chapter’s example, what are the goodput and throughput?",
+        "options": [
+          "1,060 Bps goodput; 1,000 Bps throughput",
+          "1,000 Bps goodput; 1,060 Bps throughput",
+          "8,000 Bps goodput; 8,480 Bps throughput",
+          "1,000 bps goodput; 1,060 bps throughput"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Useful data is 1,000 Bps; total transferred data is 1,060 Bps."
+      },
+      {
+        "id": "net-ch2-10",
+        "number": "10",
+        "type": "multiple-choice",
+        "prompt": "What is propagation delay?",
+        "options": [
+          "The cumulative delay across every device from source to destination",
+          "The time a device stores packets while other packets are processed",
+          "The time from a device receiving data on one port until it transmits that data through another port",
+          "The gap between completing one file transfer and opening the next file"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Propagation delay here is the interval between receiving data on one port and transmitting it through another."
+      },
+      {
+        "id": "net-ch2-11",
+        "number": "11",
+        "type": "multiple-choice",
+        "prompt": "Which term describes the cumulative delays among all devices between source and destination?",
+        "options": [
+          "Latency",
+          "Goodput",
+          "Bandwidth sharing",
+          "Full-duplexing"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Latency is the cumulative end-to-end delay."
+      },
+      {
+        "id": "net-ch2-12",
+        "number": "12",
+        "type": "multiple-choice",
+        "prompt": "A device temporarily stores outgoing packets because its operating system is still processing earlier packets. This delay is:",
+        "options": [
+          "Flooding",
+          "Buffering",
+          "Propagation",
+          "Uplinking"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Temporary packet storage while processing catches up is buffering."
+      },
+      {
+        "id": "net-ch2-13",
+        "number": "13",
+        "type": "multiple-choice",
+        "prompt": "Ten equally active computers share a 10 Mbps hub. Ignoring overhead and assuming equal use, what average effective bandwidth does each computer receive?",
+        "options": [
+          "100 Mbps",
+          "10 Mbps",
+          "1 Mbps",
+          "0.1 Mbps"
+        ],
+        "correctAnswer": 2,
+        "explanation": "10 Mbps ÷ 10 equally active stations = 1 Mbps each under the simplified assumption."
+      },
+      {
+        "id": "net-ch2-14",
+        "number": "14",
+        "type": "multiple-choice",
+        "prompt": "Why can only one station transmit at a time on a hub-based Ethernet network?",
+        "options": [
+          "All connected stations share the hub’s bandwidth and simultaneous transmissions can collide.",
+          "Each port has a dedicated route that must be reserved.",
+          "The hub must first resolve every destination IP address.",
+          "The hub supports full-duplex only."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Hub users share one communication medium; overlapping transmissions create collisions."
+      },
+      {
+        "id": "net-ch2-15",
+        "number": "15",
+        "type": "multiple-choice",
+        "prompt": "Two stations attached to a hub transmit at the same time. What event occurs?",
+        "options": [
+          "Routing loop",
+          "Collision, requiring retransmission",
+          "CRC regeneration by the router",
+          "Automatic conversion to full-duplex"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Both transmitters must retransmit after the collision."
+      },
+      {
+        "id": "net-ch2-16",
+        "number": "16",
+        "type": "multiple-choice",
+        "prompt": "On a typical hub, a port light is solid when a valid connection exists and flashes when traffic passes. Which two functions have most likely been combined into that light?",
+        "options": [
+          "Power and collision",
+          "Speed and duplex",
+          "Link status and activity",
+          "Routing and switching"
+        ],
+        "correctAnswer": 2,
+        "explanation": "A combined link/activity LED is solid for a link and flashes for activity."
+      },
+      {
+        "id": "net-ch2-17",
+        "number": "17",
+        "type": "multiple-choice",
+        "prompt": "A hub’s collision light flashes frequently. Which condition best explains it?",
+        "options": [
+          "Several stations are attempting to transmit at overlapping times.",
+          "The router has no default route.",
+          "A NIC rejected a frame with the wrong destination MAC address.",
+          "The switch aged an entry out of its MAC table."
+        ],
+        "correctAnswer": 0,
+        "explanation": "A collision indicates overlapping transmissions on the shared hub medium."
+      },
+      {
+        "id": "net-ch2-18",
+        "number": "18",
+        "type": "multiple-choice",
+        "prompt": "Two older hubs must be connected with a standard patch cable. Which arrangement described in the chapter should work?",
+        "options": [
+          "Connect regular ports on both hubs without changing anything.",
+          "Use the uplink port and uplink setting on one hub, but not on both.",
+          "Use the uplink port on both hubs.",
+          "Connect both hubs to a router’s single interface."
+        ],
+        "correctAnswer": 1,
+        "explanation": "The standard patch-cable method uses the uplink configuration on one device, not both. Regular-to-regular ports instead require a crossover cable."
+      },
+      {
+        "id": "net-ch2-19",
+        "number": "19",
+        "type": "multiple-choice",
+        "prompt": "What is the basic unit of information processed by an Ethernet switch?",
+        "options": [
+          "Bit signal only",
+          "Frame",
+          "Packet only",
+          "Application message"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Switches read and forward frames."
+      },
+      {
+        "id": "net-ch2-20",
+        "number": "20",
+        "type": "multiple-choice",
+        "prompt": "Which description of an Ethernet frame matches the chapter?",
+        "options": [
+          "A packet with source and destination MAC information plus an error-checking trailer",
+          "A bit stream with only source and destination IP addresses",
+          "A routing-table entry with a CRC header",
+          "A wireless acknowledgment followed by an SSID"
+        ],
+        "correctAnswer": 0,
+        "explanation": "The frame surrounds a packet with MAC-address information and an error-checking trailer."
+      },
+      {
+        "id": "net-ch2-21",
+        "number": "21",
+        "type": "multiple-choice",
+        "prompt": "When a switch receives a frame, which field does it use to learn where the sender is located?",
+        "options": [
+          "Destination IP address",
+          "Source IP address",
+          "Destination MAC address",
+          "Source MAC address"
+        ],
+        "correctAnswer": 3,
+        "explanation": "A switch learns from the source MAC and the port on which the frame arrived."
+      },
+      {
+        "id": "net-ch2-22",
+        "number": "22",
+        "type": "multiple-choice",
+        "prompt": "Which field does a switch look up to decide the outgoing port for a known unicast frame?",
+        "options": [
+          "Destination MAC address",
+          "Source MAC address",
+          "Destination IP address",
+          "CRC value"
+        ],
+        "correctAnswer": 0,
+        "explanation": "The destination MAC is searched in the switching/MAC address table."
+      },
+      {
+        "id": "net-ch2-23",
+        "number": "23",
+        "type": "multiple-choice",
+        "prompt": "A switch receives a unicast frame whose destination MAC address is absent from its switching table. What does it do?",
+        "options": [
+          "Discards the frame immediately",
+          "Sends it to the default gateway only",
+          "Floods it through every connected port except the receiving port",
+          "Converts it into a broadcast packet and sends it back to the source"
+        ],
+        "correctAnswer": 2,
+        "explanation": "An unknown unicast is flooded everywhere except back through its incoming port."
+      },
+      {
+        "id": "net-ch2-24",
+        "number": "24",
+        "type": "multiple-choice",
+        "prompt": "Why is a timestamp stored with a learned switching-table entry?",
+        "options": [
+          "To calculate the frame’s CRC",
+          "To remove stale MAC-to-port mappings after they have not been refreshed",
+          "To identify the fastest route to a remote network",
+          "To measure wireless acknowledgments"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Aging prevents obsolete MAC-to-port mappings from remaining indefinitely."
+      },
+      {
+        "id": "net-ch2-25",
+        "number": "25",
+        "type": "multiple-choice",
+        "prompt": "A switch already knows MAC address AA on port 4 and sees another frame sourced from AA on port 4. What should it do to that entry?",
+        "options": [
+          "Delete it immediately",
+          "Change it to a broadcast entry",
+          "Refresh its timestamp",
+          "Move it to the uplink port"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Seeing the same source on the same port refreshes the entry’s timestamp."
+      },
+      {
+        "id": "net-ch2-26",
+        "number": "26",
+        "type": "multiple-choice",
+        "prompt": "A learned MAC address has not been seen again for longer than the switch’s aging period, often about five minutes in the chapter’s example. What happens?",
+        "options": [
+          "The entry is deleted.",
+          "The entry becomes a default route.",
+          "The port changes to half-duplex.",
+          "The frame is converted to a packet."
+        ],
+        "correctAnswer": 0,
+        "explanation": "An unrefreshed entry ages out and is removed."
+      },
+      {
+        "id": "net-ch2-27",
+        "number": "27",
+        "type": "multiple-choice",
+        "prompt": "Why can a switch support several simultaneous conversations better than a hub?",
+        "options": [
+          "It repeats every signal to every port faster.",
+          "It normally forwards a known unicast only to its destination port, providing dedicated bandwidth.",
+          "It blocks all broadcast traffic.",
+          "It replaces MAC addresses with IP addresses."
+        ],
+        "correctAnswer": 1,
+        "explanation": "Selective forwarding gives devices dedicated bandwidth and permits simultaneous conversations."
+      },
+      {
+        "id": "net-ch2-28",
+        "number": "28",
+        "type": "multiple-choice",
+        "prompt": "Computer A sends at 1 Gbps to Computer B while receiving from B at 1 Gbps at the same time. Which mode and effective bidirectional rate describe this link?",
+        "options": [
+          "Half-duplex; 1 Gbps total",
+          "Full-duplex; effectively 2 Gbps across both directions",
+          "Shared-duplex; 500 Mbps per direction",
+          "Broadcast-duplex; 2 Gbps in one direction"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Full-duplex supports 1 Gbps in each direction simultaneously, or 2 Gbps of aggregate bidirectional activity."
+      },
+      {
+        "id": "net-ch2-29",
+        "number": "29",
+        "type": "multiple-choice",
+        "prompt": "Which device is limited to half-duplex operation according to the chapter?",
+        "options": [
+          "Hub",
+          "Switch",
+          "Router",
+          "Wireless NIC"
+        ],
+        "correctAnswer": 0,
+        "explanation": "The chapter says hubs operate only in half-duplex; switches can support full-duplex."
+      },
+      {
+        "id": "net-ch2-30",
+        "number": "30",
+        "type": "multiple-choice",
+        "prompt": "In a Wireshark test, Computer 1 is connected to a switch while Computers 2 and 3 ping each other. After address learning, what should Computer 1 normally capture?",
+        "options": [
+          "All unicast ICMP requests and replies",
+          "Neither broadcasts nor unicasts",
+          "Broadcast ARP traffic, but not the unicast ICMP exchange between 2 and 3",
+          "Only the ICMP replies, because replies are flooded"
+        ],
+        "correctAnswer": 2,
+        "explanation": "The switch forwards broadcasts throughout the LAN but directs learned unicast ICMP only to its intended port."
+      },
+      {
+        "id": "net-ch2-31",
+        "number": "31",
+        "type": "multiple-choice",
+        "prompt": "Why does the first ARP request appear on all switch ports in the lab?",
+        "options": [
+          "Its destination MAC address is the all-ones broadcast address.",
+          "ARP always forces switches into promiscuous mode.",
+          "It contains a default route.",
+          "Its CRC is missing."
+        ],
+        "correctAnswer": 0,
+        "explanation": "ARP requests in the lab use destination FF-FF-FF-FF-FF-FF, so the switch forwards them everywhere in the LAN."
+      },
+      {
+        "id": "net-ch2-32",
+        "number": "32",
+        "type": "multiple-choice",
+        "prompt": "In its basic shared-medium behavior, a wireless access point is most similar to a:",
+        "options": [
+          "Hub",
+          "Router only",
+          "NIC driver",
+          "Routing table"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Basic AP behavior resembles a hub because stations share the medium and hear retransmitted traffic."
+      },
+      {
+        "id": "net-ch2-33",
+        "number": "33",
+        "type": "multiple-choice",
+        "prompt": "A typical small-business or home wireless router combines which functions?",
+        "options": [
+          "Repeater, NIC, and modem only",
+          "Access point, switch, and router",
+          "Hub, protocol analyzer, and firewall only",
+          "Router, NIC driver, and CRC checker"
+        ],
+        "correctAnswer": 1,
+        "explanation": "A consumer wireless router commonly integrates an AP, Ethernet switch, and router."
+      },
+      {
+        "id": "net-ch2-34",
+        "number": "34",
+        "type": "multiple-choice",
+        "prompt": "Why do access points commonly include one or more Ethernet connectors?",
+        "options": [
+          "Wireless networks are usually connected to a wired network at some point.",
+          "Ethernet cables provide the SSID.",
+          "The connector stores the AP’s routing table.",
+          "Wi-Fi frames cannot carry data without a copper signal."
+        ],
+        "correctAnswer": 0,
+        "explanation": "WLANs usually connect into a wired network, so APs have Ethernet connectivity."
+      },
+      {
+        "id": "net-ch2-35",
+        "number": "35",
+        "type": "multiple-choice",
+        "prompt": "After a destination wireless station receives a frame, what does it send so the sender knows the frame arrived without an error or collision?",
+        "options": [
+          "Default route",
+          "Acknowledgment",
+          "Broadcast storm",
+          "OUI"
+        ],
+        "correctAnswer": 1,
+        "explanation": "The receiving wireless device acknowledges successful reception."
+      },
+      {
+        "id": "net-ch2-36",
+        "number": "36",
+        "type": "multiple-choice",
+        "prompt": "In an optional RTS/CTS exchange, which sequence is correct before the data is transmitted?",
+        "options": [
+          "AP sends RTS; client sends CTS",
+          "Client sends RTS; AP sends CTS",
+          "Client sends CTS; destination sends RTS",
+          "Router sends an acknowledgment; client sends RTS"
+        ],
+        "correctAnswer": 1,
+        "explanation": "The client requests permission with RTS; the AP announces permission with CTS."
+      },
+      {
+        "id": "net-ch2-37",
+        "number": "37",
+        "type": "multiple-choice",
+        "prompt": "What is the main performance cost of acknowledgments and optional RTS/CTS exchanges?",
+        "options": [
+          "They consume airtime as communication overhead.",
+          "They permanently reduce the AP’s physical bandwidth rating.",
+          "They turn unicast frames into broadcast frames.",
+          "They force the wired switch into half-duplex mode."
+        ],
+        "correctAnswer": 0,
+        "explanation": "These control exchanges take time/airtime that cannot carry application payload."
+      },
+      {
+        "id": "net-ch2-38",
+        "number": "38",
+        "type": "multiple-choice",
+        "prompt": "Ten equally active stations share a 200 Mbps wireless AP. The chapter says protocol overhead can reduce effective throughput to about half the per-station share. Approximately how much effective bandwidth remains per station?",
+        "options": [
+          "100 Mbps",
+          "20 Mbps",
+          "10 Mbps",
+          "5 Mbps"
+        ],
+        "correctAnswer": 2,
+        "explanation": "200 Mbps ÷ 10 = 20 Mbps raw share; 20 ÷ 2 ≈ 10 Mbps effective."
+      },
+      {
+        "id": "net-ch2-39",
+        "number": "39",
+        "type": "multiple-choice",
+        "prompt": "Which statement best reflects wireless bandwidth in the chapter?",
+        "options": [
+          "Every wireless client always receives the AP’s full rated bandwidth.",
+          "Wireless bandwidth is shared, although newer APs increasingly support simultaneous conversations.",
+          "Wireless throughput always equals physical bandwidth.",
+          "RTS/CTS doubles useful throughput."
+        ],
+        "correctAnswer": 1,
+        "explanation": "Wi-Fi traditionally shares bandwidth, while newer APs increasingly permit simultaneous conversations."
+      },
+      {
+        "id": "net-ch2-40",
+        "number": "40",
+        "type": "multiple-choice",
+        "prompt": "What is the NIC’s central role?",
+        "options": [
+          "It creates and mediates the connection between a computer and the network medium.",
+          "It selects routes between all networks.",
+          "It divides a LAN into broadcast domains.",
+          "It assigns OUIs to switch ports."
+        ],
+        "correctAnswer": 0,
+        "explanation": "The NIC connects the host to copper, fiber, or wireless media and converts between frames/bits/signals."
+      },
+      {
+        "id": "net-ch2-41",
+        "number": "41",
+        "type": "multiple-choice",
+        "prompt": "Which mapping of medium to incoming signal type is correct?",
+        "options": [
+          "Copper—light; fiber—electrical; wireless—sound",
+          "Copper—electrical; fiber—light; wireless—electromagnetic waves",
+          "Copper—electromagnetic; fiber—sound; wireless—light",
+          "All three media use only electrical signals."
+        ],
+        "correctAnswer": 1,
+        "explanation": "Copper uses electrical signals, fiber uses light, and wireless uses electromagnetic waves."
+      },
+      {
+        "id": "net-ch2-42",
+        "number": "42",
+        "type": "multiple-choice",
+        "prompt": "For an incoming transmission, what does the NIC do after interpreting the medium’s signals?",
+        "options": [
+          "Converts the signals to bits, assembles a frame, verifies destination and CRC, removes frame header/trailer, and passes the packet upward",
+          "Adds source and destination MAC addresses, then creates the outgoing signals",
+          "Looks up a remote network in a routing table",
+          "Assigns the sender a new burned-in address"
+        ],
+        "correctAnswer": 0,
+        "explanation": "That is the incoming receive/de-encapsulation path described in the chapter."
+      },
+      {
+        "id": "net-ch2-43",
+        "number": "43",
+        "type": "multiple-choice",
+        "prompt": "For an outgoing transmission, which operation is performed by the NIC and driver?",
+        "options": [
+          "Remove the packet’s IP information and broadcast the remainder",
+          "Receive a packet from the network protocol and add frame addressing and error-checking information",
+          "Select the default route for the Internet",
+          "Learn the destination MAC-to-switch-port mapping"
+        ],
+        "correctAnswer": 1,
+        "explanation": "The NIC frames the network-layer packet by adding MAC addressing and error-checking information."
+      },
+      {
+        "id": "net-ch2-44",
+        "number": "44",
+        "type": "multiple-choice",
+        "prompt": "What is the error-checking value in an Ethernet frame trailer called in the chapter?",
+        "options": [
+          "SSID",
+          "OUI",
+          "CRC",
+          "CTS"
+        ],
+        "correctAnswer": 2,
+        "explanation": "CRC means cyclical redundancy check in the chapter."
+      },
+      {
+        "id": "net-ch2-45",
+        "number": "45",
+        "type": "multiple-choice",
+        "prompt": "Why is a NIC’s hardware MAC address also called a burned-in address (BIA)?",
+        "options": [
+          "It is stored in nonvolatile memory on the NIC.",
+          "It is generated by every switch the frame crosses.",
+          "It is erased whenever the computer shuts down.",
+          "It is stored only in the router’s volatile routing table."
+        ],
+        "correctAnswer": 0,
+        "explanation": "The factory MAC address is stored in nonvolatile NIC memory."
+      },
+      {
+        "id": "net-ch2-46",
+        "number": "46",
+        "type": "multiple-choice",
+        "prompt": "How is the 48-bit MAC address divided?",
+        "options": [
+          "24-bit OUI plus a 24-bit manufacturer-assigned serial number",
+          "32-bit IP network plus a 16-bit port number",
+          "16-bit OUI plus a 32-bit CRC",
+          "24-bit SSID plus a 24-bit default gateway"
+        ],
+        "correctAnswer": 0,
+        "explanation": "The first 24 bits are the OUI; the last 24 bits are the manufacturer-assigned serial portion."
+      },
+      {
+        "id": "net-ch2-47",
+        "number": "47",
+        "type": "multiple-choice",
+        "prompt": "In 04-40-31-5B-1A-C4, which portion represents the OUI?",
+        "options": [
+          "04-40-31",
+          "5B-1A-C4",
+          "04-40-31-5B",
+          "The entire address is the OUI."
+        ],
+        "correctAnswer": 0,
+        "explanation": "The first three two-digit groups are the OUI."
+      },
+      {
+        "id": "net-ch2-48",
+        "number": "48",
+        "type": "multiple-choice",
+        "prompt": "Which statement about hexadecimal MAC notation is correct?",
+        "options": [
+          "It uses only digits 0 through 7.",
+          "It uses 0 through 9 and A through F, with F representing decimal 15.",
+          "It is a dotted-decimal representation of four 8-bit values.",
+          "It contains 24 decimal digits."
+        ],
+        "correctAnswer": 1,
+        "explanation": "Hexadecimal uses sixteen symbols: 0–9 and A–F."
+      },
+      {
+        "id": "net-ch2-49",
+        "number": "49",
+        "type": "multiple-choice",
+        "prompt": "A normally operating NIC should accept which arriving frame without promiscuous mode?",
+        "options": [
+          "Any frame it can physically detect",
+          "Only frames whose source MAC matches the NIC",
+          "A frame addressed to its own MAC or to the broadcast address",
+          "Only multicast frames"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Normal filtering accepts the NIC’s own unicast address and the broadcast address; the chapter also separately allows all visible frames in promiscuous mode."
+      },
+      {
+        "id": "net-ch2-50",
+        "number": "50",
+        "type": "multiple-choice",
+        "prompt": "Which destination MAC address represents an Ethernet broadcast?",
+        "options": [
+          "00-00-00-00-00-00",
+          "FF-FF-FF-FF-FF-FF",
+          "12-34-56-78-90-AB",
+          "01-00-00-00-00-00 only"
+        ],
+        "correctAnswer": 1,
+        "explanation": "All 48 bits set to 1 are written FF-FF-FF-FF-FF-FF."
+      },
+      {
+        "id": "net-ch2-51",
+        "number": "51",
+        "type": "multiple-choice",
+        "prompt": "Which destination category is intended for one specific computer?",
+        "options": [
+          "Broadcast",
+          "Multicast",
+          "Unicast",
+          "Promiscuous"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Unicast identifies one destination."
+      },
+      {
+        "id": "net-ch2-52",
+        "number": "52",
+        "type": "multiple-choice",
+        "prompt": "Which destination category is intended for a group of computers running a particular application or service?",
+        "options": [
+          "Unicast",
+          "Multicast",
+          "Broadcast domain",
+          "Default route"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Multicast addresses a participating group rather than one host or everyone."
+      },
+      {
+        "id": "net-ch2-53",
+        "number": "53",
+        "type": "multiple-choice",
+        "prompt": "How does Wireshark capture frames not addressed to the host running it?",
+        "options": [
+          "It asks the router to rewrite all destination MAC addresses.",
+          "It places the NIC in promiscuous mode, disabling the normal gatekeeper filtering.",
+          "It turns every unicast into a broadcast.",
+          "It deletes the switching table."
+        ],
+        "correctAnswer": 1,
+        "explanation": "Promiscuous mode disables normal destination filtering so a packet analyzer can inspect every visible frame."
+      },
+      {
+        "id": "net-ch2-54",
+        "number": "54",
+        "type": "multiple-choice",
+        "prompt": "A NIC has a valid physical connection but no traffic is passing. Which indicator behavior is most likely?",
+        "options": [
+          "Link light on; activity light not flashing",
+          "Collision light on; link light off",
+          "All lights must flash continuously",
+          "No light can indicate a physical connection"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Link can exist while no packets are currently creating activity flashes."
+      },
+      {
+        "id": "net-ch2-55",
+        "number": "55",
+        "type": "multiple-choice",
+        "prompt": "What is the best first compatibility check when choosing an internal replacement NIC?",
+        "options": [
+          "Ensure the system supports the NIC’s bus type and that a driver exists for the operating system.",
+          "Ensure its MAC address matches the old NIC.",
+          "Ensure it uses the same SSID as the router.",
+          "Ensure it has no nonvolatile memory."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Hardware interface support and operating-system driver availability are the first compatibility requirements."
+      },
+      {
+        "id": "net-ch2-56",
+        "number": "56",
+        "type": "multiple-choice",
+        "prompt": "Which bus is the chapter’s most likely choice for a modern internal PC NIC, with which connector offered as an easier external alternative?",
+        "options": [
+          "IDE; serial",
+          "PCI Express; USB",
+          "SATA; HDMI",
+          "AGP; PS/2"
+        ],
+        "correctAnswer": 1,
+        "explanation": "PCIe is the likely internal bus; USB is an easy external option."
+      },
+      {
+        "id": "net-ch2-57",
+        "number": "57",
+        "type": "multiple-choice",
+        "prompt": "Compared with a basic desktop NIC, which feature set is more appropriate for a server or high-performance workstation?",
+        "options": [
+          "10 Kbps, one port, no onboard memory",
+          "Onboard memory, multiple ports, 10 Gbps support, and possible NIC teaming",
+          "Half-duplex-only operation and a shared hub port",
+          "A duplicated MAC address for redundancy"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Higher-performance systems may benefit from onboard memory, multiple ports, faster links, and NIC teaming."
+      },
+      {
+        "id": "net-ch2-58",
+        "number": "58",
+        "type": "multiple-choice",
+        "prompt": "In Windows 11, which method opens the classic Network Connections control panel so you can inspect an adapter’s properties?",
+        "options": [
+          "Run ncpa.cpl",
+          "Run arp -d",
+          "Run tracert -d",
+          "Run ping -n"
+        ],
+        "correctAnswer": 0,
+        "explanation": "ncpa.cpl opens Network Connections; adapter Properties and Configure expose connection/driver settings."
+      },
+      {
+        "id": "net-ch2-59",
+        "number": "59",
+        "type": "multiple-choice",
+        "prompt": "When selecting a wireless NIC, what compatibility is especially important?",
+        "options": [
+          "It should support the wireless standard used by the access point.",
+          "Its OUI must match the AP’s OUI.",
+          "It must use a crossover cable.",
+          "It must be limited to 802.11b."
+        ],
+        "correctAnswer": 0,
+        "explanation": "The client NIC must interoperate with the AP’s supported 802.11 standard."
+      },
+      {
+        "id": "net-ch2-60",
+        "number": "60",
+        "type": "multiple-choice",
+        "prompt": "Which option correctly combines the chapter’s standard progression and approximate maximum speeds?",
+        "options": [
+          "be → ax → ac → n → a/g → b; 802.11b reaches 46 Gbps",
+          "b → g/a → n → ac → ax → be; b reaches 11 Mbps, a/g 54 Mbps, n roughly 600+ Mbps, ac almost 7 Gbps, ax 9.6 Gbps, and be 46 Gbps",
+          "b → n → a/g → be → ac → ax; every version is limited to 54 Mbps",
+          "a → b → n → g → ax → ac → be; 802.11ac is slower than 802.11n"
+        ],
+        "correctAnswer": 1,
+        "explanation": "It preserves the chapter’s progression and stated approximate maxima; the simplified consumer labels run from Wi-Fi 1 for 802.11b through Wi-Fi 7 for 802.11be."
+      },
+      {
+        "id": "net-ch2-61",
+        "number": "61",
+        "type": "multiple-choice",
+        "prompt": "What is the service set identifier (SSID)?",
+        "options": [
+          "The wireless network’s configured name",
+          "The NIC’s 48-bit burned-in address",
+          "The router’s default route",
+          "The frame’s error-checking trailer"
+        ],
+        "correctAnswer": 0,
+        "explanation": "The SSID is the AP-configured wireless network name clients select."
+      },
+      {
+        "id": "net-ch2-62",
+        "number": "62",
+        "type": "multiple-choice",
+        "prompt": "What is the role of a wireless security key in the chapter’s description?",
+        "options": [
+          "It chooses the AP’s Ethernet uplink speed.",
+          "It acts as a decryption key that permits an authorized client to access encrypted WLAN communication.",
+          "It replaces the client’s MAC address.",
+          "It disables acknowledgments."
+        ],
+        "correctAnswer": 1,
+        "explanation": "The security key enables an authorized client to decrypt/access protected wireless communication."
+      },
+      {
+        "id": "net-ch2-63",
+        "number": "63",
+        "type": "multiple-choice",
+        "prompt": "Which comparison is correct?",
+        "options": [
+          "Routers connect computers using frames; switches connect LANs using packets.",
+          "Routers connect LANs and use IP addresses/packets; switches connect computers and use MAC addresses/frames.",
+          "Routers and switches both forward broadcasts between all networks.",
+          "Routers learn source MAC addresses to populate routing tables."
+        ],
+        "correctAnswer": 1,
+        "explanation": "Routers join LANs and route IP packets; switches join local devices and forward MAC-addressed frames."
+      },
+      {
+        "id": "net-ch2-64",
+        "number": "64",
+        "type": "multiple-choice",
+        "prompt": "Why can excessive broadcast traffic reduce host performance even if a particular host does not need the broadcast?",
+        "options": [
+          "Every received frame can trigger a CPU interrupt that the host must service and process.",
+          "Broadcasts permanently erase the host’s MAC address.",
+          "Routers translate broadcasts into faster unicasts.",
+          "Every broadcast forces the NIC driver to reinstall."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Even irrelevant received broadcasts can interrupt the CPU and require processing."
+      },
+      {
+        "id": "net-ch2-65",
+        "number": "65",
+        "type": "multiple-choice",
+        "prompt": "What is a broadcast domain?",
+        "options": [
+          "The set of destinations in a router’s default route",
+          "The scope of devices to which a broadcast frame is forwarded",
+          "One entry in a switch’s MAC table",
+          "The physical distance a repeater can cover"
+        ],
+        "correctAnswer": 1,
+        "explanation": "A broadcast domain is the reach of a Layer-2 broadcast."
+      },
+      {
+        "id": "net-ch2-66",
+        "number": "66",
+        "type": "multiple-choice",
+        "prompt": "A router has three active interfaces, each attached to a different LAN. In the basic design described in the chapter, how many broadcast domains does it delimit?",
+        "options": [
+          "One",
+          "Two",
+          "Three",
+          "Six"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Each router interface is a boundary/delimiter, producing three broadcast domains here."
+      },
+      {
+        "id": "net-ch2-67",
+        "number": "67",
+        "type": "multiple-choice",
+        "prompt": "What information is paired in a router’s routing table at the introductory level used in this chapter?",
+        "options": [
+          "Source MAC address and switch port",
+          "IP network address and router interface/path",
+          "SSID and security key",
+          "CRC and frame length"
+        ],
+        "correctAnswer": 1,
+        "explanation": "A routing table associates destination IP networks with the appropriate interface or next path."
+      },
+      {
+        "id": "net-ch2-68",
+        "number": "68",
+        "type": "multiple-choice",
+        "prompt": "Router R1 is directly connected to Network 1 but must send traffic through R2 to reach Network 5. From R1’s perspective, which classification is correct?",
+        "options": [
+          "Both Networks 1 and 5 are local.",
+          "Network 1 is remote; Network 5 is local.",
+          "Network 1 is local; Network 5 is remote.",
+          "Both networks are broadcast domains and cannot be routed."
+        ],
+        "correctAnswer": 2,
+        "explanation": "Directly attached Network 1 is local to R1; Network 5, reached through R2, is remote."
+      },
+      {
+        "id": "net-ch2-69",
+        "number": "69",
+        "type": "multiple-choice",
+        "prompt": "What is the purpose of a default route?",
+        "options": [
+          "It tells a switch where every unknown MAC address is located.",
+          "It tells a router where to send a packet when the destination network has no more-specific routing-table match.",
+          "It causes all broadcasts to cross the router.",
+          "It assigns IP addresses to wireless clients."
+        ],
+        "correctAnswer": 1,
+        "explanation": "The default route handles destinations for which no more-specific route exists."
+      },
+      {
+        "id": "net-ch2-70",
+        "number": "70",
+        "type": "multiple-choice",
+        "prompt": "A router has neither a matching route nor a default route for a packet’s destination network. What does the chapter say the router does?",
+        "options": [
+          "Floods the packet through all interfaces",
+          "Rewrites the destination as a broadcast",
+          "Discards the packet and may notify the sender that the network is unreachable",
+          "Learns the destination from the packet’s source MAC address"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Without a match or default, the router drops the packet and may send a network-unreachable message."
+      },
+      {
+        "id": "net-ch2-71",
+        "number": "71",
+        "type": "multiple-select",
+        "prompt": "Which are normal hub/repeater functions described in the chapter?",
+        "options": [
+          "Receive incoming bit signals",
+          "Filter out electrical noise",
+          "Regenerate the signals to full strength",
+          "Transmit the regenerated signals through all other connected ports",
+          "Read the destination IP address to select a remote network"
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "explanation": "A hub handles and repeats signals; it does not route by IP address."
+      },
+      {
+        "id": "net-ch2-72",
+        "number": "72",
+        "type": "multiple-select",
+        "prompt": "Which actions belong to basic switch operation?",
+        "options": [
+          "Read source and destination MAC addresses",
+          "Look up the destination MAC address",
+          "Forward a known unicast through the associated port",
+          "Update the table from source MAC and incoming-port information",
+          "Add the destination IP address to a routing table"
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "explanation": "These are the chapter’s basic switching steps; routing-table updates belong to routers."
+      },
+      {
+        "id": "net-ch2-73",
+        "number": "73",
+        "type": "multiple-select",
+        "prompt": "Which operations belong to incoming NIC processing?",
+        "options": [
+          "Receive the medium’s bit signals and assemble them into a frame",
+          "Verify the destination MAC address",
+          "Verify the CRC",
+          "Remove the frame header and trailer and pass the packet to the network protocol",
+          "Select a WAN route from a routing table"
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "explanation": "All four describe receive-side NIC processing; route selection does not."
+      },
+      {
+        "id": "net-ch2-74",
+        "number": "74",
+        "type": "multiple-select",
+        "prompt": "Which operations belong to outgoing NIC processing?",
+        "options": [
+          "Receive a packet from the network protocol",
+          "Add source and destination MAC addresses",
+          "Add error-checking information",
+          "Convert frame data into appropriate signals for the medium",
+          "Age entries out of a switch’s table"
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "explanation": "All four describe transmit-side framing and signaling; MAC-table aging is a switch function."
+      },
+      {
+        "id": "net-ch2-75",
+        "number": "75",
+        "type": "multiple-select",
+        "prompt": "Under which circumstances can a NIC’s gatekeeper pass an incoming frame, according to the chapter?",
+        "options": [
+          "Destination MAC matches the NIC’s built-in address",
+          "Destination MAC is the broadcast address",
+          "NIC is operating in promiscuous mode",
+          "Source MAC matches the NIC’s address",
+          "Router has a default route"
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2
+        ],
+        "explanation": "Own-address unicast, broadcast, and promiscuous-mode traffic pass the stated gatekeeper rules."
+      },
+      {
+        "id": "net-ch2-76",
+        "number": "76",
+        "type": "multiple-select",
+        "prompt": "Which statements accurately distinguish routers from switches?",
+        "options": [
+          "Routers generally connect LANs; switches connect computers within a LAN.",
+          "Routers examine logical IP addresses; switches examine physical MAC addresses.",
+          "Routers process/forward packets; switches process/forward frames.",
+          "Routers normally stop local broadcast frames; switches forward them within the LAN.",
+          "Routers populate routing tables primarily with source MAC-to-port pairs."
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "explanation": "E is false because switches, not routers, learn source MAC-to-port mappings."
+      },
+      {
+        "id": "net-ch2-77",
+        "number": "77",
+        "type": "multiple-select",
+        "prompt": "Which indicator-light interpretations are supported by the chapter?",
+        "options": [
+          "A link light normally indicates a valid connection.",
+          "An activity light flashes when traffic is detected.",
+          "A hub collision light can indicate simultaneous transmissions.",
+          "Some devices use colors or separate lights to show speed.",
+          "One universal color standard applies to every NIC model."
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "explanation": "LED behavior varies by model, so no universal color standard exists."
+      },
+      {
+        "id": "net-ch2-78",
+        "number": "78",
+        "type": "multiple-select",
+        "prompt": "Which factors should be considered when selecting a NIC?",
+        "options": [
+          "Compatible bus/interface and available slot or connector",
+          "Driver availability for the operating system",
+          "Performance needs of the computer’s role",
+          "Wireless-standard compatibility when selecting a wireless NIC",
+          "A MAC address identical to another NIC on the LAN"
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "explanation": "Duplicate MAC addresses are harmful, not desirable."
+      },
+      {
+        "id": "net-ch2-79",
+        "number": "79",
+        "type": "multiple-select",
+        "prompt": "In the chapter’s wireless configuration activities, which items may be needed for a successful, secured connection?",
+        "options": [
+          "Correct SSID",
+          "Compatible 802.11 standard",
+          "Correct security credentials or passphrase",
+          "An IP configuration, often supplied automatically by DHCP",
+          "A crossover cable from every wireless client to the AP",
+          "In the Packet Tracer example, WPA2-PSK with SSID NetEss and passphrase Networking"
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3,
+          5
+        ],
+        "explanation": "Wireless clients need compatible radio settings, identification/security information, and an IP configuration; the Packet Tracer activity used the stated NetEss/WPA2-PSK example. Clients do not each use Ethernet cables."
+      },
+      {
+        "id": "net-ch2-80",
+        "number": "80",
+        "type": "multiple-select",
+        "prompt": "In the hub-versus-switch Wireshark experiments, which conclusions are justified?",
+        "options": [
+          "A hub can cause Computer 1 to see unicast traffic exchanged by Computers 2 and 3.",
+          "A switch normally keeps the unicast ICMP exchange between Computers 2 and 3 away from Computer 1.",
+          "A switch still forwards an ARP broadcast to Computer 1.",
+          "The Ethernet broadcast MAC address is FF-FF-FF-FF-FF-FF.",
+          "A hub examines the destination MAC address before choosing one output port."
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "explanation": "These are the hub/switch observations; E incorrectly gives a switch function to a hub."
+      },
+      {
+        "id": "net-ch2-81",
+        "number": "81",
+        "type": "multiple-select",
+        "prompt": "Which command or filter pairings match the hands-on projects?",
+        "options": [
+          "ipconfig — display a Windows computer’s IP configuration",
+          "arp -d — delete learned ARP entries so addresses must be learned again",
+          "Wireshark capture filter icmp — limit capture to ping-related ICMP traffic",
+          "Wireshark capture filter icmp or arp — capture both ICMP and ARP traffic",
+          "tracert -d destination — perform name lookup for every router",
+          "ping -n 20 destination — send 20 echo requests instead of the Windows default four",
+          "ping -n 20 -l 60000 destination — send 20 large, 60,000-byte echo requests in the collision demonstration",
+          "Temporarily disabling Windows Firewall may be necessary in the isolated lab if it blocks the test pings"
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6,
+          7
+        ],
+        "explanation": "E is false because tracert -d suppresses name lookup. The ping options generate repeated and large test traffic, and the isolated lab notes that a blocking firewall might need to be turned off temporarily."
+      },
+      {
+        "id": "net-ch2-82",
+        "number": "82",
+        "type": "multiple-select",
+        "prompt": "Which cabling statements match the uplink-port activity?",
+        "options": [
+          "A standard patch cable can join older hubs if the uplink function is enabled on one side.",
+          "The uplink setting should be used on both hubs simultaneously for that patch-cable method.",
+          "A crossover cable can join regular ports on two hubs when no uplink port is available.",
+          "Link lights can help verify that the physical connection succeeded.",
+          "A router default route is required before two hubs show link lights."
+        ],
+        "correctAnswers": [
+          0,
+          2,
+          3
+        ],
+        "explanation": "Enable uplink on only one hub for a standard patch cable, or use crossover between regular ports; link LEDs validate the connection."
+      },
+      {
+        "id": "net-ch2-83",
+        "number": "83",
+        "type": "multiple-select",
+        "prompt": "Which statements about tracert/traceroute in the chapter are correct?",
+        "options": [
+          "It lists routers along the path toward a destination.",
+          "Windows uses tracert.exe from the command line.",
+          "The displayed response-time columns are measured in milliseconds.",
+          "Three probes produce three time values per hop in the shown output.",
+          "The -d option suppresses router-name lookup and shows IP addresses."
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "explanation": "All statements match the traceroute activity."
+      },
+      {
+        "id": "net-ch2-84",
+        "number": "84",
+        "type": "multiple-select",
+        "prompt": "Which observations are made in the Packet Tracer labs?",
+        "options": [
+          "A hub sends copies toward all connected destinations, and a nonaddressed PC discards its copy.",
+          "A switch’s MAC table is learned from devices that have sent frames; an unused PC may have no entry.",
+          "In the wireless simulation, all laptops may receive the AP’s retransmission, and the sender discards its own copy.",
+          "Routing tables tell routers which next path/interface reaches a destination network.",
+          "Packet Tracer’s PDU means physical duplex unit.",
+          "Simulation mode plus Capture then Forward makes device-by-device packet movement visible.",
+          "In connectivity-graded activities, Check Results may need to be opened before the points register."
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6
+        ],
+        "explanation": "PDU means protocol data unit, not physical duplex unit. Simulation controls expose each hop, and Check Results can be required for connectivity points to register."
+      },
+      {
+        "id": "net-ch2-85",
+        "number": "85",
+        "type": "multiple-select",
+        "prompt": "PCs 1 and 2 use 192.168.1.0/24, and PC 3 uses 192.168.2.0/24. Which changes/conditions are necessary for cross-network communication in the chapter’s router lab?",
+        "options": [
+          "The two networks must be connected through separate router interfaces.",
+          "PC 3 must be physically placed on the 192.168.2.0 side.",
+          "Each PC must use the router interface on its own subnet as its default gateway.",
+          "The router must have connectivity/routes for both networks.",
+          "All PCs must use the same IP address."
+        ],
+        "correctAnswers": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "explanation": "Cross-subnet traffic needs the correct physical/logical sides, gateways, and router reachability; addresses must remain unique."
+      },
+      {
+        "id": "net-ch2-86",
+        "number": "86",
+        "type": "written",
+        "prompt": "True or false? If false, rewrite the statement so it becomes true.\n\nA hub reads a frame’s destination MAC address and forwards it only to the matching port.",
+        "exampleAnswer": "False. A hub repeats bit signals to all other connected ports. A switch reads the destination MAC address and can forward a known unicast only to the matching port."
+      },
+      {
+        "id": "net-ch2-87",
+        "number": "87",
+        "type": "written",
+        "prompt": "True or false? If false, rewrite the statement so it becomes true.\n\nIn the chapter’s terminology, goodput excludes headers, while throughput includes headers.",
+        "exampleAnswer": "True. Goodput measures useful data; throughput includes protocol overhead."
+      },
+      {
+        "id": "net-ch2-88",
+        "number": "88",
+        "type": "written",
+        "prompt": "True or false? If false, rewrite the statement so it becomes true.\n\nThe chapter presents the normal relationship as goodput < throughput < bandwidth.",
+        "exampleAnswer": "True. This is the relationship stated by the chapter for normal measurements."
+      },
+      {
+        "id": "net-ch2-89",
+        "number": "89",
+        "type": "written",
+        "prompt": "True or false? If false, rewrite the statement so it becomes true.\n\nAn access point has no means of connecting a wireless LAN to a wired Ethernet network.",
+        "exampleAnswer": "False. APs commonly include one or more Ethernet connectors because WLANs usually connect to a wired network."
+      },
+      {
+        "id": "net-ch2-90",
+        "number": "90",
+        "type": "written",
+        "prompt": "True or false? If false, rewrite the statement so it becomes true.\n\nA switch floods an unknown unicast frame through all connected ports except the port on which it arrived.",
+        "exampleAnswer": "True. The incoming port is the only connected port excluded during unknown-unicast flooding."
+      },
+      {
+        "id": "net-ch2-91",
+        "number": "91",
+        "type": "written",
+        "prompt": "True or false? If false, rewrite the statement so it becomes true.\n\nOnce a switch learns a MAC address, the entry remains permanently even if the computer moves or shuts down.",
+        "exampleAnswer": "False. Learned entries have timestamps, are refreshed when seen again, and age out after an inactivity period."
+      },
+      {
+        "id": "net-ch2-92",
+        "number": "92",
+        "type": "written",
+        "prompt": "True or false? If false, rewrite the statement so it becomes true.\n\nThere is a universal standard requiring green to mean 1 Gbps on every NIC and switch.",
+        "exampleAnswer": "False. LED meanings and colors vary by device; documentation must be consulted."
+      },
+      {
+        "id": "net-ch2-93",
+        "number": "93",
+        "type": "written",
+        "prompt": "True or false? If false, rewrite the statement so it becomes true.\n\nRouters normally forward local broadcast frames between all of their interfaces.",
+        "exampleAnswer": "False. Routers normally do not forward local broadcast frames, so their interfaces delimit broadcast domains."
+      },
+      {
+        "id": "net-ch2-94",
+        "number": "94",
+        "type": "written",
+        "prompt": "True or false? If false, rewrite the statement so it becomes true.\n\nA directly connected network is local to that router; a network reached through another router is remote to it.",
+        "exampleAnswer": "True. The terms local and remote are relative to a particular router."
+      },
+      {
+        "id": "net-ch2-95",
+        "number": "95",
+        "type": "written",
+        "prompt": "True or false? If false, rewrite the statement so it becomes true.\n\nIf two PCs are configured for different IP networks but are plugged into the same switch, the switch alone is sufficient for them to communicate normally across those networks.",
+        "exampleAnswer": "False. Hosts on different IP networks require routing; each host must send remote traffic to an appropriate default gateway/router."
+      },
+      {
+        "id": "net-ch2-96",
+        "number": "96",
+        "type": "written",
+        "prompt": "Wireless throughput calculation. Twelve equally active clients share a 600 Mbps AP. Use the chapter’s simplified assumption that protocol overhead leaves about half of each client’s raw share. Estimate the effective bandwidth per client and show the calculation.",
+        "exampleAnswer": "Raw per-client share: 600 Mbps ÷ 12 = 50 Mbps. Estimated effective share after overhead: 50 Mbps ÷ 2 = 25 Mbps per client."
+      },
+      {
+        "id": "net-ch2-97",
+        "number": "97",
+        "type": "written",
+        "prompt": "Switch learning scenario. A switch’s table initially contains only AA → port 1. It receives a frame on port 3 with source CC and destination DD, which is not in the table.\n\nExplain:\n1. What entry the switch learns,\n2. Where it forwards the frame,\n3. Which port is excluded, and\n4. What eventually happens to the new entry if CC sends nothing else for longer than the aging period.",
+        "exampleAnswer": "The switch learns CC → port 3 and timestamps the entry. Because DD is unknown, it floods the frame through every connected port except port 3. If CC sends no more frames before the aging timer expires, the CC → port 3 entry is deleted."
+      },
+      {
+        "id": "net-ch2-98",
+        "number": "98",
+        "type": "written",
+        "prompt": "Local versus remote delivery. Host A is 192.168.1.11/24, its default gateway is 192.168.1.1, and Host B is 192.168.2.11/24. Explain why Host A addresses the local Ethernet frame to the router’s MAC address rather than Host B’s MAC address, while the packet still identifies Host B as the IP destination.",
+        "exampleAnswer": "Host A compares its /24 network with Host B’s and determines that 192.168.2.11 is remote. Ethernet delivery is only for the current local link, so Host A sends the frame to the local next hop—the default gateway at 192.168.1.1—using the router interface’s MAC address. The enclosed packet retains Host B’s destination IP address, allowing routers to forward it toward the 192.168.2.0/24 network."
+      },
+      {
+        "id": "net-ch2-99",
+        "number": "99",
+        "type": "written",
+        "prompt": "Hub-or-switch investigation. Design a short Wireshark experiment using three computers that can determine whether their connecting device is a hub or a switch. State the traffic you generate, the useful filters/commands, the observation that indicates a hub, and the observation that indicates a switch.",
+        "exampleAnswer": "Connect three PCs to the unknown device. Record addresses with ipconfig, verify reachability with ping, and clear cached mappings with arp -d. Run Wireshark on PC1 with icmp or arp, then have PC2 ping PC3. If PC1 captures the PC2↔PC3 unicast ICMP traffic, the device behaves like a hub because it repeats signals to every port. If PC1 sees the broadcast ARP request but not the learned unicast ICMP exchange, the device behaves like a switch because it forwards the unicast only to the destination port."
+      },
+      {
+        "id": "net-ch2-100",
+        "number": "100",
+        "type": "written",
+        "prompt": "Network redesign. A single switched LAN contains 200 workstations and four servers, and monitoring shows excessive broadcasts. Propose a Chapter-2-level redesign that reduces broadcast impact while preserving communication between groups. Explain the roles of switches, router interfaces, broadcast domains, routing tables, and client default gateways.",
+        "exampleAnswer": "Divide the large LAN into smaller departmental LANs, each built from switches, and connect each LAN to a different router interface. Each router interface delimits a separate broadcast domain, so a broadcast remains within its originating department instead of interrupting all 204 hosts. Give each LAN a distinct IP network. Configure the router’s routing table so it knows the attached networks and configure every client’s default gateway as the router interface on that client’s own network. The switches continue local frame forwarding, while the router forwards IP packets between departments without forwarding their local broadcasts."
+      }
+    ]
   }
 ]
