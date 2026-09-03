@@ -2,6 +2,12 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.6.
 
+## Generate new quizzes with AI
+
+The portable [AI data kit](ai-data/README.md) contains a standalone guide, JSON schemas, complete examples, a copy-paste prompt, and a read-only validator. Attach its reference files in a fresh AI conversation, then paste your book chapter. Start with [the prompt template](ai-data/PROMPT_TEMPLATE.md).
+
+Run `npm run validate:data` to check the current collections, or `npm run validate:data -- --tests path/to/tests.additions.json --terminology path/to/terminology.additions.json --against-project` to check new files for structural mistakes and ID collisions before adding them. Source accuracy still requires review. No existing quizzes or saved scores are changed by validation.
+
 ## Terminology quizzes
 
 The **Terminology** page contains a subject-first collection of written-only quizzes. Choose **Term → definition** to type or handwrite definitions and self-check them, or **Definition → term** to type automatically graded terms. Both support immediate feedback or answers at the end. Scores share the quiz ID but track the direction separately; previous terminology scores count as Term → definition.

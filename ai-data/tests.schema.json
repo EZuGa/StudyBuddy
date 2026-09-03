@@ -1,0 +1,344 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "StudyDeck ordinary test collection",
+  "description": "Strict generation contract; more restrictive than legacy imports. Empty project arrays are allowed. Dynamic answer bounds and ID uniqueness are checked by validate.mjs.",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/test"
+  },
+  "definitions": {
+    "test": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "category": {
+          "const": "general"
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "chapters": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "kind": {
+          "enum": [
+            "chapter",
+            "midterm"
+          ]
+        },
+        "minutes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "tone": {
+          "enum": [
+            "sage",
+            "sky",
+            "amber",
+            "lilac",
+            "coral"
+          ]
+        },
+        "questions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/definitions/multipleChoice"
+              },
+              {
+                "$ref": "#/definitions/multipleSelect"
+              },
+              {
+                "$ref": "#/definitions/written"
+              },
+              {
+                "$ref": "#/definitions/matching"
+              },
+              {
+                "$ref": "#/definitions/fillBlank"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "id",
+        "subject",
+        "title",
+        "chapters",
+        "kind",
+        "minutes",
+        "tone",
+        "questions"
+      ]
+    },
+    "multipleChoice": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "number": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "type": {
+          "const": "multiple-choice"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "correctAnswer": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "prompt",
+        "options",
+        "correctAnswer",
+        "explanation"
+      ]
+    },
+    "multipleSelect": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "number": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "type": {
+          "const": "multiple-select"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "correctAnswers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "prompt",
+        "options",
+        "correctAnswers",
+        "explanation"
+      ]
+    },
+    "written": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "number": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "type": {
+          "const": "written"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "exampleAnswer": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "prompt",
+        "exampleAnswer"
+      ]
+    },
+    "matching": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "number": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "type": {
+          "const": "matching"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "pairs": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "term": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "definition": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            },
+            "required": [
+              "term",
+              "definition"
+            ]
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "prompt",
+        "pairs",
+        "explanation"
+      ]
+    },
+    "fillBlank": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "number": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "type": {
+          "const": "fill-blank"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "acceptedAnswers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "prompt",
+        "acceptedAnswers",
+        "explanation"
+      ]
+    }
+  }
+}
