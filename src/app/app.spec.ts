@@ -13,6 +13,8 @@ const multiQuestion: TestQuestion = { id: 'q71', type: 'multiple-select', prompt
 const multiTest: TestDefinition = { ...testFixture, id: 'networking-chapter-2', subject: 'Networking', title: 'Chapter 2', chapters: ['Chapter 2'], questions: [multiQuestion] };
 const termQuestion: TestQuestion = { id: 'term-lan', type: 'written', prompt: 'Define LAN.', exampleAnswer: 'A local area network.' };
 const terminologyTest: TestDefinition = { ...multiTest, id: 'networking-terms', category: 'terminology', title: 'Chapter 2: Terminology', questions: [termQuestion] };
+const sharedTerm: TestQuestion = { ...termQuestion, term: 'LAN', acceptedTerms: ['Local area network'] };
+const sharedTerminologyTest: TestDefinition = { ...terminologyTest, questions: [sharedTerm] };
 const textEvent = (value: string) => ({ target: { value } }) as unknown as Event;
 
 describe('App', () => {
@@ -196,5 +198,87 @@ describe('App', () => {
     expect(app['currentIndex']()).toBe(0);
     expect(app['answers']()).toEqual({});
     expect(app['latestFor'](terminologyTest.id)?.percentage).toBe(50);
+  });
+
+  it('reads both directions from the same question object and leaves it unchanged', () => {
+    const app = TestBed.createComponent(App).componentInstance;
+    const original = JSON.stringify(sharedTerminologyTest);
+    app['beginTest'](sharedTerminologyTest, 'instant', 'define');
+    expect(app['questionPrompt'](sharedTerm)).toBe(sharedTerm.prompt);
+    expect(app['currentQuestion']()).toBe(sharedTerm);
+    app['beginTest'](sharedTerminologyTest, 'instant', 'recall');
+    expect(app['questionPrompt'](sharedTerm)).toBe(sharedTerm.exampleAnswer);
+    expect(app['currentQuestion']()).toBe(sharedTerm);
+    expect(app['activeTest']()).toBe(sharedTerminologyTest);
+    expect(JSON.stringify(sharedTerminologyTest)).toBe(original);
+  });
+
+  it('checks reverse terms automatically and locks instant feedback answers', () => {
+    const app = TestBed.createComponent(App).componentInstance;
+    app['beginTest'](sharedTerminologyTest, 'instant', 'recall');
+    app['checkObjective'](sharedTerm);
+    app['togglePaperAnswer'](sharedTerm);
+    app['selfGrade'](sharedTerm, true);
+    expect(app['isAnswered'](sharedTerm)).toBe(false);
+    app['updateWritten'](sharedTerm, textEvent('  local   AREA network.  '));
+    expect(app['isAnswered'](sharedTerm)).toBe(false);
+    app['checkObjective'](sharedTerm);
+    expect(app['isAnswered'](sharedTerm)).toBe(true);
+    expect(app['isCorrect'](sharedTerm)).toBe(true);
+    app['updateWritten'](sharedTerm, textEvent('Wrong'));
+    expect(app['answerFor'](sharedTerm.id).text).toBe('  local   AREA network.  ');
+    app['nextQuestion']();
+    expect(app['page']()).toBe('results');
+    expect(app['result']()).toMatchObject({ score: 1, total: 1, terminologyDirection: 'recall', testId: sharedTerminologyTest.id });
+    app['retryTest']();
+    expect(app['selectedDirection']()).toBe('recall');
+    expect(app['answers']()).toEqual({});
+  });
+
+  it.each([
+    { text: 'lan', correct: true }, { text: 'LAN!', correct: true },
+    { text: 'local area network', correct: true }, { text: 'network', correct: false },
+    { text: 'WAN', correct: false }, { text: 'LAN or WAN', correct: false }, { text: '   ', correct: false },
+  ])('requires an exact canonical term or listed alternative: $text', ({ text, correct }) => {
+    const app = TestBed.createComponent(App).componentInstance;
+    app['beginTest'](sharedTerminologyTest, 'end', 'recall');
+    app['updateWritten'](sharedTerm, textEvent(text));
+    expect(app['isCorrect'](sharedTerm)).toBe(correct);
+  });
+
+  it('accepts hyphen variants in reverse answers', () => {
+    const question: TestQuestion = { id: 'duplex', type: 'written', prompt: 'Define full-duplex.', term: 'Full-duplex', exampleAnswer: 'Simultaneous transmission and reception.' };
+    const app = TestBed.createComponent(App).componentInstance;
+    app['beginTest']({ ...sharedTerminologyTest, questions: [question] }, 'end', 'recall');
+    app['updateWritten'](question, textEvent('full duplex'));
+    expect(app['isCorrect'](question)).toBe(true);
+  });
+
+  it('lets reverse exam answers change and finishes without written self-review', () => {
+    const second: TestQuestion = { ...sharedTerm, id: 'wan', term: 'WAN', acceptedTerms: ['Wide area network'], exampleAnswer: 'A geographically dispersed network.' };
+    const app = TestBed.createComponent(App).componentInstance;
+    app['beginTest']({ ...sharedTerminologyTest, questions: [sharedTerm, second] }, 'end', 'recall');
+    app['updateWritten'](sharedTerm, textEvent('Wrong'));
+    app['nextQuestion']();
+    app['updateWritten'](second, textEvent('LAN'));
+    app['previousQuestion']();
+    app['updateWritten'](sharedTerm, textEvent('LAN'));
+    expect(app['answerFor'](sharedTerm.id).checked).toBeUndefined();
+    expect(app['answerFor'](sharedTerm.id).revealed).toBeUndefined();
+    app['nextQuestion']();
+    app['nextQuestion']();
+    expect(app['writtenQuestions']()).toEqual([]);
+    expect(app['page']()).toBe('results');
+    expect(app['result']()).toMatchObject({ score: 1, total: 2, percentage: 50, terminologyDirection: 'recall' });
+  });
+
+  it('keeps legacy definitions usable but requires explicit terms for reverse mode', () => {
+    const app = TestBed.createComponent(App).componentInstance;
+    expect(app['supportsReverse'](terminologyTest)).toBe(false);
+    expect(app['supportsReverse'](sharedTerminologyTest)).toBe(true);
+    expect(app['supportsReverse'](multiTest)).toBe(false);
+    app['openTestSetup'](terminologyTest, 'recall');
+    expect(app['selectedDirection']()).toBe('define');
+    expect(() => app['beginTest'](terminologyTest, 'end', 'recall')).toThrow(/explicit term and definition/);
   });
 });

@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { AppPage, FeedbackMode, QuestionAnswer, TestAttempt, TestDefinition, TestQuestion } from './models';
+import { AppPage, FeedbackMode, QuestionAnswer, TerminologyDirection, TestAttempt, TestDefinition, TestQuestion } from './models';
 import { ProgressService } from './progress.service';
 import { TestDataService } from './test-data.service';
 
@@ -22,6 +22,7 @@ export class App implements OnInit, OnDestroy {
   protected readonly listView = signal(false);
   protected readonly chooserTest = signal<TestDefinition | null>(null);
   protected readonly selectedMode = signal<FeedbackMode>('instant');
+  protected readonly selectedDirection = signal<TerminologyDirection>('define');
   protected readonly activeTest = signal<TestDefinition | null>(null);
   protected readonly currentIndex = signal(0);
   protected readonly answers = signal<Record<string, QuestionAnswer>>({});
@@ -62,7 +63,8 @@ export class App implements OnInit, OnDestroy {
     });
   });
   protected readonly currentQuestion = computed(() => this.activeTest()?.questions[this.currentIndex()] ?? null);
-  protected readonly writtenQuestions = computed(() => this.activeTest()?.questions.filter((question) => question.type === 'written') ?? []);
+  protected readonly reverseTerminology = computed(() => this.activeTest()?.category === 'terminology' && this.selectedDirection() === 'recall');
+  protected readonly writtenQuestions = computed(() => this.reverseTerminology() ? [] : this.activeTest()?.questions.filter((question) => question.type === 'written') ?? []);
   protected readonly reviewQuestion = computed(() => this.writtenQuestions()[this.reviewIndex()] ?? null);
   protected readonly averageScore = computed(() => {
     const history = this.attempts();
@@ -103,9 +105,10 @@ export class App implements OnInit, OnDestroy {
     document.getElementById('library')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
   }
 
-  protected openTestSetup(test: TestDefinition): void {
+  protected openTestSetup(test: TestDefinition, direction: TerminologyDirection = 'define'): void {
     this.chooserTest.set(test);
     this.selectedMode.set('instant');
+    this.selectedDirection.set(direction === 'recall' && this.supportsReverse(test) ? 'recall' : 'define');
   }
 
   protected closeTestSetup(): void { this.chooserTest.set(null); }
@@ -114,11 +117,13 @@ export class App implements OnInit, OnDestroy {
     const test = this.chooserTest();
     if (!test) return;
     this.chooserTest.set(null);
-    this.beginTest(test, this.selectedMode());
+    this.beginTest(test, this.selectedMode(), this.selectedDirection());
   }
 
-  private beginTest(test: TestDefinition, mode: FeedbackMode): void {
+  private beginTest(test: TestDefinition, mode: FeedbackMode, direction: TerminologyDirection = 'define'): void {
+    if (direction === 'recall' && !this.supportsReverse(test)) throw new Error('Reverse practice requires an explicit term and definition for every question.');
     this.activeTest.set(test);
+    this.selectedDirection.set(test.category === 'terminology' ? direction : 'define');
     this.selectedSubject.set(test.subject);
     this.search.set('');
     this.selectedMode.set(mode);
@@ -146,6 +151,7 @@ export class App implements OnInit, OnDestroy {
 
   protected isAnswered(question: TestQuestion): boolean {
     const answer = this.answerFor(question.id);
+    if (this.reverseTerminology()) return Boolean(answer.text?.trim()) && (this.selectedMode() === 'end' || answer.checked === true);
     if (question.type === 'multiple-choice') return answer.choice !== undefined;
     if (question.type === 'multiple-select') return Boolean(answer.choices?.length) && (this.selectedMode() === 'end' || answer.checked === true);
     if (question.type === 'fill-blank') return Boolean(answer.text?.trim()) && (this.selectedMode() === 'end' || answer.checked === true);
@@ -156,6 +162,7 @@ export class App implements OnInit, OnDestroy {
 
   protected isCorrect(question: TestQuestion): boolean {
     const answer = this.answerFor(question.id);
+    if (this.reverseTerminology()) return Boolean(answer.text?.trim() && [question.term, ...(question.acceptedTerms ?? [])].some((term) => term && this.normalizeTerm(term) === this.normalizeTerm(answer.text!)));
     if (question.type === 'multiple-choice') return answer.choice === question.correctAnswer;
     if (question.type === 'multiple-select') {
       const choices = new Set(answer.choices ?? []);
@@ -167,6 +174,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected revealWritten(question: TestQuestion): void {
+    if (this.reverseTerminology()) return;
     if (this.activeTest()?.category === 'terminology' && !this.writtenReady(question)) return;
     const current = this.answerFor(question.id);
     this.setAnswer(question.id, { ...current, revealed: true, writtenComplete: this.activeTest()?.category === 'terminology' ? current.writtenComplete : true });
@@ -178,7 +186,8 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected definitionLocked(question: TestQuestion): boolean {
-    return this.activeTest()?.category === 'terminology' && this.selectedMode() === 'instant' && this.answerFor(question.id).revealed === true;
+    const answer = this.answerFor(question.id);
+    return this.activeTest()?.category === 'terminology' && this.selectedMode() === 'instant' && (answer.revealed === true || answer.checked === true);
   }
 
   protected updateWritten(question: TestQuestion, event: Event): void {
@@ -213,6 +222,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected checkObjective(question: TestQuestion): void {
+    if (this.reverseTerminology() && !this.answerFor(question.id).text?.trim()) return;
     if (question.type === 'multiple-select' && !this.answerFor(question.id).choices?.length) return;
     if (question.type === 'fill-blank' && !this.answerFor(question.id).text?.trim()) return;
     if (question.type === 'matching' && !this.matchingReady(question)) return;
@@ -220,6 +230,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected togglePaperAnswer(question: TestQuestion): void {
+    if (this.reverseTerminology()) return;
     if (this.definitionLocked(question)) return;
     const current = this.answerFor(question.id);
     this.setAnswer(question.id, { ...current, writtenComplete: !current.writtenComplete });
@@ -239,6 +250,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected selfGrade(question: TestQuestion, correct: boolean): void {
+    if (this.reverseTerminology()) return;
     if (this.activeTest()?.category === 'terminology' && this.selectedMode() === 'instant' && !this.answerFor(question.id).revealed) return;
     this.setAnswer(question.id, { ...this.answerFor(question.id), selfGrade: correct, writtenComplete: true });
   }
@@ -295,6 +307,7 @@ export class App implements OnInit, OnDestroy {
       total,
       percentage: Math.round((score / total) * 100),
       mode: this.selectedMode(),
+      ...(test.category === 'terminology' ? { terminologyDirection: this.selectedDirection() } : {}),
       completedAt: new Date().toISOString(),
     };
     this.progressService.addAttempt(attempt);
@@ -305,11 +318,11 @@ export class App implements OnInit, OnDestroy {
 
   protected retryTest(): void {
     const test = this.activeTest();
-    if (test) this.beginTest(test, this.selectedMode());
+    if (test) this.beginTest(test, this.selectedMode(), this.selectedDirection());
   }
 
-  protected latestFor(testId: string): TestAttempt | undefined { return this.progressService.latestFor(testId); }
-  protected bestFor(testId: string): TestAttempt | undefined { return this.progressService.bestFor(testId); }
+  protected latestFor(testId: string, direction?: TerminologyDirection): TestAttempt | undefined { return this.progressService.latestFor(testId, direction); }
+  protected bestFor(testId: string, direction?: TerminologyDirection): TestAttempt | undefined { return this.progressService.bestFor(testId, direction); }
   protected isImported(testId: string): boolean { return this.importedIds().has(testId); }
 
   protected openImport(): void {
@@ -350,7 +363,7 @@ export class App implements OnInit, OnDestroy {
     const terminology = this.page() === 'terminology';
     const template = terminology ? [{
       id: 'my-terminology-quiz', category: 'terminology', subject: 'My subject', title: 'Chapter 1: Terminology', chapters: ['Chapter 1'], kind: 'chapter', minutes: 5, tone: 'sage',
-      questions: [{ id: 'term-1', type: 'written', prompt: 'Define “your term” in your own words.', exampleAnswer: 'A clear definition with the key ideas.' }],
+      questions: [{ id: 'term-1', type: 'written', term: 'LAN', definition: 'A network covering a small geographic area, such as a building.', acceptedTerms: ['Local area network'] }],
     }] : example;
     const url = URL.createObjectURL(new Blob([JSON.stringify(template, null, 2)], { type: 'application/json' }));
     const anchor = document.createElement('a');
@@ -379,6 +392,7 @@ export class App implements OnInit, OnDestroy {
   protected progressPercent(): number { return ((this.currentIndex() + 1) / (this.activeTest()?.questions.length || 1)) * 100; }
   protected optionLetter(index: number): string { return String.fromCharCode(65 + index); }
   protected questionTypeLabel(question: TestQuestion): string {
+    if (this.reverseTerminology()) return 'Write the term';
     return ({ 'multiple-choice': 'Choose one answer', 'multiple-select': 'Choose all correct answers', written: 'Written response', matching: 'Match the pairs', 'fill-blank': 'Fill in the blank' })[question.type];
   }
   protected questionTypeSymbol(question: TestQuestion): string {
@@ -391,6 +405,32 @@ export class App implements OnInit, OnDestroy {
 
   private normalizeAnswer(value: string): string {
     return value.normalize('NFKC').trim().toLocaleLowerCase().replace(/[.!?]+$/, '').replace(/\s+/g, ' ');
+  }
+
+  private normalizeTerm(value: string): string {
+    return this.normalizeAnswer(value.replace(/[-‐‑–—]/g, ' '));
+  }
+
+  protected supportsReverse(test: TestDefinition): boolean {
+    return test.category === 'terminology' && test.questions.length > 0 && test.questions.every((question) => question.type === 'written' && Boolean(question.term?.trim()) && Boolean(question.exampleAnswer?.trim()));
+  }
+
+  protected questionPrompt(question: TestQuestion): string {
+    return this.reverseTerminology() ? question.exampleAnswer ?? '' : question.prompt;
+  }
+
+  protected directionLabel(direction: TerminologyDirection): string {
+    return direction === 'recall' ? 'Definition → term' : 'Term → definition';
+  }
+
+  protected attemptDirectionLabel(attempt: TestAttempt): string {
+    return attempt.terminologyDirection || this.tests().some((test) => test.id === attempt.testId && test.category === 'terminology') ? this.directionLabel(attempt.terminologyDirection ?? 'define') : '';
+  }
+
+  protected setupModeDescription(test: TestDefinition, mode: FeedbackMode): string {
+    if (test.category !== 'terminology') return mode === 'instant' ? 'See the right answer and a quick explanation after each question.' : 'Work through the full test before any answers are revealed.';
+    if (this.selectedDirection() === 'recall') return mode === 'instant' ? 'Type the term, then check it immediately. Answers are graded automatically.' : 'Type every term first. Reveal the correct terms and your automatic score at the end.';
+    return mode === 'instant' ? 'Write a definition, compare it with the example, and self-check each term.' : 'Write every definition first, then compare and self-check them at the end.';
   }
 
   private correctUnits(question: TestQuestion): number {
@@ -425,10 +465,10 @@ export class App implements OnInit, OnDestroy {
       void Promise.resolve(context.registerTool({
         name: 'start_studydeck_test',
         title: 'Start a StudyDeck test',
-        description: 'Open a specific test in StudyDeck using instant feedback (learn mode) or feedback at the end (exam mode).',
+        description: 'Open a test with instant or end feedback. For terminology, optionally choose define (term to definition) or recall (definition to term).',
         inputSchema: {
           type: 'object',
-          properties: { testId: { type: 'string' }, mode: { type: 'string', enum: ['instant', 'end'] } },
+          properties: { testId: { type: 'string' }, mode: { type: 'string', enum: ['instant', 'end'] }, direction: { type: 'string', enum: ['define', 'recall'] } },
           required: ['testId', 'mode'],
           additionalProperties: false,
         },
@@ -437,10 +477,12 @@ export class App implements OnInit, OnDestroy {
           if (!input || typeof input !== 'object') throw new Error('Input must include testId and mode.');
           const values = input as Record<string, unknown>;
           if (values['mode'] !== 'instant' && values['mode'] !== 'end') throw new Error('Mode must be instant or end.');
+          if (values['direction'] !== undefined && values['direction'] !== 'define' && values['direction'] !== 'recall') throw new Error('Direction must be define or recall.');
           const test = this.tests().find((item) => item.id === values['testId']);
           if (!test) throw new Error(`No test found with id “${String(values['testId'])}”.`);
-          this.beginTest(test, values['mode']);
-          return { status: 'started', testId: test.id, title: test.title, mode: values['mode'] };
+          const direction = values['direction'] === 'recall' ? 'recall' : 'define';
+          this.beginTest(test, values['mode'], direction);
+          return { status: 'started', testId: test.id, title: test.title, mode: values['mode'], ...(test.category === 'terminology' ? { direction } : {}) };
         },
       }, options)).catch(reportError);
     } catch (error) { reportError(error); }

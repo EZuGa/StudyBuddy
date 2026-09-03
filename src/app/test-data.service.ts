@@ -65,6 +65,19 @@ export class TestDataService {
   private parseQuestion(value: unknown, title: string, index: number): TestQuestion {
     if (!value || typeof value !== 'object') throw new Error(`Question ${index + 1} in “${title}” is invalid.`);
     const item = value as Record<string, unknown>;
+    if ('term' in item || 'definition' in item) {
+      if (item['type'] !== 'written' || typeof item['id'] !== 'string' || !item['id'].trim() || typeof item['term'] !== 'string' || !item['term'].trim() || typeof item['definition'] !== 'string' || !item['definition'].trim()) {
+        throw new Error(`Terminology question ${index + 1} needs type written, an id, a term, and a definition.`);
+      }
+      if (item['acceptedTerms'] !== undefined && (!Array.isArray(item['acceptedTerms']) || !item['acceptedTerms'].every((term) => typeof term === 'string' && term.trim()))) {
+        throw new Error(`Terminology question ${index + 1} needs an acceptedTerms array of non-empty strings.`);
+      }
+      return {
+        id: item['id'], number: typeof item['number'] === 'string' ? item['number'] : undefined,
+        type: 'written', term: item['term'].trim(), acceptedTerms: item['acceptedTerms'] as string[] | undefined,
+        prompt: `Define “${item['term'].trim()}” in your own words.`, exampleAnswer: item['definition'].trim(),
+      };
+    }
     if (typeof item['id'] !== 'string' || typeof item['prompt'] !== 'string') {
       throw new Error(`Question ${index + 1} in “${title}” needs an id and prompt.`);
     }

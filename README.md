@@ -4,9 +4,15 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Terminology quizzes
 
-The **Terminology** navigation page contains a separate, subject-first collection of written-only quizzes. Definitions can be typed or written on paper, then self-checked against example answers in either feedback mode. Scores use the same device-local history as chapter tests, with separate quiz IDs.
+The **Terminology** page contains a subject-first collection of written-only quizzes. Choose **Term → definition** to type or handwrite definitions and self-check them, or **Definition → term** to type automatically graded terms. Both support immediate feedback or answers at the end. Scores share the quiz ID but track the direction separately; previous terminology scores count as Term → definition.
 
-Permanent terminology quizzes live in `public/tests/terminology.json`; regular chapter and midterm tests live in `public/tests/tests.json`. The app loads both files. Terminology quizzes use only `"written"` questions, each with a `prompt` and `exampleAnswer`, and are automatically categorized as terminology when loaded from their file. Keep `category: "terminology"` when sharing them as imports. The parser rejects other question types in terminology quizzes. The Terminology page's import dialog and downloadable template support this format; browser imports remain session-only. Either project file can contain an empty array when that collection has no quizzes.
+Permanent terminology quizzes live in `public/tests/terminology.json`; regular tests live in `public/tests/tests.json`. Every terminology question stores one shared object with `id`, `type: "written"`, `term`, and `definition`. Both directions read this same entry—there are no separate reverse quizzes or duplicated definitions. Optional `acceptedTerms` lists alternate answers for reverse grading, which ignores capitalization, extra whitespace, trailing sentence punctuation, and hyphen differences.
+
+```json
+{ "id": "lan", "type": "written", "term": "LAN", "definition": "A network covering a small geographic area.", "acceptedTerms": ["Local area network"] }
+```
+
+Keep `category: "terminology"` on the quiz when sharing it as an import. The Terminology page's downloadable template uses this format. Older written `prompt`/`exampleAnswer` imports still work in the ordinary direction; reverse practice requires explicit term–definition entries. Browser imports remain session-only, and either project file can be an empty array.
 
 ## Development server
 

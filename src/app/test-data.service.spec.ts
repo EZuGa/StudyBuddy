@@ -64,6 +64,21 @@ describe('TestDataService', () => {
     expect(test.questions[1].pairs).toHaveLength(2);
   });
 
+  it('uses one term-definition object to generate both directions without changing the source', () => {
+    const entry = { id: 'lan', type: 'written', term: 'LAN', definition: 'A local area network.', acceptedTerms: ['Local area network'] };
+    const [test] = service.parseTests({ id: 'shared-terms', category: 'terminology', subject: 'Networking', title: 'Terms', chapters: ['Chapter 1'], questions: [entry] });
+    expect(test.questions[0]).toMatchObject({ id: 'lan', type: 'written', term: 'LAN', prompt: 'Define “LAN” in your own words.', exampleAnswer: entry.definition, acceptedTerms: entry.acceptedTerms });
+    expect(entry).not.toHaveProperty('prompt');
+    expect(entry).not.toHaveProperty('exampleAnswer');
+  });
+
+  it.each([
+    { term: '' }, { term: undefined }, { definition: '' }, { definition: undefined },
+    { acceptedTerms: 'LAN' }, { acceptedTerms: [''] }, { acceptedTerms: [42] }, { type: 'multiple-choice' },
+  ])('rejects invalid shared terminology entries: %j', (invalid) => {
+    expect(() => service.parseTests({ id: 'bad', subject: 'Networking', title: 'Terms', chapters: ['Chapter 1'], questions: [{ id: 'lan', type: 'written', term: 'LAN', definition: 'A local area network.', ...invalid }] }, true)).toThrowError(/Terminology question/);
+  });
+
   it('rejects a fill-in-the-blank question without accepted answers', () => {
     expect(() => service.parseTests({
       id: 'broken', subject: 'Science', title: 'Broken test', chapters: ['Chapter 1'],
