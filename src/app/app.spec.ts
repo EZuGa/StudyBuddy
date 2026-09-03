@@ -11,6 +11,9 @@ const testFixture: TestDefinition = {
 
 const multiQuestion: TestQuestion = { id: 'q71', type: 'multiple-select', prompt: 'Choose all correct options.', options: ['A', 'B', 'C'], correctAnswers: [0, 2], explanation: 'A and C are correct.' };
 const multiTest: TestDefinition = { ...testFixture, id: 'networking-chapter-2', subject: 'Networking', title: 'Chapter 2', chapters: ['Chapter 2'], questions: [multiQuestion] };
+const termQuestion: TestQuestion = { id: 'term-lan', type: 'written', prompt: 'Define LAN.', exampleAnswer: 'A local area network.' };
+const terminologyTest: TestDefinition = { ...multiTest, id: 'networking-terms', category: 'terminology', title: 'Chapter 2: Terminology', questions: [termQuestion] };
+const textEvent = (value: string) => ({ target: { value } }) as unknown as Event;
 
 describe('App', () => {
   beforeEach(async () => {
@@ -114,5 +117,84 @@ describe('App', () => {
     expect(app['result']()).toBeNull();
     app['gradeReview'](false);
     expect(app['result']()).toMatchObject({ score: 1, total: 2, percentage: 50 });
+  });
+
+  it('keeps the two libraries separate and retains subject-first filtering', () => {
+    const app = TestBed.createComponent(App).componentInstance;
+    app['tests'].set([testFixture, multiTest, terminologyTest]);
+    expect(app['libraryTests']().map((test) => test.id)).toEqual([testFixture.id, multiTest.id]);
+    app['navigate']('terminology');
+    expect(app['selectedSubject']()).toBeNull();
+    expect(app['subjects']()).toMatchObject([{ name: 'Networking', tests: 1, questions: 1 }]);
+    app['chooseSubject']('Networking');
+    expect(app['filteredTests']()).toEqual([terminologyTest]);
+    app['search'].set('unmatched');
+    expect(app['filteredTests']()).toEqual([]);
+    app['navigate']('library');
+    expect(app['search']()).toBe('');
+    expect(app['selectedSubject']()).toBeNull();
+    expect(app['libraryTests']()).toHaveLength(2);
+  });
+
+  it('requires a written definition before revealing, then self-checks and saves it', () => {
+    const app = TestBed.createComponent(App).componentInstance;
+    app['beginTest'](terminologyTest, 'instant');
+    app['updateWritten'](termQuestion, textEvent('   '));
+    app['revealWritten'](termQuestion);
+    app['selfGrade'](termQuestion, true);
+    expect(app['answerFor'](termQuestion.id).revealed).toBeUndefined();
+    expect(app['isAnswered'](termQuestion)).toBe(false);
+    app['updateWritten'](termQuestion, textEvent('A network within a small geographic area.'));
+    app['revealWritten'](termQuestion);
+    expect(app['definitionLocked'](termQuestion)).toBe(true);
+    expect(app['answerFor'](termQuestion.id).writtenComplete).toBeUndefined();
+    expect(app['isAnswered'](termQuestion)).toBe(false);
+    app['updateWritten'](termQuestion, textEvent('Changed after seeing example'));
+    expect(app['answerFor'](termQuestion.id).text).toBe('A network within a small geographic area.');
+    app['selfGrade'](termQuestion, true);
+    app['nextQuestion']();
+    expect(app['result']()).toMatchObject({ testId: terminologyTest.id, score: 1, total: 1 });
+    expect(app['latestFor'](terminologyTest.id)?.percentage).toBe(100);
+    expect(app['latestFor'](multiTest.id)).toBeUndefined();
+    app['exitTest']();
+    expect(app['page']()).toBe('terminology');
+    expect(app['selectedSubject']()).toBe('Networking');
+  });
+
+  it('supports handwritten terminology answers in learn mode', () => {
+    const app = TestBed.createComponent(App).componentInstance;
+    app['beginTest'](terminologyTest, 'instant');
+    app['togglePaperAnswer'](termQuestion);
+    expect(app['writtenReady'](termQuestion)).toBe(true);
+    app['revealWritten'](termQuestion);
+    app['togglePaperAnswer'](termQuestion);
+    expect(app['answerFor'](termQuestion.id).writtenComplete).toBe(true);
+    app['selfGrade'](termQuestion, false);
+    app['nextQuestion']();
+    expect(app['result']()).toMatchObject({ score: 0, total: 1 });
+  });
+
+  it('defers terminology review until every definition is written in exam mode', () => {
+    const second = { ...termQuestion, id: 'term-wan', prompt: 'Define WAN.', exampleAnswer: 'A wide area network.' };
+    const app = TestBed.createComponent(App).componentInstance;
+    app['beginTest']({ ...terminologyTest, questions: [termQuestion, second] }, 'end');
+    app['nextQuestion']();
+    expect(app['currentIndex']()).toBe(0);
+    app['updateWritten'](termQuestion, textEvent('A local network.'));
+    app['nextQuestion']();
+    app['togglePaperAnswer'](second);
+    expect(app['answerFor'](termQuestion.id).revealed).toBeUndefined();
+    expect(app['answerFor'](second.id).revealed).toBeUndefined();
+    app['nextQuestion']();
+    expect(app['page']()).toBe('written-review');
+    expect(app['result']()).toBeNull();
+    app['gradeReview'](true);
+    expect(app['result']()).toBeNull();
+    app['gradeReview'](false);
+    expect(app['result']()).toMatchObject({ score: 1, total: 2, percentage: 50 });
+    app['retryTest']();
+    expect(app['currentIndex']()).toBe(0);
+    expect(app['answers']()).toEqual({});
+    expect(app['latestFor'](terminologyTest.id)?.percentage).toBe(50);
   });
 });

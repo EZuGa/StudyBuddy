@@ -44,4 +44,29 @@ describe('TestDataService', () => {
       questions: [{ id: 'multi', type: 'multiple-select', prompt: 'Choose all.', options: ['A', 'B', 'C'], correctAnswers }],
     })).toThrowError(/correctAnswers/);
   });
+
+  it('recognizes terminology quizzes without changing ordinary chapter tests', () => {
+    const quizzes = service.parseTests([
+      { id: 'terms', category: 'terminology', subject: 'Networking', title: 'Terms', chapters: ['Chapter 1'], questions: [{ id: 'term', type: 'written', prompt: 'Define LAN.', exampleAnswer: 'A local area network.' }] },
+      { id: 'chapter', subject: 'Networking', title: 'Chapter test', chapters: ['Chapter 1'], questions: [{ id: 'choice', type: 'multiple-choice', prompt: 'Select one.', options: ['A', 'B'], correctAnswer: 0 }] },
+    ]);
+    expect(quizzes.map((test) => test.category)).toEqual(['terminology', 'general']);
+  });
+
+  it('places untagged written-only imports into the terminology collection', () => {
+    const [quiz] = service.parseTests({ id: 'terms', subject: 'Networking', title: 'Terms', chapters: ['Chapter 1'], questions: [{ id: 'term', type: 'written', prompt: 'Define LAN.', exampleAnswer: 'A local area network.' }] }, true);
+    expect(quiz.category).toBe('terminology');
+    expect(quiz.questions[0].type).toBe('written');
+  });
+
+  it.each([
+    { type: 'multiple-choice', options: ['A', 'B'], correctAnswer: 0 },
+    { type: 'multiple-select', options: ['A', 'B'], correctAnswers: [0, 1] },
+    { type: 'matching', pairs: [{ term: 'A', definition: 'One' }, { term: 'B', definition: 'Two' }] },
+    { type: 'fill-blank', acceptedAnswers: ['LAN'] },
+  ])('rejects $type questions from terminology imports and saved quizzes', (question) => {
+    const quiz = { id: 'terms', subject: 'Networking', title: 'Terms', chapters: ['Chapter 1'], questions: [{ id: 'term', prompt: 'Test prompt', ...question }] };
+    expect(() => service.parseTests(quiz, true)).toThrowError(/Every question must be a written response/);
+    expect(() => service.parseTests({ ...quiz, category: 'terminology' })).toThrowError(/Every question must be a written response/);
+  });
 });

@@ -33,9 +33,13 @@ export class App implements OnInit, OnDestroy {
   protected readonly mobileMenuOpen = signal(false);
   private readonly webMcpLifecycle = new AbortController();
 
+  protected readonly libraryTests = computed(() => this.tests().filter((test) =>
+    this.page() === 'terminology' ? test.category === 'terminology' : test.category !== 'terminology',
+  ));
+
   protected readonly subjects = computed(() => {
     const grouped = new Map<string, TestDefinition[]>();
-    for (const test of this.tests()) grouped.set(test.subject, [...(grouped.get(test.subject) ?? []), test]);
+    for (const test of this.libraryTests()) grouped.set(test.subject, [...(grouped.get(test.subject) ?? []), test]);
     return [...grouped.entries()].map(([name, tests]) => ({
       name,
       tone: tests[0].tone,
@@ -51,7 +55,7 @@ export class App implements OnInit, OnDestroy {
   });
   protected readonly filteredTests = computed(() => {
     const query = this.search().trim().toLowerCase();
-    return this.tests().filter((test) => {
+    return this.libraryTests().filter((test) => {
       const matchesSubject = test.subject === this.selectedSubject();
       const searchable = `${test.title} ${test.subject} ${test.chapters.join(' ')}`.toLowerCase();
       return matchesSubject && (!query || searchable.includes(query));
@@ -76,9 +80,9 @@ export class App implements OnInit, OnDestroy {
 
   ngOnDestroy(): void { this.webMcpLifecycle.abort(); }
 
-  protected navigate(page: 'library' | 'history'): void {
+  protected navigate(page: 'library' | 'terminology' | 'history'): void {
     this.page.set(page);
-    if (page === 'library') { this.selectedSubject.set(null); this.search.set(''); }
+    if (page !== 'history') { this.selectedSubject.set(null); this.search.set(''); }
     this.mobileMenuOpen.set(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -115,6 +119,8 @@ export class App implements OnInit, OnDestroy {
 
   private beginTest(test: TestDefinition, mode: FeedbackMode): void {
     this.activeTest.set(test);
+    this.selectedSubject.set(test.subject);
+    this.search.set('');
     this.selectedMode.set(mode);
     this.answers.set({});
     this.currentIndex.set(0);
@@ -125,9 +131,10 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected exitTest(): void {
+    const destination = this.activeTest()?.category === 'terminology' ? 'terminology' : 'library';
     this.activeTest.set(null);
     this.answers.set({});
-    this.page.set('library');
+    this.page.set(destination);
   }
 
   protected answerFor(questionId: string): QuestionAnswer { return this.answers()[questionId] ?? {}; }
@@ -160,10 +167,22 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected revealWritten(question: TestQuestion): void {
-    this.setAnswer(question.id, { ...this.answerFor(question.id), revealed: true, writtenComplete: true });
+    if (this.activeTest()?.category === 'terminology' && !this.writtenReady(question)) return;
+    const current = this.answerFor(question.id);
+    this.setAnswer(question.id, { ...current, revealed: true, writtenComplete: this.activeTest()?.category === 'terminology' ? current.writtenComplete : true });
+  }
+
+  protected writtenReady(question: TestQuestion): boolean {
+    const answer = this.answerFor(question.id);
+    return Boolean(answer.text?.trim() || answer.writtenComplete);
+  }
+
+  protected definitionLocked(question: TestQuestion): boolean {
+    return this.activeTest()?.category === 'terminology' && this.selectedMode() === 'instant' && this.answerFor(question.id).revealed === true;
   }
 
   protected updateWritten(question: TestQuestion, event: Event): void {
+    if (this.definitionLocked(question)) return;
     const text = (event.target as HTMLTextAreaElement).value;
     this.setAnswer(question.id, { ...this.answerFor(question.id), text });
   }
@@ -201,6 +220,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected togglePaperAnswer(question: TestQuestion): void {
+    if (this.definitionLocked(question)) return;
     const current = this.answerFor(question.id);
     this.setAnswer(question.id, { ...current, writtenComplete: !current.writtenComplete });
   }
@@ -219,6 +239,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected selfGrade(question: TestQuestion, correct: boolean): void {
+    if (this.activeTest()?.category === 'terminology' && this.selectedMode() === 'instant' && !this.answerFor(question.id).revealed) return;
     this.setAnswer(question.id, { ...this.answerFor(question.id), selfGrade: correct, writtenComplete: true });
   }
 
@@ -304,7 +325,7 @@ export class App implements OnInit, OnDestroy {
     const file = input.files?.[0];
     if (!file) return;
     try {
-      const imported = this.dataService.parseTests(JSON.parse(await file.text()));
+      const imported = this.dataService.parseTests(JSON.parse(await file.text()), this.page() === 'terminology');
       const byId = new Map(this.tests().map((test) => [test.id, test]));
       imported.forEach((test) => byId.set(test.id, test));
       this.tests.set([...byId.values()]);
@@ -326,9 +347,14 @@ export class App implements OnInit, OnDestroy {
         { id: 'q5', type: 'multiple-select', prompt: 'Select all correct statements.', options: ['Correct statement', 'Another correct statement', 'Incorrect statement'], correctAnswers: [0, 1], explanation: 'Select every correct option and no incorrect options.' },
       ],
     }];
-    const url = URL.createObjectURL(new Blob([JSON.stringify(example, null, 2)], { type: 'application/json' }));
+    const terminology = this.page() === 'terminology';
+    const template = terminology ? [{
+      id: 'my-terminology-quiz', category: 'terminology', subject: 'My subject', title: 'Chapter 1: Terminology', chapters: ['Chapter 1'], kind: 'chapter', minutes: 5, tone: 'sage',
+      questions: [{ id: 'term-1', type: 'written', prompt: 'Define “your term” in your own words.', exampleAnswer: 'A clear definition with the key ideas.' }],
+    }] : example;
+    const url = URL.createObjectURL(new Blob([JSON.stringify(template, null, 2)], { type: 'application/json' }));
     const anchor = document.createElement('a');
-    anchor.href = url; anchor.download = 'studydeck-test-template.json'; anchor.click();
+    anchor.href = url; anchor.download = terminology ? 'studydeck-terminology-template.json' : 'studydeck-test-template.json'; anchor.click();
     URL.revokeObjectURL(url);
   }
 
@@ -394,7 +420,7 @@ export class App implements OnInit, OnDestroy {
         description: 'List the tests currently available in the StudyDeck library, including subject, chapters, and question count.',
         inputSchema: { type: 'object', properties: {}, additionalProperties: false },
         annotations: { readOnlyHint: true, untrustedContentHint: false },
-        execute: () => ({ tests: this.tests().map((test) => ({ id: test.id, title: test.title, subject: test.subject, chapters: test.chapters, questions: this.questionUnitCount(test) })) }),
+        execute: () => ({ tests: this.tests().map((test) => ({ id: test.id, category: test.category ?? 'general', title: test.title, subject: test.subject, chapters: test.chapters, questions: this.questionUnitCount(test) })) }),
       }, options)).catch(reportError);
       void Promise.resolve(context.registerTool({
         name: 'start_studydeck_test',

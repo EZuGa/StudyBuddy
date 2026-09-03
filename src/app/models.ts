@@ -1,6 +1,6 @@
 export type QuestionType = 'multiple-choice' | 'multiple-select' | 'written' | 'matching' | 'fill-blank';
 export type FeedbackMode = 'instant' | 'end';
-export type AppPage = 'library' | 'history' | 'taking' | 'written-review' | 'results';
+export type AppPage = 'library' | 'terminology' | 'history' | 'taking' | 'written-review' | 'results';
 
 export interface TestQuestion {
   id: string;
@@ -18,6 +18,7 @@ export interface TestQuestion {
 
 export interface TestDefinition {
   id: string;
+  category?: 'general' | 'terminology';
   subject: string;
   title: string;
   chapters: string[];

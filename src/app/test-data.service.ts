@@ -11,10 +11,17 @@ export class TestDataService {
     return this.http.get<unknown>('/tests/tests.json').pipe(map((data) => this.parseTests(data)));
   }
 
-  parseTests(data: unknown): TestDefinition[] {
+  parseTests(data: unknown, terminologyOnly = false): TestDefinition[] {
     const candidates = Array.isArray(data) ? data : [data];
     if (!candidates.length) throw new Error('The file does not contain any tests.');
-    return candidates.map((candidate, index) => this.parseTest(candidate, index));
+    return candidates.map((candidate, index) => {
+      const test = this.parseTest(candidate, index);
+      if (terminologyOnly) test.category = 'terminology';
+      if (test.category === 'terminology' && test.questions.some((question) => question.type !== 'written')) {
+        throw new Error(`“${test.title}” is a terminology quiz. Every question must be a written response with an exampleAnswer.`);
+      }
+      return test;
+    });
   }
 
   private parseTest(value: unknown, index: number): TestDefinition {
@@ -35,6 +42,7 @@ export class TestDataService {
     );
     return {
       id: String(item['id']),
+      category: item['category'] === 'terminology' ? 'terminology' : 'general',
       subject: String(item['subject']),
       title: String(item['title']),
       chapters: item['chapters'] as string[],

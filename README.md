@@ -2,6 +2,12 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.6.
 
+## Terminology quizzes
+
+The **Terminology** navigation page contains a separate, subject-first collection of written-only quizzes. Definitions can be typed or written on paper, then self-checked against example answers in either feedback mode. Scores use the same device-local history as chapter tests, with separate quiz IDs.
+
+Permanent quizzes live in `public/tests/tests.json`. Set `category` to `"terminology"` and use only `"written"` questions, each with a `prompt` and `exampleAnswer`. Regular tests can omit `category`. The parser rejects other question types in terminology quizzes. The Terminology page's import dialog and downloadable template support this format; browser imports remain session-only.
+
 ## Development server
 
 To start a local development server, run:
