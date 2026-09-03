@@ -322,7 +322,7 @@
       <span class="import-icon">↥</span><p class="eyebrow">ADD TO YOUR LIBRARY</p><h2 id="import-title">{{ page() === 'terminology' ? 'Import terminology' : 'Import a test' }}</h2><p class="modal-intro">{{ page() === 'terminology' ? 'Choose a StudyDeck JSON file with written questions and example definitions only. Imported quizzes will appear on this page.' : 'Choose a StudyDeck JSON file. You can import one test or a whole collection.' }}</p>
       <label class="drop-zone"><input type="file" accept="application/json,.json" (change)="importFile($event)" /><span>＋</span><strong>Choose a JSON file</strong><small>Maximum 2 MB recommended</small></label>
       @if (importStatus(); as status) { <div [class]="'import-status ' + status.tone"><span>{{ status.tone === 'success' ? '✓' : '!' }}</span>{{ status.text }}</div> }
-      <div class="storage-note"><span>i</span><p><strong>A quick note about saving</strong>Imported tests stay until this page is refreshed. A browser cannot write into the project folder. To keep one permanently, add it to <code>public/tests/tests.json</code>. Scores are saved in this browser.</p></div>
+      <div class="storage-note"><span>i</span><p><strong>A quick note about saving</strong>Imported tests stay until this page is refreshed. A browser cannot write into the project folder. To keep one permanently, add it to <code>{{ page() === 'terminology' ? 'public/tests/terminology.json' : 'public/tests/tests.json' }}</code>. Scores are saved in this browser.</p></div>
       <button class="template-button" type="button" (click)="downloadTemplate()">↓ Download a test template</button>
     </section>
   </div>

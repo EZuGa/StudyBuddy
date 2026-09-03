@@ -73,7 +73,7 @@ export class App implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.dataService.loadTests().subscribe({
       next: (tests) => { this.tests.set(tests); this.loading.set(false); },
-      error: () => { this.loadError.set('The test library could not be loaded. Check public/tests/tests.json.'); this.loading.set(false); },
+      error: () => { this.loadError.set('The test library could not be loaded. Check public/tests/tests.json and public/tests/terminology.json.'); this.loading.set(false); },
     });
     this.registerWebMcpTools();
   }

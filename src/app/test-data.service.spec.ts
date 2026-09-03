@@ -1,13 +1,54 @@
 import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { TestDataService } from './test-data.service';
 
 describe('TestDataService', () => {
   let service: TestDataService;
+  let http: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [provideHttpClient(), TestDataService] });
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting(), TestDataService] });
     service = TestBed.inject(TestDataService);
+    http = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => http.verify());
+
+  it('loads chapter and terminology quizzes from separate project files', async () => {
+    const result = firstValueFrom(service.loadTests());
+    http.expectOne('/tests/tests.json').flush([
+      { id: 'chapter-1', subject: 'Networking', title: 'Chapter 1', chapters: ['Chapter 1'], questions: [{ id: 'q1', type: 'multiple-choice', prompt: 'Pick one.', options: ['A', 'B'], correctAnswer: 0 }] },
+    ]);
+    http.expectOne('/tests/terminology.json').flush([
+      { id: 'terms-1', subject: 'Networking', title: 'Terminology', chapters: ['Chapter 1'], questions: [{ id: 'term-1', type: 'written', prompt: 'Define LAN.', exampleAnswer: 'A local area network.' }] },
+    ]);
+    expect((await result).map((test) => [test.id, test.category])).toEqual([['chapter-1', 'general'], ['terms-1', 'terminology']]);
+  });
+
+  it('allows empty project collections without accepting empty imports', async () => {
+    const result = firstValueFrom(service.loadTests());
+    http.expectOne('/tests/tests.json').flush([]);
+    http.expectOne('/tests/terminology.json').flush([]);
+    expect(await result).toEqual([]);
+    expect(() => service.parseTests([])).toThrowError(/does not contain any tests/);
+  });
+
+  it('enforces written-only questions in the terminology file even without a category', async () => {
+    const result = expect(firstValueFrom(service.loadTests())).rejects.toThrow(/Every question must be a written response/);
+    http.expectOne('/tests/tests.json').flush([]);
+    http.expectOne('/tests/terminology.json').flush([
+      { id: 'bad-term', subject: 'Networking', title: 'Invalid terminology', chapters: ['Chapter 1'], questions: [{ id: 'q1', type: 'multiple-choice', prompt: 'Pick one.', options: ['A', 'B'], correctAnswer: 0 }] },
+    ]);
+    await result;
+  });
+
+  it('reports a missing terminology file instead of silently omitting it', async () => {
+    const result = expect(firstValueFrom(service.loadTests())).rejects.toMatchObject({ status: 404 });
+    http.expectOne('/tests/tests.json').flush([]);
+    http.expectOne('/tests/terminology.json').flush('Missing', { status: 404, statusText: 'Not Found' });
+    await result;
   });
 
   it('parses fill-in-the-blank and matching questions', () => {

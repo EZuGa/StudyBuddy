@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { forkJoin, map, Observable } from 'rxjs';
 import { TestDefinition, TestQuestion } from './models';
 
 @Injectable({ providedIn: 'root' })
@@ -8,7 +8,16 @@ export class TestDataService {
   private readonly http = inject(HttpClient);
 
   loadTests(): Observable<TestDefinition[]> {
-    return this.http.get<unknown>('/tests/tests.json').pipe(map((data) => this.parseTests(data)));
+    return forkJoin([
+      this.loadTestFile('/tests/tests.json'),
+      this.loadTestFile('/tests/terminology.json', true),
+    ]).pipe(map((collections) => collections.flat()));
+  }
+
+  private loadTestFile(path: string, terminologyOnly = false): Observable<TestDefinition[]> {
+    return this.http.get<unknown>(path).pipe(map((data) =>
+      Array.isArray(data) && data.length === 0 ? [] : this.parseTests(data, terminologyOnly),
+    ));
   }
 
   parseTests(data: unknown, terminologyOnly = false): TestDefinition[] {

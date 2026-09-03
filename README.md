@@ -6,7 +6,7 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 The **Terminology** navigation page contains a separate, subject-first collection of written-only quizzes. Definitions can be typed or written on paper, then self-checked against example answers in either feedback mode. Scores use the same device-local history as chapter tests, with separate quiz IDs.
 
-Permanent quizzes live in `public/tests/tests.json`. Set `category` to `"terminology"` and use only `"written"` questions, each with a `prompt` and `exampleAnswer`. Regular tests can omit `category`. The parser rejects other question types in terminology quizzes. The Terminology page's import dialog and downloadable template support this format; browser imports remain session-only.
+Permanent terminology quizzes live in `public/tests/terminology.json`; regular chapter and midterm tests live in `public/tests/tests.json`. The app loads both files. Terminology quizzes use only `"written"` questions, each with a `prompt` and `exampleAnswer`, and are automatically categorized as terminology when loaded from their file. Keep `category: "terminology"` when sharing them as imports. The parser rejects other question types in terminology quizzes. The Terminology page's import dialog and downloadable template support this format; browser imports remain session-only. Either project file can contain an empty array when that collection has no quizzes.
 
 ## Development server
 
