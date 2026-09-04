@@ -15,15 +15,19 @@ Generate: [ordinary test / terminology quiz / both]
 Kind: [chapter / midterm]
 Output language: [e.g. English]
 Question count and difficulty: [specify, or choose a reasonable balanced set]
-Existing quiz/question IDs: [attach existing data or say not provided]
+Existing chapter/quiz/question IDs: [attach existing data or say not provided]
 
 Use only the source below. Flag missing or conflicting information.
-Produce only new quiz objects, not replacements for existing collections.
+Produce only requested chapter additions, not complete library replacements.
+If updating an existing chapter, preserve its ID and put additions inside
+that same chapter; do not create a separate chapter for terminology.
 Use one shared term-definition entry for both terminology directions.
-Return one library.additions.json array containing the requested quizzes.
-Use category general or terminology on each quiz, with matching subject and
-chapter labels so both appear under the same chapter. Do not nest or split
-the collection. Add brief source-review notes outside JSON.
+Return one library.additions.json array of chapter objects. Each chapter
+must contain quiz and/or terminology as nested objects. Put both inside
+the SAME chapter when both are requested. Store subject, chapter title,
+and kind only on the parent; do not add category fields. Only midterms
+have a chapters array of covered chapter titles. Add brief source-review
+notes outside JSON.
 Do not edit the app or deploy anything.
 
 BEGIN CHAPTER

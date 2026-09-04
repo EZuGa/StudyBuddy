@@ -17,7 +17,7 @@ describe('AI data kit compatibility', () => {
 
   it('imports the shared terminology example without a second reverse collection', () => {
     const quiz = TestBed.inject(TestDataService).parseTests(libraryExample)[1];
-    const source = libraryExample[1].questions[0];
+    const source = libraryExample[0].terminology.questions[0];
     const definition = 'definition' in source ? source.definition : undefined;
     expect(definition).toEqual(expect.any(String));
     expect(quiz.category).toBe('terminology');

@@ -16,14 +16,67 @@ export class TestDataService {
   parseTests(data: unknown, terminologyOnly = false): TestDefinition[] {
     const candidates = Array.isArray(data) ? data : [data];
     if (!candidates.length) throw new Error('The file does not contain any tests.');
-    return candidates.map((candidate, index) => {
+    const chapterIds = new Set<string>();
+    const chapterNames = new Set<string>();
+    const tests = candidates.flatMap((candidate, index) => {
+      // Older flat quiz files remain importable; project data is chapter-owned.
+      if (candidate && typeof candidate === 'object' && !('questions' in candidate)) {
+        const chapter = candidate as Record<string, unknown>;
+        const parsed = this.parseChapter(chapter, index);
+        const name = JSON.stringify([chapter['subject'], chapter['title'], chapter['kind']]);
+        if (chapterIds.has(String(chapter['id'])) || chapterNames.has(name)) throw new Error('Combine quiz and terminology inside one object per chapter.');
+        chapterIds.add(String(chapter['id']));
+        chapterNames.add(name);
+        return parsed;
+      }
       const test = this.parseTest(candidate, index);
       if (terminologyOnly) test.category = 'terminology';
+      return [test];
+    });
+    const testIds = new Set<string>();
+    for (const test of tests) {
+      if (testIds.has(test.id)) throw new Error(`Duplicate quiz id “${test.id}”. Each quiz needs its own stable id.`);
+      testIds.add(test.id);
       if (test.category === 'terminology' && test.questions.some((question) => question.type !== 'written')) {
         throw new Error(`“${test.title}” is a terminology quiz. Every question must be a written response with an exampleAnswer.`);
       }
-      return test;
-    });
+    }
+    return tests;
+  }
+
+  private parseChapter(chapter: Record<string, unknown>, index: number): TestDefinition[] {
+    for (const key of ['id', 'subject', 'title']) {
+      if (typeof chapter[key] !== 'string' || !chapter[key].trim()) throw new Error(`Chapter ${index + 1} needs a ${key}.`);
+    }
+    if (!['chapter', 'midterm'].includes(String(chapter['kind']))) throw new Error(`“${chapter['title']}” needs kind chapter or midterm.`);
+    const allowed = ['id', 'subject', 'title', 'kind', 'chapters', 'quiz', 'terminology'];
+    if (Object.keys(chapter).some((key) => !allowed.includes(key))) throw new Error(`“${chapter['title']}” contains an unsupported chapter field.`);
+    let chapters = [String(chapter['title'])];
+    if (chapter['kind'] === 'midterm') {
+      const covered = chapter['chapters'];
+      if (!Array.isArray(covered) || covered.length < 2 || covered.some((name) => typeof name !== 'string' || !name.trim()) || new Set(covered).size !== covered.length) {
+        throw new Error(`“${chapter['title']}” needs at least two distinct covered chapters.`);
+      }
+      chapters = covered as string[];
+    } else if ('chapters' in chapter) {
+      throw new Error('A chapter uses its title as the chapter label; only midterms need a chapters array.');
+    }
+    const quizzes: TestDefinition[] = [];
+    for (const key of ['quiz', 'terminology'] as const) {
+      if (!(key in chapter)) continue;
+      const value = chapter[key];
+      if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(`“${chapter['title']}” needs a valid ${key} object.`);
+      const content = value as Record<string, unknown>;
+      if (Object.keys(content).some((field) => !['id', 'title', 'minutes', 'tone', 'questions'].includes(field))) {
+        throw new Error(`The ${key} in “${chapter['title']}” must inherit subject and chapter details from its parent; remove unsupported fields.`);
+      }
+      if (key === 'terminology' && Array.isArray(content['questions']) && content['questions'].some((entry) => !entry || typeof entry !== 'object' || entry.type !== 'written' || typeof entry.term !== 'string' || typeof entry.definition !== 'string')) {
+        throw new Error('Terminology must contain shared written term and definition entries only.');
+      }
+      quizzes.push(this.parseTest({ ...content, category: key === 'quiz' ? 'general' : 'terminology', subject: chapter['subject'], chapters, kind: chapter['kind'] }, index));
+    }
+    if (!quizzes.length) throw new Error(`“${chapter['title']}” needs quiz or terminology data inside it.`);
+    return quizzes;
   }
 
   private parseTest(value: unknown, index: number): TestDefinition {

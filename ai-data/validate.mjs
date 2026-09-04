@@ -38,6 +38,8 @@ export function validateDocuments(documents) {
   const errors = [];
   const warnings = [];
   const testIds = new Map();
+  const chapterIds = new Map();
+  const chapterNames = new Map();
   const questionIds = new Map();
   const registerId = (map, id, location) => {
     if (map.has(id)) errors.push(`${location}: duplicate id "${id}"; also found at ${map.get(id)}.`);
@@ -53,48 +55,57 @@ export function validateDocuments(documents) {
       continue;
     }
 
-    data.forEach((quiz, quizIndex) => {
-      const location = `${label}/${quizIndex}`;
-      registerId(testIds, quiz.id, location);
-      const seenTerms = new Set();
-      const seenPrompts = new Set();
-      quiz.questions.forEach((question, questionIndex) => {
-        const path = `${location}/questions/${questionIndex}`;
-        registerId(questionIds, question.id, path);
+    data.forEach((chapter, chapterIndex) => {
+      const chapterLocation = `${label}/${chapterIndex}`;
+      registerId(chapterIds, chapter.id, chapterLocation);
+      const chapterKey = JSON.stringify([chapter.subject, chapter.title, chapter.kind]);
+      if (chapterNames.has(chapterKey)) errors.push(`${chapterLocation}: duplicate chapter "${chapter.title}"; put quiz and terminology in the same chapter object (also at ${chapterNames.get(chapterKey)}).`);
+      else chapterNames.set(chapterKey, chapterLocation);
+      for (const category of ['quiz', 'terminology']) {
+        const quiz = chapter[category];
+        if (!quiz) continue;
+        const location = `${chapterLocation}/${category}`;
+        registerId(testIds, quiz.id, location);
+        const seenTerms = new Set();
+        const seenPrompts = new Set();
+        quiz.questions.forEach((question, questionIndex) => {
+          const path = `${location}/questions/${questionIndex}`;
+          registerId(questionIds, question.id, path);
 
-        if (quiz.category === 'terminology') {
-          const key = normalizeTerm(question.term);
-          if (!key) errors.push(`${path}: term must remain non-empty after answer normalization.`);
-          if (seenTerms.has(key)) errors.push(`${path}: duplicate term "${question.term}" within this quiz.`);
-          seenTerms.add(key);
-          const alternatives = question.acceptedTerms ?? [];
-          if (alternatives.some((answer) => !normalizeTerm(answer))) errors.push(`${path}: acceptedTerms contains an empty normalized answer.`);
-          if (duplicateValues(alternatives, normalizeTerm).length) errors.push(`${path}: acceptedTerms repeats an equivalent answer.`);
-          const definition = normalizeTerm(question.definition);
-          const leaksAnswer = [question.term, ...alternatives].some((answer) => {
-            const escaped = normalizeTerm(answer).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            return escaped && new RegExp(`(?<![\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}])`, 'u').test(definition);
-          });
-          if (leaksAnswer) warnings.push(`${path}: the definition may reveal the term or an accepted alias; review it for reverse practice.`);
-          return;
-        }
+          if (category === 'terminology') {
+            const key = normalizeTerm(question.term);
+            if (!key) errors.push(`${path}: term must remain non-empty after answer normalization.`);
+            if (seenTerms.has(key)) errors.push(`${path}: duplicate term "${question.term}" within this quiz.`);
+            seenTerms.add(key);
+            const alternatives = question.acceptedTerms ?? [];
+            if (alternatives.some((answer) => !normalizeTerm(answer))) errors.push(`${path}: acceptedTerms contains an empty normalized answer.`);
+            if (duplicateValues(alternatives, normalizeTerm).length) errors.push(`${path}: acceptedTerms repeats an equivalent answer.`);
+            const definition = normalizeTerm(question.definition);
+            const leaksAnswer = [question.term, ...alternatives].some((answer) => {
+              const escaped = normalizeTerm(answer).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              return escaped && new RegExp(`(?<![\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}])`, 'u').test(definition);
+            });
+            if (leaksAnswer) warnings.push(`${path}: the definition may reveal the term or an accepted alias; review it for reverse practice.`);
+            return;
+          }
 
-        const prompt = normalize(question.prompt);
-        if (seenPrompts.has(prompt)) warnings.push(`${path}: repeated question prompt; check whether this adds useful coverage.`);
-        seenPrompts.add(prompt);
-        if (question.options && duplicateValues(question.options, normalizeDisplay).length) errors.push(`${path}: options contain equivalent duplicate text.`);
-        if (question.type === 'multiple-choice' && question.correctAnswer >= question.options.length) errors.push(`${path}/correctAnswer: index ${question.correctAnswer} is outside options; valid indexes are 0–${question.options.length - 1}.`);
-        if (question.type === 'multiple-select' && question.correctAnswers.some((index) => index >= question.options.length)) errors.push(`${path}/correctAnswers: every index must be between 0 and ${question.options.length - 1}.`);
-        if (question.type === 'matching') {
-          if (duplicateValues(question.pairs.map((pair) => pair.term), normalizeDisplay).length) errors.push(`${path}/pairs: matching terms must be distinct.`);
-          if (duplicateValues(question.pairs.map((pair) => pair.definition), normalizeDisplay).length) errors.push(`${path}/pairs: matching definitions must be distinct.`);
-        }
-        if (question.type === 'fill-blank') {
-          if (question.acceptedAnswers.some((answer) => !normalize(answer))) errors.push(`${path}: acceptedAnswers contains an empty normalized answer.`);
-          if (duplicateValues(question.acceptedAnswers).length) errors.push(`${path}: acceptedAnswers repeats an equivalent answer.`);
-          if ((question.prompt.match(/_{2,}/g) ?? []).length > 1) warnings.push(`${path}: multiple blanks share one text field; prefer one blank per question.`);
-        }
-      });
+          const prompt = normalize(question.prompt);
+          if (seenPrompts.has(prompt)) warnings.push(`${path}: repeated question prompt; check whether this adds useful coverage.`);
+          seenPrompts.add(prompt);
+          if (question.options && duplicateValues(question.options, normalizeDisplay).length) errors.push(`${path}: options contain equivalent duplicate text.`);
+          if (question.type === 'multiple-choice' && question.correctAnswer >= question.options.length) errors.push(`${path}/correctAnswer: index ${question.correctAnswer} is outside options; valid indexes are 0–${question.options.length - 1}.`);
+          if (question.type === 'multiple-select' && question.correctAnswers.some((index) => index >= question.options.length)) errors.push(`${path}/correctAnswers: every index must be between 0 and ${question.options.length - 1}.`);
+          if (question.type === 'matching') {
+            if (duplicateValues(question.pairs.map((pair) => pair.term), normalizeDisplay).length) errors.push(`${path}/pairs: matching terms must be distinct.`);
+            if (duplicateValues(question.pairs.map((pair) => pair.definition), normalizeDisplay).length) errors.push(`${path}/pairs: matching definitions must be distinct.`);
+          }
+          if (question.type === 'fill-blank') {
+            if (question.acceptedAnswers.some((answer) => !normalize(answer))) errors.push(`${path}: acceptedAnswers contains an empty normalized answer.`);
+            if (duplicateValues(question.acceptedAnswers).length) errors.push(`${path}: acceptedAnswers repeats an equivalent answer.`);
+            if ((question.prompt.match(/_{2,}/g) ?? []).length > 1) warnings.push(`${path}: multiple blanks share one text field; prefer one blank per question.`);
+          }
+        });
+      }
     });
   }
   return { errors, warnings };
@@ -105,7 +116,7 @@ const usage = `StudyDeck data validator (read-only)
   npm run validate:data -- --examples
   npm run validate:data -- --library path/to/library.additions.json --against-project
 
-One library file contains ordinary tests and terminology. --against-project checks additions for ID
+One library file contains chapters, each owning quiz and terminology data. --against-project checks new chapters for ID
 collisions with existing quizzes; do not use it for complete replacement files.
 Warnings require human review but do not fail validation. Errors exit with code 1.
 This checks structure and consistency, not factual accuracy against a chapter.`;
@@ -142,7 +153,9 @@ export function runCli(args = process.argv.slice(2)) {
       console.error(`Validation failed: ${errors.length} error(s). No files changed.`);
       return 1;
     }
-    console.log(`Valid: ${documents.reduce((total, document) => total + document.data.length, 0)} quizzes across ${documents.length} file(s); ${warnings.length} review warning(s). No files changed.`);
+    const chapters = documents.flatMap((document) => document.data);
+    const quizCount = chapters.reduce((total, chapter) => total + Number(Boolean(chapter.quiz)) + Number(Boolean(chapter.terminology)), 0);
+    console.log(`Valid: ${chapters.length} chapters, ${quizCount} quizzes across ${documents.length} file(s); ${warnings.length} review warning(s). No files changed.`);
     console.log('Next: review the answers against the source chapter before adding them.');
     return 0;
   } catch (error) {

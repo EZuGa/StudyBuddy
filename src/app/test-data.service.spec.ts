@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { TestDataService } from './test-data.service';
+import libraryExample from '../../ai-data/examples/library.example.json';
 
 describe('TestDataService', () => {
   let service: TestDataService;
@@ -15,6 +16,52 @@ describe('TestDataService', () => {
   });
 
   afterEach(() => http.verify());
+
+  it('loads one chapter with nested quiz and terminology inheriting parent details', async () => {
+    const original = JSON.stringify(libraryExample);
+    const result = firstValueFrom(service.loadTests());
+    http.expectOne('/tests/library.json').flush(libraryExample);
+    const tests = await result;
+    expect(tests).toHaveLength(2);
+    expect(tests.map((test) => [test.id, test.subject, test.chapters, test.kind, test.category])).toEqual([
+      [libraryExample[0].quiz.id, 'Networking', ['Chapter 1'], 'chapter', 'general'],
+      [libraryExample[0].terminology.id, 'Networking', ['Chapter 1'], 'chapter', 'terminology'],
+    ]);
+    expect(JSON.stringify(libraryExample)).toBe(original);
+  });
+
+  it('accepts a single nested chapter for import and either activity alone', () => {
+    const { quiz, terminology, ...chapter } = libraryExample[0];
+    expect(service.parseTests({ ...chapter, quiz })[0].category).toBe('general');
+    expect(service.parseTests({ ...chapter, terminology })[0].category).toBe('terminology');
+  });
+
+  it('keeps a multi-chapter midterm as one activity', () => {
+    const { terminology, ...chapter } = libraryExample[0];
+    const [test] = service.parseTests({ ...chapter, kind: 'midterm', chapters: ['Chapter 1', 'Chapter 2'] });
+    expect(test).toMatchObject({ kind: 'midterm', chapters: ['Chapter 1', 'Chapter 2'], id: chapter.quiz.id });
+  });
+
+  it('rejects duplicate chapters or activity IDs rather than losing content', () => {
+    expect(() => service.parseTests([...libraryExample, ...libraryExample])).toThrow(/one object per chapter/);
+    const chapter = structuredClone(libraryExample[0]);
+    chapter.terminology.id = chapter.quiz.id;
+    expect(() => service.parseTests(chapter)).toThrow(/Duplicate quiz id/);
+  });
+
+  it('rejects malformed or contradictory nested chapter data', () => {
+    const { quiz, terminology, ...chapter } = libraryExample[0];
+    for (const invalid of [
+      chapter, { ...chapter, quiz: null }, { ...chapter, quiz: [] },
+      { ...chapter, quiz: { ...quiz, subject: 'Other' } },
+      { ...chapter, quiz, chapters: ['Chapter 1'] },
+      { ...chapter, quiz, kind: 'midterm', chapters: ['Chapter 1'] },
+      { ...chapter, quiz, kind: 'midterm', chapters: ['Chapter 1', 'Chapter 1'] },
+      { ...chapter, quiz, kind: 'unknown' },
+      { ...chapter, quiz: { ...quiz, questions: [] } },
+      { ...chapter, terminology: { ...terminology, questions: quiz.questions } },
+    ]) expect(() => service.parseTests(invalid)).toThrow();
+  });
 
   it('loads chapter and terminology quizzes from one combined project file', async () => {
     const result = firstValueFrom(service.loadTests());

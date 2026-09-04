@@ -1,17 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "StudyDeck combined test and terminology library",
-  "description": "One collection grouped by subject and chapter in the app. Each quiz declares general or terminology. IDs and dynamic answer bounds are checked by validate.mjs.",
+  "title": "StudyDeck chapter library",
+  "description": "One object per chapter, containing quiz and terminology data. Each nested activity inherits subject and chapter details from its parent. IDs and answer bounds are checked by validate.mjs.",
   "type": "array",
   "items": {
-    "oneOf": [
-      {
-        "$ref": "#/definitions/test"
-      },
-      {
-        "$ref": "#/definitions/terminologyTest"
-      }
-    ]
+    "$ref": "#/definitions/chapter"
   },
   "definitions": {
     "test": {
@@ -22,34 +15,10 @@
           "type": "string",
           "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
         },
-        "category": {
-          "const": "general"
-        },
-        "subject": {
-          "type": "string",
-          "minLength": 1,
-          "pattern": "\\S"
-        },
         "title": {
           "type": "string",
           "minLength": 1,
           "pattern": "\\S"
-        },
-        "chapters": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "minLength": 1,
-            "pattern": "\\S"
-          }
-        },
-        "kind": {
-          "enum": [
-            "chapter",
-            "midterm"
-          ]
         },
         "minutes": {
           "type": "integer",
@@ -90,14 +59,10 @@
       },
       "required": [
         "id",
-        "subject",
         "title",
-        "chapters",
-        "kind",
         "minutes",
         "tone",
-        "questions",
-        "category"
+        "questions"
       ]
     },
     "multipleChoice": {
@@ -356,34 +321,10 @@
           "type": "string",
           "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
         },
-        "category": {
-          "const": "terminology"
-        },
-        "subject": {
-          "type": "string",
-          "minLength": 1,
-          "pattern": "\\S"
-        },
         "title": {
           "type": "string",
           "minLength": 1,
           "pattern": "\\S"
-        },
-        "chapters": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "minLength": 1,
-            "pattern": "\\S"
-          }
-        },
-        "kind": {
-          "enum": [
-            "chapter",
-            "midterm"
-          ]
         },
         "minutes": {
           "type": "integer",
@@ -408,14 +349,10 @@
       },
       "required": [
         "id",
-        "subject",
         "title",
-        "chapters",
-        "kind",
         "minutes",
         "tone",
-        "questions",
-        "category"
+        "questions"
       ]
     },
     "term": {
@@ -460,6 +397,96 @@
         "type",
         "term",
         "definition"
+      ]
+    },
+    "chapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "kind": {
+          "enum": [
+            "chapter",
+            "midterm"
+          ]
+        },
+        "chapters": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "quiz": {
+          "$ref": "#/definitions/test"
+        },
+        "terminology": {
+          "$ref": "#/definitions/terminologyTest"
+        }
+      },
+      "required": [
+        "id",
+        "subject",
+        "title",
+        "kind"
+      ],
+      "anyOf": [
+        {
+          "properties": { "quiz": {} },
+          "required": [
+            "quiz"
+          ]
+        },
+        {
+          "properties": { "terminology": {} },
+          "required": [
+            "terminology"
+          ]
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "midterm"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": { "chapters": {} },
+            "required": [
+              "chapters"
+            ]
+          },
+          "else": {
+            "not": {
+              "properties": { "chapters": {} },
+              "required": [
+                "chapters"
+              ]
+            }
+          }
+        }
       ]
     }
   }

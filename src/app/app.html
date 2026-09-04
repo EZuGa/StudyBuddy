@@ -382,7 +382,7 @@
   <div class="modal-backdrop" role="presentation">
     <section class="import-modal" role="dialog" aria-modal="true" aria-labelledby="import-title">
       <button class="modal-close" type="button" (click)="closeImport()" aria-label="Close">×</button>
-      <span class="import-icon">↥</span><p class="eyebrow">ADD TO YOUR LIBRARY</p><h2 id="import-title">Import quizzes</h2><p class="modal-intro">Choose a StudyDeck JSON file with tests, terminology, or both. Subject and chapter labels place each quiz in the library. Use category “terminology” for shared term–definition entries.</p>
+      <span class="import-icon">↥</span><p class="eyebrow">ADD TO YOUR LIBRARY</p><h2 id="import-title">Import quizzes</h2><p class="modal-intro">Choose a StudyDeck JSON file containing chapters. Each chapter holds its quiz and terminology data together. Terminology uses shared term–definition entries for both test directions.</p>
       <label class="drop-zone"><input type="file" accept="application/json,.json" (change)="importFile($event)" /><span>＋</span><strong>Choose a JSON file</strong><small>Maximum 2 MB recommended</small></label>
       @if (importStatus(); as status) { <div [class]="'import-status ' + status.tone"><span>{{ status.tone === 'success' ? '✓' : '!' }}</span>{{ status.text }}</div> }
       <div class="storage-note"><span>i</span><p><strong>A quick note about saving</strong>Imported quizzes stay until this page is refreshed. To keep them permanently, add them to <code>public/tests/library.json</code>. Scores and favorites stay saved in this browser.</p></div>

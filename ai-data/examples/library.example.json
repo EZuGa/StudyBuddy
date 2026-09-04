@@ -1,121 +1,115 @@
 [
   {
-    "id": "example-networking-ch1-test",
-    "category": "general",
+    "id": "example-networking-chapter-1",
     "subject": "Networking",
-    "title": "Chapter 1: Networks and addressing",
-    "chapters": [
-      "Chapter 1"
-    ],
+    "title": "Chapter 1",
     "kind": "chapter",
-    "minutes": 12,
-    "tone": "sky",
-    "questions": [
-      {
-        "id": "example-networking-ch1-q1",
-        "number": "1",
-        "type": "multiple-choice",
-        "prompt": "Which term describes a network covering a small geographic area?",
-        "options": [
-          "WAN",
-          "LAN",
-          "Router"
-        ],
-        "correctAnswer": 1,
-        "explanation": "A local area network covers a small area; a WAN spans greater distances, and a router connects IP networks."
-      },
-      {
-        "id": "example-networking-ch1-q2",
-        "number": "2",
-        "type": "multiple-select",
-        "prompt": "Select all statements supported by the chapter.",
-        "options": [
-          "A LAN covers a small geographic area.",
-          "A router forwards packets between IP networks.",
-          "A WAN is always limited to one room."
-        ],
-        "correctAnswers": [
-          0,
-          1
-        ],
-        "explanation": "The chapter defines LANs by their small geographic scope and routers by their packet-forwarding role. WANs span long distances."
-      },
-      {
-        "id": "example-networking-ch1-q3",
-        "number": "3",
-        "type": "written",
-        "prompt": "A company has offices in distant cities. Explain why a WAN is appropriate and what routers do.",
-        "exampleAnswer": "A WAN connects networks over long distances. Routers forward packets between the offices’ IP networks.",
-        "explanation": "Include the long geographic distance and the router’s role in forwarding packets between networks."
-      },
-      {
-        "id": "example-networking-ch1-q4",
-        "number": "4–5",
-        "type": "matching",
-        "prompt": "Match each network type with its geographic scope.",
-        "pairs": [
-          {
-            "term": "LAN",
-            "definition": "Covers a small geographic area."
-          },
-          {
-            "term": "WAN",
-            "definition": "Spans long geographic distances."
-          }
-        ],
-        "explanation": "LAN means local area network; WAN means wide area network."
-      },
-      {
-        "id": "example-networking-ch1-q6",
-        "number": "6",
-        "type": "fill-blank",
-        "prompt": "A collection of eight bits is one _____.",
-        "acceptedAnswers": [
-          "byte"
-        ],
-        "explanation": "Eight bits form one byte."
-      }
-    ]
-  },
-  {
-    "id": "example-networking-ch1-terms",
-    "category": "terminology",
-    "subject": "Networking",
-    "title": "Chapter 1: Core terminology",
-    "chapters": [
-      "Chapter 1"
-    ],
-    "kind": "chapter",
-    "minutes": 6,
-    "tone": "sage",
-    "questions": [
-      {
-        "id": "example-networking-ch1-term-1",
-        "number": "1",
-        "type": "written",
-        "term": "LAN",
-        "definition": "A network covering a small geographic area, such as one building.",
-        "acceptedTerms": [
-          "Local area network"
-        ]
-      },
-      {
-        "id": "example-networking-ch1-term-2",
-        "number": "2",
-        "type": "written",
-        "term": "WAN",
-        "definition": "A network spanning long geographic distances.",
-        "acceptedTerms": [
-          "Wide area network"
-        ]
-      },
-      {
-        "id": "example-networking-ch1-term-3",
-        "number": "3",
-        "type": "written",
-        "term": "Router",
-        "definition": "A device that forwards packets between IP networks."
-      }
-    ]
+    "quiz": {
+      "id": "example-networking-ch1-test",
+      "title": "Chapter 1: Networks and addressing",
+      "minutes": 12,
+      "tone": "sky",
+      "questions": [
+        {
+          "id": "example-networking-ch1-q1",
+          "number": "1",
+          "type": "multiple-choice",
+          "prompt": "Which term describes a network covering a small geographic area?",
+          "options": [
+            "WAN",
+            "LAN",
+            "Router"
+          ],
+          "correctAnswer": 1,
+          "explanation": "A local area network covers a small area; a WAN spans greater distances, and a router connects IP networks."
+        },
+        {
+          "id": "example-networking-ch1-q2",
+          "number": "2",
+          "type": "multiple-select",
+          "prompt": "Select all statements supported by the chapter.",
+          "options": [
+            "A LAN covers a small geographic area.",
+            "A router forwards packets between IP networks.",
+            "A WAN is always limited to one room."
+          ],
+          "correctAnswers": [
+            0,
+            1
+          ],
+          "explanation": "The chapter defines LANs by their small geographic scope and routers by their packet-forwarding role. WANs span long distances."
+        },
+        {
+          "id": "example-networking-ch1-q3",
+          "number": "3",
+          "type": "written",
+          "prompt": "A company has offices in distant cities. Explain why a WAN is appropriate and what routers do.",
+          "exampleAnswer": "A WAN connects networks over long distances. Routers forward packets between the offices’ IP networks.",
+          "explanation": "Include the long geographic distance and the router’s role in forwarding packets between networks."
+        },
+        {
+          "id": "example-networking-ch1-q4",
+          "number": "4–5",
+          "type": "matching",
+          "prompt": "Match each network type with its geographic scope.",
+          "pairs": [
+            {
+              "term": "LAN",
+              "definition": "Covers a small geographic area."
+            },
+            {
+              "term": "WAN",
+              "definition": "Spans long geographic distances."
+            }
+          ],
+          "explanation": "LAN means local area network; WAN means wide area network."
+        },
+        {
+          "id": "example-networking-ch1-q6",
+          "number": "6",
+          "type": "fill-blank",
+          "prompt": "A collection of eight bits is one _____.",
+          "acceptedAnswers": [
+            "byte"
+          ],
+          "explanation": "Eight bits form one byte."
+        }
+      ]
+    },
+    "terminology": {
+      "id": "example-networking-ch1-terms",
+      "title": "Chapter 1: Core terminology",
+      "minutes": 6,
+      "tone": "sage",
+      "questions": [
+        {
+          "id": "example-networking-ch1-term-1",
+          "number": "1",
+          "type": "written",
+          "term": "LAN",
+          "definition": "A network covering a small geographic area, such as one building.",
+          "acceptedTerms": [
+            "Local area network"
+          ]
+        },
+        {
+          "id": "example-networking-ch1-term-2",
+          "number": "2",
+          "type": "written",
+          "term": "WAN",
+          "definition": "A network spanning long geographic distances.",
+          "acceptedTerms": [
+            "Wide area network"
+          ]
+        },
+        {
+          "id": "example-networking-ch1-term-3",
+          "number": "3",
+          "type": "written",
+          "term": "Router",
+          "definition": "A device that forwards packets between IP networks."
+        }
+      ]
+    }
   }
 ]

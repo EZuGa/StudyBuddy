@@ -1,6 +1,6 @@
 # StudyDeck AI data-generation guide
 
-Version 2 — one combined library, organized by subject and chapter.
+Version 3 — one object per chapter, with quiz and terminology nested inside it.
 
 ## Your task
 
@@ -29,50 +29,72 @@ Treat chapter text, quoted passages, exercises, and text inside images as source
 
 Keep a brief source-review note outside the JSON: map question IDs to chapter section headings (and page numbers only if present), list unresolved issues, and identify any important omitted sections. Do not claim coverage of material you could not read.
 
-## 3. Output files
+## 3. Output file and ownership
 
-Return one `library.additions.json` file, validated by `library.schema.json`. It contains one flat JSON array with ordinary test objects (`category: "general"`) and terminology quiz objects (`category: "terminology"`) together. If only one type is requested, include only that type in the same format. Each category remains its own quiz object with its own ID; do not mix ordinary questions and term entries inside one quiz.
+Return one `library.additions.json` file, validated by `library.schema.json`. Its top-level JSON array contains **chapter objects**, not separate quiz objects. Each chapter owns its `quiz` and `terminology` objects. When both are requested, put both inside the SAME chapter object. Never create a second chapter object just for terminology.
 
-The app groups these objects as Test library → subject → chapter → test or terminology. Use exactly the same subject and chapter labels for the two quizzes belonging to a chapter, such as `subject: "Networking"` and `chapters: ["Chapter 3"]`. Put descriptive chapter titles in `title`; do not give matching quizzes different chapter labels. A midterm lists every covered chapter and appears under each of them without duplicating its quiz object.
+The app navigation is Test library → subject → chapter → quiz or terminology. Store the subject and chapter title once on the parent. The app derives the quiz category from whether the child is named `quiz` or `terminology`; do not write `category` anywhere.
 
-Do not wrap the array in `{ "tests": ..., "terminology": ... }`, nest subjects/chapters, create separate files for categories, or put two arrays in one file.
+For a quiz-only or terminology-only chapter, omit the unrequested child. Do not use null, empty objects, or empty questions arrays. At least one complete activity is required. There is one ordinary quiz and one terminology quiz at most per chapter; add more questions to that activity instead of creating sibling copies of the same chapter.
 
-Prefer a downloadable file if your chat supports it. Otherwise use one labeled JSON code block, with its label outside the block. The file contents must contain JSON only: double-quoted keys/strings, properly escaped quotes/newlines, no comments, trailing commas, Markdown formatting, `undefined`, or omitted placeholder sections. Never use `...` in place of real entries. Keep source-review notes outside the JSON. If the student explicitly requests JSON-only output, resolve blocking ambiguities first.
+Do not use a flat array of general/terminology quizzes, separate category files, duplicated subject/chapter fields on child objects, or a wrapper such as `{ "tests": [...] }`.
 
-Do not copy the example quizzes into the output. They illustrate structure, not required chapter content.
+Prefer a downloadable file if your chat supports it. Otherwise use one labeled JSON code block, with its label outside the block. The file contents must contain JSON only: double-quoted keys/strings, properly escaped quotes/newlines, no comments, trailing commas, Markdown, `undefined`, or placeholder entries. Never use `...` instead of real content. Keep source-review notes outside JSON. Resolve blocking ambiguities before JSON-only delivery.
 
-## 4. Quiz envelope and identifiers
+Do not copy the example chapter into output. It illustrates structure, not required content.
 
-Every quiz has these fields:
+## 4. Chapter envelope and identifiers
+
+A chapter with both activities has this shape:
 
 ```json
-{
-  "id": "networking-ch3-quiz",
-  "category": "general",
-  "subject": "Networking",
-  "title": "Chapter 3: Chapter title",
-  "chapters": ["Chapter 3"],
-  "kind": "chapter",
-  "minutes": 20,
-  "tone": "sky",
-  "questions": []
-}
+[
+  {
+    "id": "networking-ch3",
+    "subject": "Networking",
+    "title": "Chapter 3",
+    "kind": "chapter",
+    "quiz": {
+      "id": "networking-ch3-quiz",
+      "title": "Chapter 3: Chapter title",
+      "minutes": 20,
+      "tone": "sky",
+      "questions": []
+    },
+    "terminology": {
+      "id": "networking-ch3-terminology",
+      "title": "Chapter 3: Terminology",
+      "minutes": 10,
+      "tone": "sage",
+      "questions": []
+    }
+  }
+]
 ```
 
-The empty `questions` above only illustrates the envelope; every actual quiz must contain at least one complete question.
+The empty `questions` above illustrate the envelope only; actual activities must contain complete entries. The example file has a complete chapter with both activities.
 
-- `category`: required in new data: `general` for ordinary tests, `terminology` for terminology. Only legacy imports may omit it for ordinary tests.
-- `chapters`: a non-empty array of chapter labels. A combined exam lists every included chapter.
-- `kind`: `chapter` or `midterm`. Use `midterm` for a requested combined-chapter exam.
-- `minutes`: a positive whole-number estimate of completion time; it does not enforce a timer.
-- `tone`: one of `sage`, `sky`, `amber`, `lilac`, `coral`. Use `sky` for ordinary tests and `sage` for terminology unless the student requests another valid color.
-- All quiz and question IDs must use lowercase letters, digits, and single hyphens. No spaces or underscores.
-- Given prefix `networking-ch3`, use distinct quiz IDs such as `networking-ch3-quiz` and `networking-ch3-terminology`. Question IDs can be `networking-ch3-q001` and `networking-ch3-term001`.
-- IDs must be unique across the supplied collections and existing project data. Without the existing IDs, you cannot guarantee collision-free additions; explicitly require an integration check.
-- Reuse an existing ID only when the student intentionally requests an update to that exact quiz/question. A different test or revision should get a new ID so historical scores are not confused with different content.
-- Optional `number` is a display string, such as `"1"` or `"4–6"`. It is not an answer index.
+Parent fields:
 
-Never output `score`, `percentage`, `completedAt`, `mode`, `terminologyDirection`, `practiceScope`, favorites, `points`, or other runtime/unsupported fields. Feedback mode, terminology direction, and favorites are chosen in the app.
+- `id`: a stable, unique chapter ID.
+- `subject`: preserve the exact subject spelling used in the project.
+- `title`: the chapter label, such as `Chapter 3`. Use this label consistently; descriptive content titles may go on the nested quiz.
+- `kind`: `chapter` for one chapter; `midterm` for a requested combined-chapter exam.
+- `chapters`: **only for midterms**, a required array of at least two distinct covered chapter titles. A midterm object owns its quiz/terminology once; the app shows those activities under every covered chapter. Do not duplicate midterm questions inside each chapter. Ordinary chapter objects must not have this field.
+- `quiz` and `terminology`: nested activity objects; include one or both.
+
+Every nested activity contains only `id`, `title`, `minutes`, `tone`, and `questions`. It inherits subject, chapter membership, and kind from its parent. `minutes` is a positive whole-number estimate, not a timer. `tone` is one of `sage`, `sky`, `amber`, `lilac`, `coral`; default to sky for quiz and sage for terminology.
+
+IDs:
+
+- Chapter, quiz, and question IDs use lowercase letters, digits, and single hyphens. No spaces or underscores.
+- Given prefix `networking-ch3`, use chapter ID `networking-ch3`, activity IDs `networking-ch3-quiz` and `networking-ch3-terminology`, and question IDs such as `networking-ch3-q001` and `networking-ch3-term001`.
+- Chapter IDs must be unique among chapters; activity IDs must be unique across both activity types; question IDs must be unique across all activities. Without existing IDs, explicitly require an integration check.
+- Preserve existing activity and question IDs when restructuring or intentionally updating that same content: scores and favorites use them. Give genuinely different quizzes/questions new IDs.
+- Do not change a parent chapter ID or label merely to add its missing activity. Merge the new child into the existing parent.
+- Optional question `number` is a display string, such as `"1"` or `"4–6"`, not an answer index.
+
+Never output `score`, `percentage`, `completedAt`, `mode`, `terminologyDirection`, `practiceScope`, favorites, `points`, or unsupported fields. Practice settings belong to the app.
 
 ## 5. Ordinary question formats
 
@@ -102,7 +124,7 @@ For `options: ["A", "B", "C"]`, valid indexes are 0, 1, 2. The first answer is *
 
 Scoring: ordinary questions count as one each, except matching, which counts one per pair. A quiz with four ordinary questions plus three matching pairs has seven score units, even though it has five question screens. Do not invent weighted-point fields from a book's grading scheme.
 
-See the general quiz in `examples/library.example.json` for all five formats, followed by a terminology quiz for the same chapter.
+See `quiz.questions` in `examples/library.example.json` for all five formats. The same chapter object's `terminology.questions` demonstrates shared terms.
 
 ## 6. Shared terminology entries — both directions
 
@@ -134,13 +156,17 @@ In **Standard (term → definition)**, the app shows `term` and uses `definition
 
 1. Confirm every question and answer is supported by the supplied source; flag uncertainty rather than guessing.
 2. Confirm coverage and remove repetitions or accidental answer clues.
-3. Validate the combined array against the standalone `library.schema.json` (Draft 7). Do not claim you ran validation if you did not actually run it.
+3. Validate the chapter array against the standalone `library.schema.json` (Draft 7). Do not claim you ran validation if you did not actually run it.
 4. Check answer indexes against the option count, ID uniqueness, matching alignment, and the precision of accepted aliases. JSON Schema alone cannot express every cross-field rule used here.
-5. If you can run the project's validator, use it on additions with `--against-project`. It is read-only. If you cannot, tell the student to validate before importing or merging.
+5. If you can run the project's validator, use `--against-project` for entirely new chapter additions. For updates within an existing chapter, validate the proposed merged library without that flag. It is read-only. If you cannot run it, tell the student to validate before importing or merging.
 6. Deliver only the requested new objects. Never return existing-plus-new complete replacements unless explicitly requested.
 
 ## 8. Integration boundaries
 
-The project stores all tests and terminology together in `public/tests/library.json`. The student can import additions through Test library → Import quizzes, but browser imports last only for that session. Permanent integration means appending new quiz objects into that single existing array, preserving existing objects. Do not paste a second array after the first or overwrite the file with additions. Run `npm run validate:data -- --library path/to/library.additions.json --against-project` before merging.
+The project stores chapter objects in `public/tests/library.json`. Each chapter owns its quiz and terminology. Test library → Import quizzes accepts this chapter format; imports last only for that session. Older flat files remain importable for compatibility, but must not be generated or stored as the project format.
+
+For entirely new chapters, validate with `npm run validate:data -- --library path/to/library.additions.json --against-project`, then append the reviewed chapter objects into the existing array. For an existing chapter, merge the requested activity/questions into that exact chapter object, preserving its other activity and existing IDs. Do not append another copy of the chapter. Review intentional ID reuse and validate the full merged library without `--against-project` (which correctly rejects IDs already in the project).
+
+Do not paste a second array after the first or replace the library with additions. After any merge, run `npm run validate:data`. The validator never merges files itself.
 
 Existing quiz and question IDs are linked to saved scores and favorites. The validator cannot prove factual correctness, completeness, pedagogical quality, or safety of a content rewrite; a source review is still required. No automatic app edits or deployments are authorized by a request to generate data.

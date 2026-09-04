@@ -32,6 +32,35 @@ export interface TestDefinition {
   questions: TestQuestion[];
 }
 
+// The on-disk library owns both practice activities within each chapter.
+// TestDefinition is the derived, flat session model used by grading/history.
+export interface ChapterData {
+  id: string;
+  subject: string;
+  title: string;
+  kind: 'chapter' | 'midterm';
+  chapters?: string[]; // Covered chapter titles, for midterms only.
+  quiz?: ChapterQuizData;
+  terminology?: Omit<ChapterQuizData, 'questions'> & { questions: TerminologyEntry[] };
+}
+
+export interface ChapterQuizData {
+  id: string;
+  title: string;
+  minutes: number;
+  tone: TestDefinition['tone'];
+  questions: TestQuestion[];
+}
+
+export interface TerminologyEntry {
+  id: string;
+  number?: string;
+  type: 'written';
+  term: string;
+  definition: string;
+  acceptedTerms?: string[];
+}
+
 export interface QuestionAnswer {
   choice?: number;
   choices?: number[];

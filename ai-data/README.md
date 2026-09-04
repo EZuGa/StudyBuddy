@@ -34,11 +34,15 @@ npm run test:data
 
 Replace `path/to/...` with the files you received. Input paths are relative to your terminal's current directory; quote paths containing spaces. For complete replacement-file review, omit `--against-project` so the file is not compared against itself. `--examples` is a standalone mode.
 
-Errors fail validation (exit code 1). Warnings ask for manual review but do not fail it. A passing result does not prove that answers agree with the book. The schema deliberately enforces a cleaner generation format than the app's permissive legacy import parser; for example, every new quiz needs a category and new terminology must use shared term–definition objects.
+Errors fail validation (exit code 1). Warnings ask for manual review but do not fail it. A passing result does not prove that answers agree with the book. The schema deliberately enforces a cleaner generation format than the app's permissive legacy import parser; for example, the library must contain chapter objects with nested `quiz` and/or `terminology`, and terminology must use shared term–definition entries.
 
 ## Add reviewed data safely
 
-Try the file through Test library → Import quizzes. This is temporary. For permanent storage, append both ordinary and terminology quiz objects into `public/tests/library.json`. Preserve the single surrounding array and existing entries. Matching subject and chapter labels group the two quiz types together. A multi-chapter midterm appears under each included chapter without duplicated data. Re-run `npm run validate:data` after merging. Preserve existing IDs so scores and favorites remain connected.
+The file is an array of chapters. Each chapter holds `quiz` and `terminology` as child objects; subject and chapter details are stored once on the parent. See the complete chapter in `examples/library.example.json`. Do not put quizzes and terminology in separate top-level entries.
+
+Try the file through Test library → Import quizzes. This is temporary. For permanent storage, append entirely new chapter objects into `public/tests/library.json`. To add terminology or quiz questions to an existing chapter, merge into that same chapter object and retain its other activity. Do not append a duplicate chapter. For these intentional updates, validate the proposed complete merged file without `--against-project`; that flag is for new chapters only.
+
+Preserve the single surrounding array, existing content, and activity/question IDs so scores and favorites stay connected. Midterms are single parent objects with `kind: "midterm"` and `chapters` listing at least two covered chapter titles; their nested activities appear under each covered chapter. Ordinary chapter objects use `title` as their chapter label and have no `chapters` array. Re-run `npm run validate:data` after merging.
 
 The validator never writes, imports, merges, or deploys data. It uses the project's development dependency `ajv`; the schema is standalone Draft 7 JSON Schema with no external references. The kit contains no book chapters, account credentials, or score history.
 

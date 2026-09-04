@@ -415,7 +415,7 @@ export class App implements OnInit, OnDestroy {
 
   protected downloadTemplate(): void {
     const example = [{
-      id: 'my-test', category: 'general', subject: 'My subject', title: 'My chapter test', chapters: ['Chapter 1'], kind: 'chapter', minutes: 10, tone: 'coral',
+      id: 'my-test', title: 'My chapter test', minutes: 10, tone: 'coral',
       questions: [
         { id: 'q1', type: 'multiple-choice', prompt: 'Your question?', options: ['Option A', 'Option B'], correctAnswer: 0, explanation: 'Why this answer is correct.' },
         { id: 'q2', type: 'written', prompt: 'Write your response on paper.', exampleAnswer: 'A strong example response.', explanation: 'What to include.' },
@@ -424,9 +424,13 @@ export class App implements OnInit, OnDestroy {
         { id: 'q5', type: 'multiple-select', prompt: 'Select all correct statements.', options: ['Correct statement', 'Another correct statement', 'Incorrect statement'], correctAnswers: [0, 1], explanation: 'Select every correct option and no incorrect options.' },
       ],
     }];
-    const template = [...example, {
-      id: 'my-terminology-quiz', category: 'terminology', subject: 'My subject', title: 'Chapter 1: Terminology', chapters: ['Chapter 1'], kind: 'chapter', minutes: 5, tone: 'sage',
-      questions: [{ id: 'term-1', type: 'written', term: 'LAN', definition: 'A network covering a small geographic area, such as a building.', acceptedTerms: ['Local area network'] }],
+    const template = [{
+      id: 'my-chapter-1', subject: 'My subject', title: 'Chapter 1', kind: 'chapter',
+      quiz: example[0],
+      terminology: {
+        id: 'my-terminology-quiz', title: 'Chapter 1: Terminology', minutes: 5, tone: 'sage',
+        questions: [{ id: 'term-1', type: 'written', term: 'LAN', definition: 'A network covering a small geographic area, such as a building.', acceptedTerms: ['Local area network'] }],
+      },
     }];
     const url = URL.createObjectURL(new Blob([JSON.stringify(template, null, 2)], { type: 'application/json' }));
     const anchor = document.createElement('a');
