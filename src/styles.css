@@ -1,0 +1,8 @@
+:root {
+  --canvas: #f7f6f2; --surface: #ffffff; --ink: #1f2926; --muted: #6f7773; --line: #e7e6e0;
+  --coral: #ee765e; --coral-dark: #d85e48; --coral-soft: #fce7e1; --sage: #6e9d88; --sage-soft: #e5f0eb;
+  --amber: #c99346; --amber-soft: #faefd9; --sky: #5d91ad; --sky-soft: #e3eff4; --lilac: #8b7bad; --lilac-soft: #eee9f5;
+  font-family: Aptos, "Segoe UI Variable", "Segoe UI", sans-serif; color: var(--ink); background: var(--canvas); font-synthesis: none; text-rendering: optimizeLegibility;
+}
+* { box-sizing: border-box; } html { scroll-behavior: smooth; } body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--canvas); }
+button, input { font: inherit; } button, a { -webkit-tap-highlight-color: transparent; } button { cursor: pointer; } a { color: inherit; text-decoration: none; }

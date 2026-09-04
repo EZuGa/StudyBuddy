@@ -1,0 +1,350 @@
+[
+  {
+    "id": "networking-terminology-chapter-1",
+    "category": "terminology",
+    "subject": "Networking",
+    "title": "Chapter 1: Core terminology",
+    "chapters": [
+      "Chapter 1"
+    ],
+    "kind": "chapter",
+    "minutes": 20,
+    "tone": "sage",
+    "questions": [
+      {
+        "id": "net-terms-ch1-1",
+        "number": "1",
+        "type": "written",
+        "term": "Encapsulation",
+        "definition": "The process of adding headers and trailers to data as it moves down through network layers."
+      },
+      {
+        "id": "net-terms-ch1-2",
+        "number": "2",
+        "type": "written",
+        "term": "Deencapsulation",
+        "definition": "The process of removing headers and trailers as data moves up through network layers.",
+        "acceptedTerms": [
+          "Decapsulation",
+          "De-encapsulation"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-3",
+        "number": "3",
+        "type": "written",
+        "term": "DNS",
+        "definition": "A service that translates computer names to IP addresses.",
+        "acceptedTerms": [
+          "Domain Name System"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-4",
+        "number": "4",
+        "type": "written",
+        "term": "ARP",
+        "definition": "A protocol that automatically discovers a computer's MAC address from its IP address.",
+        "acceptedTerms": [
+          "Address Resolution Protocol"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-5",
+        "number": "5",
+        "type": "written",
+        "term": "LAN",
+        "definition": "A network limited to a small geographic area like a single building or floor.",
+        "acceptedTerms": [
+          "Local Area Network"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-6",
+        "number": "6",
+        "type": "written",
+        "term": "WAN",
+        "definition": "A network that spans long distances and uses third-party communication providers.",
+        "acceptedTerms": [
+          "Wide Area Network"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-7",
+        "number": "7",
+        "type": "written",
+        "term": "MAN",
+        "definition": "A network spanning a city or large geographic region using WAN technologies.",
+        "acceptedTerms": [
+          "Metropolitan Area Network"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-8",
+        "number": "8",
+        "type": "written",
+        "term": "Internet",
+        "definition": "A worldwide public internetwork using TCP/IP and other standard protocols.",
+        "acceptedTerms": [
+          "The Internet"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-9",
+        "number": "9",
+        "type": "written",
+        "term": "Intranet",
+        "definition": "A private network that uses Internet technologies but is accessible only to internal users."
+      },
+      {
+        "id": "net-terms-ch1-10",
+        "number": "10",
+        "type": "written",
+        "term": "Extranet",
+        "definition": "A network that allows limited, controlled access to internal resources by outside users."
+      }
+    ]
+  },
+  {
+    "id": "networking-terminology-chapter-2",
+    "category": "terminology",
+    "subject": "Networking",
+    "title": "Chapter 2: Hardware terminology",
+    "chapters": [
+      "Chapter 2"
+    ],
+    "kind": "chapter",
+    "minutes": 54,
+    "tone": "sage",
+    "questions": [
+      {
+        "id": "net-terms-ch2-1",
+        "number": "1",
+        "type": "written",
+        "term": "Repeater",
+        "definition": "A device that regenerates weakened bit signals to their original strength so a network connection can cover a greater distance."
+      },
+      {
+        "id": "net-terms-ch2-2",
+        "number": "2",
+        "type": "written",
+        "term": "Hub",
+        "definition": "A multiport repeater that regenerates incoming bit signals and sends them through every other connected port without inspecting frame addresses."
+      },
+      {
+        "id": "net-terms-ch2-3",
+        "number": "3",
+        "type": "written",
+        "term": "Bandwidth",
+        "definition": "The maximum data-carrying capacity of a network connection, usually measured in bits per second."
+      },
+      {
+        "id": "net-terms-ch2-4",
+        "number": "4",
+        "type": "written",
+        "term": "Throughput",
+        "definition": "The actual amount of data transferred over time, including protocol headers and the effects of real-world delays."
+      },
+      {
+        "id": "net-terms-ch2-5",
+        "number": "5",
+        "type": "written",
+        "term": "Goodput",
+        "definition": "The rate at which useful application payload is delivered, excluding protocol overhead such as headers."
+      },
+      {
+        "id": "net-terms-ch2-6",
+        "number": "6",
+        "type": "written",
+        "term": "Latency",
+        "definition": "The cumulative end-to-end delay experienced by data as it travels from sender to receiver."
+      },
+      {
+        "id": "net-terms-ch2-7",
+        "number": "7",
+        "type": "written",
+        "term": "Buffering",
+        "definition": "Temporarily storing packets or data while a device waits for processing or transmission to catch up."
+      },
+      {
+        "id": "net-terms-ch2-8",
+        "number": "8",
+        "type": "written",
+        "term": "Collision",
+        "definition": "Overlapping transmissions on a shared network medium, such as a hub-based Ethernet network, that require the affected data to be retransmitted."
+      },
+      {
+        "id": "net-terms-ch2-9",
+        "number": "9",
+        "type": "written",
+        "term": "Switch",
+        "definition": "A device that connects computers within a LAN and uses destination MAC addresses to forward frames to the appropriate ports."
+      },
+      {
+        "id": "net-terms-ch2-10",
+        "number": "10",
+        "type": "written",
+        "term": "MAC address table",
+        "definition": "A switch table that maps learned source MAC addresses to the ports on which they were received. The switch consults it to forward frames.",
+        "acceptedTerms": [
+          "Switching table",
+          "MAC table",
+          "Forwarding table"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-11",
+        "number": "11",
+        "type": "written",
+        "term": "MAC address aging",
+        "definition": "The removal of a learned MAC-to-port entry after it has not been refreshed for an inactivity period, preventing obsolete mappings from remaining indefinitely.",
+        "acceptedTerms": [
+          "MAC aging",
+          "MAC table aging"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-12",
+        "number": "12",
+        "type": "written",
+        "term": "Full-duplex",
+        "definition": "Communication in which a connection can send and receive data simultaneously.",
+        "acceptedTerms": [
+          "Full-duplex communication"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-13",
+        "number": "13",
+        "type": "written",
+        "term": "Half-duplex",
+        "definition": "Communication in which a shared connection can transmit in either direction, but not in both directions at the same time.",
+        "acceptedTerms": [
+          "Half-duplex communication"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-14",
+        "number": "14",
+        "type": "written",
+        "term": "Wireless access point (AP)",
+        "definition": "A device that connects wireless clients to a WLAN and commonly connects that wireless network to a wired Ethernet network.",
+        "acceptedTerms": [
+          "AP",
+          "Access point",
+          "Wireless access point",
+          "WAP"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-15",
+        "number": "15",
+        "type": "written",
+        "term": "Network interface card (NIC)",
+        "definition": "The hardware interface that connects a computer to copper, fiber, or wireless media and converts between frames, bits, and signals.",
+        "acceptedTerms": [
+          "NIC",
+          "Network interface card",
+          "Network adapter",
+          "Network interface controller"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-16",
+        "number": "16",
+        "type": "written",
+        "term": "MAC address",
+        "definition": "A physical interface address used for local frame delivery. In Ethernet it is 48 bits long and is commonly written as six hexadecimal byte pairs.",
+        "acceptedTerms": [
+          "Media Access Control address",
+          "Physical address"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-17",
+        "number": "17",
+        "type": "written",
+        "term": "Organizationally unique identifier (OUI)",
+        "definition": "The first 24 bits of a MAC address, identifying the organization or manufacturer assigned that address prefix.",
+        "acceptedTerms": [
+          "OUI",
+          "Organizationally unique identifier"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-18",
+        "number": "18",
+        "type": "written",
+        "term": "Unicast",
+        "definition": "Communication addressed to one specific destination."
+      },
+      {
+        "id": "net-terms-ch2-19",
+        "number": "19",
+        "type": "written",
+        "term": "Multicast",
+        "definition": "Communication addressed to a participating group of destinations rather than a single host or every host."
+      },
+      {
+        "id": "net-terms-ch2-20",
+        "number": "20",
+        "type": "written",
+        "term": "Broadcast",
+        "definition": "Communication addressed to all devices in the local broadcast domain. The Ethernet broadcast address is FF-FF-FF-FF-FF-FF."
+      },
+      {
+        "id": "net-terms-ch2-21",
+        "number": "21",
+        "type": "written",
+        "term": "Promiscuous mode",
+        "definition": "A NIC mode that disables normal destination filtering so a packet analyzer can inspect every frame visible to that interface."
+      },
+      {
+        "id": "net-terms-ch2-22",
+        "number": "22",
+        "type": "written",
+        "term": "Service set identifier (SSID)",
+        "definition": "The wireless network name configured on an access point that clients use to identify and select the network.",
+        "acceptedTerms": [
+          "SSID",
+          "Service set identifier"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-23",
+        "number": "23",
+        "type": "written",
+        "term": "Router",
+        "definition": "A device that connects IP networks and forwards packets using their destination IP addresses and a routing table. It normally does not forward local broadcast frames between networks."
+      },
+      {
+        "id": "net-terms-ch2-24",
+        "number": "24",
+        "type": "written",
+        "term": "Broadcast domain",
+        "definition": "The set of devices that can receive a local Layer-2 broadcast. Router interfaces normally form boundaries between broadcast domains."
+      },
+      {
+        "id": "net-terms-ch2-25",
+        "number": "25",
+        "type": "written",
+        "term": "Routing table",
+        "definition": "A table that associates destination IP networks with the appropriate outgoing interface or next hop used to reach them."
+      },
+      {
+        "id": "net-terms-ch2-26",
+        "number": "26",
+        "type": "written",
+        "term": "Default route",
+        "definition": "The route used when no more-specific route matches a packet’s destination network."
+      },
+      {
+        "id": "net-terms-ch2-27",
+        "number": "27",
+        "type": "written",
+        "term": "Default gateway",
+        "definition": "The local router interface to which a host sends traffic destined for a different IP network."
+      }
+    ]
+  }
+]
