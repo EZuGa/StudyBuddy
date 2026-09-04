@@ -111,7 +111,14 @@ export class App implements OnInit, OnDestroy {
     this.selectedDirection.set(direction === 'recall' && this.supportsReverse(test) ? 'recall' : 'define');
   }
 
-  protected closeTestSetup(): void { this.chooserTest.set(null); }
+  protected closeTestSetup(): void {
+    this.chooserTest.set(null);
+    const result = this.result();
+    if (this.page() === 'results' && result) {
+      this.selectedMode.set(result.mode);
+      this.selectedDirection.set(result.terminologyDirection ?? 'define');
+    }
+  }
 
   protected startChosenTest(): void {
     const test = this.chooserTest();
@@ -318,7 +325,14 @@ export class App implements OnInit, OnDestroy {
 
   protected retryTest(): void {
     const test = this.activeTest();
-    if (test) this.beginTest(test, this.selectedMode(), this.selectedDirection());
+    if (!test) return;
+    if (test.category === 'terminology') {
+      const mode = this.selectedMode();
+      this.openTestSetup(test, this.selectedDirection());
+      this.selectedMode.set(mode);
+    } else {
+      this.beginTest(test, this.selectedMode());
+    }
   }
 
   protected latestFor(testId: string, direction?: TerminologyDirection): TestAttempt | undefined { return this.progressService.latestFor(testId, direction); }
@@ -420,7 +434,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected directionLabel(direction: TerminologyDirection): string {
-    return direction === 'recall' ? 'Definition → term' : 'Term → definition';
+    return direction === 'recall' ? 'Inverted (definition → term)' : 'Standard (term → definition)';
   }
 
   protected attemptDirectionLabel(attempt: TestAttempt): string {

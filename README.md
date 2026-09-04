@@ -10,7 +10,7 @@ Run `npm run validate:data` to check the current collections, or `npm run valida
 
 ## Terminology quizzes
 
-The **Terminology** page contains a subject-first collection of written-only quizzes. Choose **Term → definition** to type or handwrite definitions and self-check them, or **Definition → term** to type automatically graded terms. Both support immediate feedback or answers at the end. Scores share the quiz ID but track the direction separately; previous terminology scores count as Term → definition.
+The **Terminology** page contains a subject-first collection of written-only quizzes. On the start screen, choose **Standard (term → definition)** to type or handwrite definitions and self-check them, or **Inverted (definition → term)** to type automatically graded terms. Both support immediate feedback or answers at the end. **Practice again** reopens these choices, with your previous settings selected. Scores share the quiz ID but track the direction separately; previous terminology scores count as Standard.
 
 Permanent terminology quizzes live in `public/tests/terminology.json`; regular tests live in `public/tests/tests.json`. Every terminology question stores one shared object with `id`, `type: "written"`, `term`, and `definition`. Both directions read this same entry—there are no separate reverse quizzes or duplicated definitions. Optional `acceptedTerms` lists alternate answers for reverse grading, which ignores capitalization, extra whitespace, trailing sentence punctuation, and hyphen differences.
 

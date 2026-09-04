@@ -195,6 +195,9 @@ describe('App', () => {
     app['gradeReview'](false);
     expect(app['result']()).toMatchObject({ score: 1, total: 2, percentage: 50 });
     app['retryTest']();
+    expect(app['chooserTest']()?.id).toBe(terminologyTest.id);
+    expect(app['selectedMode']()).toBe('end');
+    app['startChosenTest']();
     expect(app['currentIndex']()).toBe(0);
     expect(app['answers']()).toEqual({});
     expect(app['latestFor'](terminologyTest.id)?.percentage).toBe(50);
@@ -232,7 +235,100 @@ describe('App', () => {
     expect(app['result']()).toMatchObject({ score: 1, total: 1, terminologyDirection: 'recall', testId: sharedTerminologyTest.id });
     app['retryTest']();
     expect(app['selectedDirection']()).toBe('recall');
+    expect(app['chooserTest']()).toBe(sharedTerminologyTest);
+    app['startChosenTest']();
     expect(app['answers']()).toEqual({});
+  });
+
+  it.each([
+    { direction: 'define', label: 'Standard', mode: 'instant' },
+    { direction: 'define', label: 'Standard', mode: 'end' },
+    { direction: 'recall', label: 'Inverted', mode: 'instant' },
+    { direction: 'recall', label: 'Inverted', mode: 'end' },
+  ] as const)('starts $label terminology with $mode feedback through the setup controls', ({ direction, label, mode }) => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    const app = fixture.componentInstance;
+    const compiled = fixture.nativeElement as HTMLElement;
+    app['tests'].set([sharedTerminologyTest]);
+    app['navigate']('terminology');
+    app['chooseSubject']('Networking');
+    fixture.detectChanges();
+    compiled.querySelector<HTMLButtonElement>('.start-button')!.click();
+    fixture.detectChanges();
+
+    const chooser = compiled.querySelector<HTMLFieldSetElement>('.direction-chooser')!;
+    expect(chooser.querySelector('legend')?.textContent).toBe('Test type');
+    expect(chooser.textContent).toContain('Standard');
+    expect(chooser.textContent).toContain('Inverted');
+    expect(chooser.querySelector<HTMLInputElement>('[value="define"]')!.checked).toBe(true);
+    chooser.querySelector<HTMLInputElement>(`[value="${direction}"]`)!.click();
+    fixture.detectChanges();
+    compiled.querySelectorAll<HTMLButtonElement>('.mode-options > button')[mode === 'instant' ? 0 : 1].click();
+    fixture.detectChanges();
+    expect(app['selectedDirection']()).toBe(direction);
+    expect(chooser.querySelector<HTMLInputElement>(`[value="${direction}"]`)!.checked).toBe(true);
+    expect(compiled.querySelector('.start-mode')?.textContent).toContain(`Start ${label.toLowerCase()} test`);
+    compiled.querySelector<HTMLButtonElement>('.start-mode')!.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('.mode-modal')).toBeNull();
+    expect(app['activeTest']()).toBe(sharedTerminologyTest);
+    expect(app['selectedMode']()).toBe(mode);
+    expect(compiled.querySelector('.question-meta')?.textContent).toContain(label);
+    expect(compiled.querySelector('.question-card > h1')?.textContent).toContain(direction === 'define' ? sharedTerm.prompt : sharedTerm.exampleAnswer!);
+    expect(compiled.querySelector(direction === 'define' ? '#definition-answer' : '#term-answer')).not.toBeNull();
+  });
+
+  it('allows changing terminology type on retry without changing the previous score', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    const compiled = fixture.nativeElement as HTMLElement;
+    app['beginTest'](sharedTerminologyTest, 'end', 'recall');
+    app['updateWritten'](sharedTerm, textEvent('LAN'));
+    app['nextQuestion']();
+    fixture.detectChanges();
+    compiled.querySelector<HTMLButtonElement>('.result-actions .primary-button')!.click();
+    fixture.detectChanges();
+    expect(compiled.querySelector<HTMLInputElement>('.direction-chooser [value="recall"]')!.checked).toBe(true);
+    expect(app['selectedMode']()).toBe('end');
+    compiled.querySelector<HTMLInputElement>('.direction-chooser [value="define"]')!.click();
+    compiled.querySelector<HTMLButtonElement>('.start-mode')!.click();
+    fixture.detectChanges();
+    expect(app['page']()).toBe('taking');
+    expect(app['selectedDirection']()).toBe('define');
+    expect(app['answers']()).toEqual({});
+    expect(app['latestFor'](sharedTerminologyTest.id, 'recall')?.score).toBe(1);
+    expect(app['latestFor'](sharedTerminologyTest.id, 'define')).toBeUndefined();
+  });
+
+  it('restores completed terminology settings if retry setup is cancelled', () => {
+    const app = TestBed.createComponent(App).componentInstance;
+    app['beginTest'](sharedTerminologyTest, 'end', 'recall');
+    app['updateWritten'](sharedTerm, textEvent('LAN'));
+    app['nextQuestion']();
+    app['retryTest']();
+    app['selectedDirection'].set('define');
+    app['selectedMode'].set('instant');
+    app['closeTestSetup']();
+    expect(app['page']()).toBe('results');
+    expect(app['selectedMode']()).toBe('end');
+    expect(app['selectedDirection']()).toBe('recall');
+    expect(app['isCorrect'](sharedTerm)).toBe(true);
+    expect(app['result']()).toMatchObject({ score: 1, terminologyDirection: 'recall' });
+  });
+
+  it('only offers test types for terminology, disabling inverted for legacy entries', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    const compiled = fixture.nativeElement as HTMLElement;
+    app['openTestSetup'](testFixture);
+    fixture.detectChanges();
+    expect(compiled.querySelector('.direction-chooser')).toBeNull();
+    app['openTestSetup'](terminologyTest);
+    fixture.detectChanges();
+    expect(compiled.querySelector<HTMLInputElement>('.direction-chooser [value="recall"]')!.disabled).toBe(true);
+    expect(compiled.querySelector<HTMLInputElement>('.direction-chooser [value="define"]')!.checked).toBe(true);
   });
 
   it.each([
