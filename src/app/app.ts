@@ -170,7 +170,7 @@ export class App implements OnInit, OnDestroy {
     if (!scoped.questions.length) throw new Error('Add at least one favorite before starting favorites practice.');
     this.activeSourceTest.set(test);
     this.activeScope.set(scope);
-    this.activeTest.set(scoped);
+    this.activeTest.set({ ...scoped, questions: this.shuffleQuestions(scoped.questions) });
     this.selectedDirection.set(test.category === 'terminology' ? direction : 'define');
     if (this.selectedSubject() !== test.subject || !test.chapters.includes(this.selectedChapter() ?? '')) this.selectedChapter.set(test.chapters[0]);
     this.selectedSubject.set(test.subject);
@@ -387,6 +387,17 @@ export class App implements OnInit, OnDestroy {
     const questions = this.favorites.questionsFor(test);
     return { ...test, questions, minutes: questions.length ? Math.max(1, Math.ceil(test.minutes * questions.length / test.questions.length)) : 0 };
   }
+
+  private shuffleQuestions(questions: readonly TestQuestion[]): TestQuestion[] {
+    // Shuffle a session copy so library order, IDs, and answer keys stay intact.
+    const shuffled = [...questions];
+    for (let index = shuffled.length - 1; index > 0; index--) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+    }
+    return shuffled;
+  }
+
   protected isImported(testId: string): boolean { return this.importedIds().has(testId); }
 
   protected openImport(): void {

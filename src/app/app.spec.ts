@@ -20,12 +20,16 @@ const textEvent = (value: string) => ({ target: { value } }) as unknown as Event
 describe('App', () => {
   beforeEach(async () => {
     vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    // Keep unrelated workflow tests deterministic; random-order.spec covers shuffling.
+    vi.spyOn(Math, 'random').mockReturnValue(0.999);
     localStorage.clear();
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [{ provide: TestDataService, useValue: { loadTests: () => of([testFixture]) } }],
     }).compileComponents();
   });
+
+  afterEach(() => vi.restoreAllMocks());
 
   it('creates the StudyDeck app', () => {
     const fixture = TestBed.createComponent(App);
@@ -220,7 +224,7 @@ describe('App', () => {
     app['beginTest'](sharedTerminologyTest, 'instant', 'recall');
     expect(app['questionPrompt'](sharedTerm)).toBe(sharedTerm.exampleAnswer);
     expect(app['currentQuestion']()).toBe(sharedTerm);
-    expect(app['activeTest']()).toBe(sharedTerminologyTest);
+    expect(app['activeTest']()).toEqual(sharedTerminologyTest);
     expect(JSON.stringify(sharedTerminologyTest)).toBe(original);
   });
 
@@ -282,7 +286,7 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(compiled.querySelector('.mode-modal')).toBeNull();
-    expect(app['activeTest']()).toBe(sharedTerminologyTest);
+    expect(app['activeTest']()).toEqual(sharedTerminologyTest);
     expect(app['selectedMode']()).toBe(mode);
     expect(compiled.querySelector('.question-meta')?.textContent).toContain(label);
     expect(compiled.querySelector('.question-card > h1')?.textContent).toContain(direction === 'define' ? sharedTerm.prompt : sharedTerm.exampleAnswer!);

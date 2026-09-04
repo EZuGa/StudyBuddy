@@ -21,11 +21,15 @@ describe('Favorite question practice', () => {
   beforeEach(async () => {
     localStorage.clear();
     vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    // Keep unrelated workflow tests deterministic; random-order.spec covers shuffling.
+    vi.spyOn(Math, 'random').mockReturnValue(0.999);
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [{ provide: TestDataService, useValue: { loadTests: () => of([quiz, terms]) } }],
     }).compileComponents();
   });
+
+  afterEach(() => vi.restoreAllMocks());
 
   it.each(questions)('shows an accessible favorite toggle on $type questions', (question) => {
     const fixture = TestBed.createComponent(App);
@@ -117,7 +121,7 @@ describe('Favorite question practice', () => {
     expect(app['setupTest']()?.questions).toEqual([questions[2]]);
     app['selectedScope'].set('all');
     app['startChosenTest']();
-    expect(app['activeTest']()).toBe(quiz);
+    expect(app['activeTest']()).toEqual(quiz);
     expect(app['activeScope']()).toBe('all');
   });
 
