@@ -98,6 +98,9 @@
                     <div class="card-bottom">
                       <div class="metadata"><span>{{ questionUnitCount(test) }} {{ test.category === 'terminology' ? 'terms' : 'questions' }}</span><i></i><span>~{{ test.minutes }} min</span>@if (bestFor(test.id); as best) { <i></i><span>Best {{ best.percentage }}%</span> }</div>
                       <button type="button" class="start-button" (click)="openTestSetup(test)">{{ latestFor(test.id) ? 'Practice again' : 'Start test' }} <span>→</span></button>
+                      @if (favoriteCount(test); as count) {
+                        <button type="button" class="favorites-practice" (click)="openTestSetup(test, 'define', 'favorites')"><span aria-hidden="true">★</span> Practice favorites <span class="favorite-count">{{ count }}</span></button>
+                      }
                     </div>
                   </article>
                 }
@@ -116,9 +119,9 @@
               @for (attempt of attempts(); track attempt.id) {
                 <article>
                   <div class="history-score" [class.high]="attempt.percentage >= 80"><strong>{{ attempt.percentage }}</strong><span>%</span></div>
-                  <div class="history-copy"><p>{{ attempt.subject }}</p><h3>{{ attempt.testTitle }}</h3><small>{{ formatDate(attempt.completedAt) }} · {{ attempt.mode === 'instant' ? 'Learn mode' : 'Exam mode' }}@if (attemptDirectionLabel(attempt); as direction) { · {{ direction }} }</small></div>
+                  <div class="history-copy"><p>{{ attempt.subject }}</p><h3>{{ attempt.testTitle }}</h3><small>{{ formatDate(attempt.completedAt) }} · {{ attempt.mode === 'instant' ? 'Learn mode' : 'Exam mode' }}@if (attemptDirectionLabel(attempt); as direction) { · {{ direction }} } · {{ attempt.practiceScope === 'favorites' ? '★ Favorites only' : 'Full test' }}</small></div>
                   <div class="history-result"><strong>{{ attempt.score }}/{{ attempt.total }}</strong><span>correct</span></div>
-                  @if (tests().find(test => test.id === attempt.testId); as test) { <button type="button" class="history-action" (click)="openTestSetup(test, attempt.terminologyDirection ?? 'define')">Try again →</button> }
+                  @if (tests().find(test => test.id === attempt.testId); as test) { <button type="button" class="history-action" (click)="openTestSetup(test, attempt.terminologyDirection ?? 'define', attempt.practiceScope ?? 'all')">Try again →</button> }
                 </article>
               }
             </div>
@@ -135,10 +138,10 @@
     <div class="test-progress"><span [style.width.%]="progressPercent()"></span></div>
     @if (currentQuestion(); as question) {
       <main class="question-area">
-        <div class="question-meta"><span>{{ test.subject }}</span><i></i><span>{{ chapterSummary(test) }}</span>@if (test.category === 'terminology') { <i></i><span>{{ directionLabel(selectedDirection()) }}</span> }</div>
-        <div class="question-count"><span>Question {{ questionNumber(question) }}</span> of {{ questionUnitCount(test) }}</div>
+        <div class="question-meta"><span>{{ test.subject }}</span><i></i><span>{{ chapterSummary(test) }}</span>@if (test.category === 'terminology') { <i></i><span>{{ directionLabel(selectedDirection()) }}</span> }@if (activeScope() === 'favorites') { <span class="favorites-badge">★ Favorites only</span> }</div>
+        <div class="question-count"><span>Question {{ currentIndex() + 1 }}</span> of {{ test.questions.length }}</div>
         <section class="question-card">
-          <div class="type-label"><span>{{ questionTypeSymbol(question) }}</span>{{ questionTypeLabel(question) }}</div>
+          <div class="question-topline"><div class="type-label"><span>{{ questionTypeSymbol(question) }}</span>{{ questionTypeLabel(question) }}</div><app-favorite-button [testId]="test.id" [questionId]="question.id" [label]="'question ' + questionNumber(question)" /></div>
           <h1>{{ questionPrompt(question) }}</h1>
 
           @if (question.type === 'multiple-choice') {
@@ -273,7 +276,7 @@
       <main class="review-area">
         <p class="eyebrow">WRITTEN ANSWER {{ reviewIndex() + 1 }} OF {{ writtenQuestions().length }}</p><h1>Compare your work</h1><p class="review-intro">Be honest with yourself — this is how the score stays useful.</p>
         <section class="review-card">
-          <div class="review-block"><span>QUESTION {{ questionNumber(question) }}</span><p>{{ question.prompt }}</p></div>
+          <div class="review-block"><div class="review-question-heading"><span>QUESTION {{ questionNumber(question) }}</span><app-favorite-button [testId]="test.id" [questionId]="question.id" [label]="'question ' + questionNumber(question)" /></div><p>{{ question.prompt }}</p></div>
           <div class="review-block your-answer"><span>YOUR ANSWER</span><p>{{ answerFor(question.id).text?.trim() || 'Answered on paper' }}</p></div>
           <div class="review-block example"><span>EXAMPLE ANSWER</span><p>{{ question.exampleAnswer }}</p>@if (question.explanation) { <small>{{ question.explanation }}</small> }</div>
         </section>
@@ -290,14 +293,14 @@
       <main class="results-area">
         <section class="result-hero">
           <div class="score-ring" [class.great]="score.percentage >= 80"><div><strong>{{ score.score }}</strong><span>/ {{ score.total }}</span></div><small>correct</small></div>
-          <p class="eyebrow">TEST COMPLETE</p><h1>{{ resultMessage(score.percentage) }}</h1><p>{{ test.title }} · {{ score.percentage }}%@if (test.category === 'terminology') { · {{ directionLabel(selectedDirection()) }} }</p>
-          <div class="result-actions"><button class="primary-button" type="button" (click)="retryTest()">Practice again</button><button class="secondary-button" type="button" (click)="exitTest()">Choose another test</button></div>
+          <p class="eyebrow">{{ activeScope() === 'favorites' ? 'FAVORITES PRACTICE COMPLETE' : 'TEST COMPLETE' }}</p><h1>{{ resultMessage(score.percentage) }}</h1><p>{{ test.title }} · {{ score.percentage }}%@if (test.category === 'terminology') { · {{ directionLabel(selectedDirection()) }} }</p>
+          <div class="result-actions"><button class="primary-button" type="button" (click)="retryTest()">Practice again</button><button class="secondary-button" type="button" (click)="exitTest()">Choose another test</button>@if (activeSourceTest(); as source) { @if (favoriteCount(source); as count) { <button type="button" class="favorites-practice" (click)="openTestSetup(source, selectedDirection(), 'favorites')"><span aria-hidden="true">★</span> Practice favorites ({{ count }})</button> } }</div>
         </section>
         <section class="answer-review">
           <div class="section-heading"><div><h2>Answer review</h2><p>Your score is saved automatically on this device.</p></div><span>{{ score.score }} correct · {{ score.total - score.score }} to review</span></div>
           <div class="review-list">
             @for (question of test.questions; track question.id) {
-              <article [class.correct]="isCorrect(question)"><span class="review-status">{{ isCorrect(question) ? '✓' : '×' }}</span><div><small>QUESTION {{ questionNumber(question) }} · {{ questionTypeLabel(question).toUpperCase() }}</small><h3>{{ questionPrompt(question) }}</h3>
+              <article [class.correct]="isCorrect(question)"><span class="review-status">{{ isCorrect(question) ? '✓' : '×' }}</span><div><div class="review-question-heading"><small>QUESTION {{ questionNumber(question) }} · {{ questionTypeLabel(question).toUpperCase() }}</small><app-favorite-button [testId]="test.id" [questionId]="question.id" [label]="'question ' + questionNumber(question)" [compact]="true" /></div><h3>{{ questionPrompt(question) }}</h3>
                 @if (reverseTerminology()) { <p><b>Your term:</b> {{ answerFor(question.id).text || 'No answer' }}</p><p class="correct-answer"><b>Correct term:</b> {{ question.term }}</p> }
                 @else if (question.type === 'multiple-choice') { <p><b>Your answer:</b> {{ answerFor(question.id).choice === undefined ? 'No answer' : question.options?.[answerFor(question.id).choice!] }}</p><p class="correct-answer"><b>Correct answer:</b> {{ question.options?.[question.correctAnswer!] }}</p> }
                 @else if (question.type === 'multiple-select') { <p><b>Your selections:</b> {{ choiceSummary(question, answerFor(question.id).choices) }}</p><p class="correct-answer"><b>Correct selections:</b> {{ choiceSummary(question, question.correctAnswers) }}</p> }
@@ -321,6 +324,23 @@
     <section class="mode-modal" role="dialog" aria-modal="true" aria-labelledby="mode-title">
       <button class="modal-close" type="button" (click)="closeTestSetup()" aria-label="Close">×</button>
       <p class="eyebrow">{{ test.subject }} · {{ chapterSummary(test) }}</p><h2 id="mode-title">How do you want to practice?</h2><p class="modal-intro">{{ test.category === 'terminology' ? 'Choose your test type and when to see the answers.' : 'Choose when StudyDeck should reveal the answers.' }}</p>
+      <fieldset class="scope-chooser">
+        <legend>Questions to practice</legend>
+        <label [class.selected]="selectedScope() === 'all'"><input type="radio" name="practice-scope" value="all" [checked]="selectedScope() === 'all'" (change)="selectedScope.set('all')" /><span>Full test <small>{{ test.questions.length }}</small></span></label>
+        <label [class.selected]="selectedScope() === 'favorites'" [class.unavailable]="!favoriteCount(test)"><input type="radio" name="practice-scope" value="favorites" [checked]="selectedScope() === 'favorites'" [disabled]="!favoriteCount(test)" (change)="selectedScope.set('favorites')" /><span>Favorites only <small>{{ favoriteCount(test) }}</small></span></label>
+      </fieldset>
+      @if (favoriteCount(test) || selectedScope() === 'favorites') {
+        <details class="favorites-list" [open]="selectedScope() === 'favorites'">
+          <summary>Your favorites ({{ favoriteCount(test) }})</summary>
+          @if (favoriteCount(test)) {
+            <ul aria-label="Favorite questions">
+              @for (question of favorites.questionsFor(test); track question.id) {
+                <li><div><small>QUESTION {{ question.number ?? test.questions.indexOf(question) + 1 }}</small><p>{{ test.category === 'terminology' ? (question.term || question.prompt) : question.prompt }}</p></div><app-favorite-button [testId]="test.id" [questionId]="question.id" [label]="'question ' + (question.number ?? test.questions.indexOf(question) + 1)" [compact]="true" /></li>
+              }
+            </ul>
+          } @else { <p class="favorites-help" role="status">No favorites left. Choose Full test and star the questions you want to revisit.</p> }
+        </details>
+      } @else { <p class="favorites-help">Tap the star on any question while answering or reviewing to save it here.</p> }
       @if (test.category === 'terminology') {
         <fieldset class="direction-chooser">
           <legend>Test type</legend>
@@ -334,18 +354,20 @@
           </label>
         </fieldset>
         @if (!supportsReverse(test)) { <p class="direction-help">Inverted practice needs a term and definition for each entry. Use the updated terminology template to add them.</p> }
-        <p class="direction-score">@if (latestFor(test.id, selectedDirection()); as last) { Last: {{ last.percentage }}% · Best: {{ bestFor(test.id, selectedDirection())?.percentage }}% } @else { No attempts in this direction yet. }</p>
-        <h3 class="setup-section-label">Answer feedback</h3>
       }
+      <p class="direction-score">{{ selectedScope() === 'favorites' ? 'Favorites' : 'Full test' }} · @if (latestFor(test.id, test.category === 'terminology' ? selectedDirection() : undefined, selectedScope()); as last) { Last: {{ last.percentage }}% · Best: {{ bestFor(test.id, test.category === 'terminology' ? selectedDirection() : undefined, selectedScope())?.percentage }}% } @else { No attempts yet. }</p>
+      <h3 class="setup-section-label">Answer feedback</h3>
       <div class="mode-options">
         <button type="button" [class.selected]="selectedMode() === 'instant'" (click)="selectedMode.set('instant')"><span class="mode-icon learn">✓</span><div><strong>Learn as you go</strong><p>{{ setupModeDescription(test, 'instant') }}</p><small>Best for learning</small></div><i>{{ selectedMode() === 'instant' ? '●' : '' }}</i></button>
         <button type="button" [class.selected]="selectedMode() === 'end'" (click)="selectedMode.set('end')"><span class="mode-icon exam">◷</span><div><strong>Check at the end</strong><p>{{ setupModeDescription(test, 'end') }}</p><small>Best for exam practice</small></div><i>{{ selectedMode() === 'end' ? '●' : '' }}</i></button>
       </div>
-      <div class="mode-summary"><span>{{ questionUnitCount(test) }} questions</span><i></i><span>About {{ test.minutes }} minutes</span><i></i><span>{{ test.questions.filter(question => question.type === 'written').length }} written</span></div>
-      <button class="primary-button start-mode" type="button" (click)="startChosenTest()">Start {{ test.category === 'terminology' ? (selectedDirection() === 'define' ? 'standard test' : 'inverted test') : (selectedMode() === 'instant' ? 'learning' : 'test') }} <span>→</span></button>
+      @if (setupTest(); as practice) { <div class="mode-summary"><span>{{ practice.questions.length }} {{ test.category === 'terminology' ? 'terms' : 'questions' }}</span><i></i><span>{{ questionUnitCount(practice) }} points</span><i></i><span>About {{ practice.minutes }} minutes</span></div> }
+      <button class="primary-button start-mode" type="button" [disabled]="!setupTest()?.questions?.length" (click)="startChosenTest()">{{ selectedScope() === 'favorites' ? 'Practice favorites' : 'Start ' + (test.category === 'terminology' ? (selectedDirection() === 'define' ? 'standard test' : 'inverted test') : (selectedMode() === 'instant' ? 'learning' : 'test')) }} <span>→</span></button>
     </section>
   </div>
 }
+
+@if (favorites.storageNotice(); as notice) { <p class="favorites-storage-notice" role="status">{{ notice }}</p> }
 
 @if (importOpen()) {
   <div class="modal-backdrop" role="presentation">

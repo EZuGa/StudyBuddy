@@ -23,4 +23,16 @@ describe('Terminology progress', () => {
     expect(service.latestFor('terms')?.id).toBe('reverse');
     expect(JSON.parse(localStorage.getItem('studydeck-score-history-v2')!)).toHaveLength(2);
   });
+
+  it('keeps favorites scores separate from full tests in each terminology direction', () => {
+    const service = TestBed.inject(ProgressService);
+    service.addAttempt({ ...legacy, id: 'favorites-define', practiceScope: 'favorites', score: 1, total: 1, percentage: 100 });
+    service.addAttempt({ ...legacy, id: 'favorites-recall', practiceScope: 'favorites', terminologyDirection: 'recall', score: 0, total: 1, percentage: 0 });
+    expect(service.latestFor('terms')).toEqual(legacy);
+    expect(service.bestFor('terms')?.percentage).toBe(50);
+    expect(service.latestFor('terms', 'define', 'favorites')?.percentage).toBe(100);
+    expect(service.bestFor('terms', 'recall', 'favorites')?.percentage).toBe(0);
+    expect(service.latestFor('terms', 'recall')).toBeUndefined();
+    expect(new ProgressService().latestFor('terms', 'define', 'favorites')?.id).toBe('favorites-define');
+  });
 });

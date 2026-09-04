@@ -1,6 +1,7 @@
 export type QuestionType = 'multiple-choice' | 'multiple-select' | 'written' | 'matching' | 'fill-blank';
 export type FeedbackMode = 'instant' | 'end';
 export type TerminologyDirection = 'define' | 'recall';
+export type PracticeScope = 'all' | 'favorites';
 export type AppPage = 'library' | 'terminology' | 'history' | 'taking' | 'written-review' | 'results';
 
 export interface TestQuestion {
@@ -52,5 +53,6 @@ export interface TestAttempt {
   percentage: number;
   mode: FeedbackMode;
   terminologyDirection?: TerminologyDirection;
+  practiceScope?: PracticeScope;
   completedAt: string;
 }

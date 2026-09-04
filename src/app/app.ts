@@ -1,16 +1,20 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { AppPage, FeedbackMode, QuestionAnswer, TerminologyDirection, TestAttempt, TestDefinition, TestQuestion } from './models';
+import { AppPage, FeedbackMode, PracticeScope, QuestionAnswer, TerminologyDirection, TestAttempt, TestDefinition, TestQuestion } from './models';
+import { FavoriteButton } from './favorite-button';
+import { FavoritesService } from './favorites.service';
 import { ProgressService } from './progress.service';
 import { TestDataService } from './test-data.service';
 
 @Component({
   selector: 'app-root',
+  imports: [FavoriteButton],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App implements OnInit, OnDestroy {
   private readonly dataService = inject(TestDataService);
   private readonly progressService = inject(ProgressService);
+  protected readonly favorites = inject(FavoritesService);
 
   protected readonly tests = signal<TestDefinition[]>([]);
   protected readonly attempts = this.progressService.attempts;
@@ -23,6 +27,9 @@ export class App implements OnInit, OnDestroy {
   protected readonly chooserTest = signal<TestDefinition | null>(null);
   protected readonly selectedMode = signal<FeedbackMode>('instant');
   protected readonly selectedDirection = signal<TerminologyDirection>('define');
+  protected readonly selectedScope = signal<PracticeScope>('all');
+  protected readonly activeScope = signal<PracticeScope>('all');
+  protected readonly activeSourceTest = signal<TestDefinition | null>(null);
   protected readonly activeTest = signal<TestDefinition | null>(null);
   protected readonly currentIndex = signal(0);
   protected readonly answers = signal<Record<string, QuestionAnswer>>({});
@@ -63,6 +70,10 @@ export class App implements OnInit, OnDestroy {
     });
   });
   protected readonly currentQuestion = computed(() => this.activeTest()?.questions[this.currentIndex()] ?? null);
+  protected readonly setupTest = computed(() => {
+    const test = this.chooserTest();
+    return test ? this.scopedTest(test, this.selectedScope()) : null;
+  });
   protected readonly reverseTerminology = computed(() => this.activeTest()?.category === 'terminology' && this.selectedDirection() === 'recall');
   protected readonly writtenQuestions = computed(() => this.reverseTerminology() ? [] : this.activeTest()?.questions.filter((question) => question.type === 'written') ?? []);
   protected readonly reviewQuestion = computed(() => this.writtenQuestions()[this.reviewIndex()] ?? null);
@@ -105,8 +116,9 @@ export class App implements OnInit, OnDestroy {
     document.getElementById('library')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
   }
 
-  protected openTestSetup(test: TestDefinition, direction: TerminologyDirection = 'define'): void {
+  protected openTestSetup(test: TestDefinition, direction: TerminologyDirection = 'define', scope: PracticeScope = 'all'): void {
     this.chooserTest.set(test);
+    this.selectedScope.set(scope);
     this.selectedMode.set('instant');
     this.selectedDirection.set(direction === 'recall' && this.supportsReverse(test) ? 'recall' : 'define');
   }
@@ -117,19 +129,24 @@ export class App implements OnInit, OnDestroy {
     if (this.page() === 'results' && result) {
       this.selectedMode.set(result.mode);
       this.selectedDirection.set(result.terminologyDirection ?? 'define');
+      this.selectedScope.set(this.activeScope());
     }
   }
 
   protected startChosenTest(): void {
     const test = this.chooserTest();
-    if (!test) return;
+    if (!test || !this.setupTest()?.questions.length) return;
     this.chooserTest.set(null);
-    this.beginTest(test, this.selectedMode(), this.selectedDirection());
+    this.beginTest(test, this.selectedMode(), this.selectedDirection(), this.selectedScope());
   }
 
-  private beginTest(test: TestDefinition, mode: FeedbackMode, direction: TerminologyDirection = 'define'): void {
+  private beginTest(test: TestDefinition, mode: FeedbackMode, direction: TerminologyDirection = 'define', scope: PracticeScope = 'all'): void {
     if (direction === 'recall' && !this.supportsReverse(test)) throw new Error('Reverse practice requires an explicit term and definition for every question.');
-    this.activeTest.set(test);
+    const scoped = this.scopedTest(test, scope);
+    if (!scoped.questions.length) throw new Error('Add at least one favorite before starting favorites practice.');
+    this.activeSourceTest.set(test);
+    this.activeScope.set(scope);
+    this.activeTest.set(scoped);
     this.selectedDirection.set(test.category === 'terminology' ? direction : 'define');
     this.selectedSubject.set(test.subject);
     this.search.set('');
@@ -145,6 +162,7 @@ export class App implements OnInit, OnDestroy {
   protected exitTest(): void {
     const destination = this.activeTest()?.category === 'terminology' ? 'terminology' : 'library';
     this.activeTest.set(null);
+    this.activeSourceTest.set(null);
     this.answers.set({});
     this.page.set(destination);
   }
@@ -315,6 +333,7 @@ export class App implements OnInit, OnDestroy {
       percentage: Math.round((score / total) * 100),
       mode: this.selectedMode(),
       ...(test.category === 'terminology' ? { terminologyDirection: this.selectedDirection() } : {}),
+      ...(this.activeScope() === 'favorites' ? { practiceScope: 'favorites' as const } : {}),
       completedAt: new Date().toISOString(),
     };
     this.progressService.addAttempt(attempt);
@@ -324,19 +343,26 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected retryTest(): void {
-    const test = this.activeTest();
+    const test = this.activeSourceTest();
     if (!test) return;
-    if (test.category === 'terminology') {
+    if (test.category === 'terminology' || this.activeScope() === 'favorites') {
       const mode = this.selectedMode();
-      this.openTestSetup(test, this.selectedDirection());
+      this.openTestSetup(test, this.selectedDirection(), this.activeScope());
       this.selectedMode.set(mode);
     } else {
       this.beginTest(test, this.selectedMode());
     }
   }
 
-  protected latestFor(testId: string, direction?: TerminologyDirection): TestAttempt | undefined { return this.progressService.latestFor(testId, direction); }
-  protected bestFor(testId: string, direction?: TerminologyDirection): TestAttempt | undefined { return this.progressService.bestFor(testId, direction); }
+  protected latestFor(testId: string, direction?: TerminologyDirection, scope: PracticeScope = 'all'): TestAttempt | undefined { return this.progressService.latestFor(testId, direction, scope); }
+  protected bestFor(testId: string, direction?: TerminologyDirection, scope: PracticeScope = 'all'): TestAttempt | undefined { return this.progressService.bestFor(testId, direction, scope); }
+  protected favoriteCount(test: TestDefinition): number { return this.favorites.questionsFor(test).length; }
+
+  private scopedTest(test: TestDefinition, scope: PracticeScope): TestDefinition {
+    if (scope === 'all') return test;
+    const questions = this.favorites.questionsFor(test);
+    return { ...test, questions, minutes: questions.length ? Math.max(1, Math.ceil(test.minutes * questions.length / test.questions.length)) : 0 };
+  }
   protected isImported(testId: string): boolean { return this.importedIds().has(testId); }
 
   protected openImport(): void {
@@ -401,7 +427,7 @@ export class App implements OnInit, OnDestroy {
     return '✦';
   }
 
-  protected questionNumber(question: TestQuestion): string { return question.number ?? String((this.activeTest()?.questions.indexOf(question) ?? 0) + 1); }
+  protected questionNumber(question: TestQuestion): string { return question.number ?? String(((this.activeSourceTest() ?? this.activeTest())?.questions.indexOf(question) ?? 0) + 1); }
   protected questionUnitCount(test: TestDefinition): number { return test.questions.reduce((total, question) => total + (question.type === 'matching' ? question.pairs?.length ?? 1 : 1), 0); }
   protected progressPercent(): number { return ((this.currentIndex() + 1) / (this.activeTest()?.questions.length || 1)) * 100; }
   protected optionLetter(index: number): string { return String.fromCharCode(65 + index); }

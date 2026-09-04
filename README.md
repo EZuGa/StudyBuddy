@@ -20,6 +20,14 @@ Permanent terminology quizzes live in `public/tests/terminology.json`; regular t
 
 Keep `category: "terminology"` on the quiz when sharing it as an import. The Terminology page's downloadable template uses this format. Older written `prompt`/`exampleAnswer` imports still work in the ordinary direction; reverse practice requires explicit term–definition entries. Browser imports remain session-only, and either project file can be an empty array.
 
+## Favorites practice
+
+Use the star on any question or terminology entry while answering, self-checking, or reviewing results. Each quiz keeps its own favorites list. Open **Practice favorites** on its card, or choose **Favorites only** in the start screen, to view/remove favorites and practice just those entries. Both feedback modes and both terminology directions are supported. A matching question is saved as one item, including all its pairs.
+
+Only quiz/question IDs are saved in `studydeck-favorites-v1` in localStorage; question content remains in the project JSON files. Standard and Inverted share the same favorites. Removed or unknown question IDs are ignored. If browser storage is unavailable, favorites work for the session and the app shows a notice.
+
+Favorites sessions use a fixed question selection for the current run, so removing a star does not skip questions or change that run's score. Retaking uses the current favorites list. Favorites scores are labeled separately in history and do not replace full-test last/best scores; older scores remain full-test attempts.
+
 ## Development server
 
 To start a local development server, run:

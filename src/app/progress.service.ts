@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { TerminologyDirection, TestAttempt } from './models';
+import { PracticeScope, TerminologyDirection, TestAttempt } from './models';
 
 const STORAGE_KEY = 'studydeck-score-history-v2';
 const LEGACY_STORAGE_KEY = 'studydeck-score-history-v1';
@@ -18,16 +18,16 @@ export class ProgressService {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* The app still works when storage is unavailable. */ }
   }
 
-  latestFor(testId: string, direction?: TerminologyDirection): TestAttempt | undefined {
-    return this.attempts().find((attempt) => this.matches(attempt, testId, direction));
+  latestFor(testId: string, direction?: TerminologyDirection, scope: PracticeScope = 'all'): TestAttempt | undefined {
+    return this.attempts().find((attempt) => this.matches(attempt, testId, direction, scope));
   }
 
-  bestFor(testId: string, direction?: TerminologyDirection): TestAttempt | undefined {
-    return this.attempts().filter((attempt) => this.matches(attempt, testId, direction)).sort((a, b) => b.percentage - a.percentage)[0];
+  bestFor(testId: string, direction?: TerminologyDirection, scope: PracticeScope = 'all'): TestAttempt | undefined {
+    return this.attempts().filter((attempt) => this.matches(attempt, testId, direction, scope)).sort((a, b) => b.percentage - a.percentage)[0];
   }
 
-  private matches(attempt: TestAttempt, testId: string, direction?: TerminologyDirection): boolean {
-    return attempt.testId === testId && (!direction || (attempt.terminologyDirection ?? 'define') === direction);
+  private matches(attempt: TestAttempt, testId: string, direction: TerminologyDirection | undefined, scope: PracticeScope): boolean {
+    return attempt.testId === testId && (attempt.practiceScope ?? 'all') === scope && (!direction || (attempt.terminologyDirection ?? 'define') === direction);
   }
 
   private read(): TestAttempt[] {
