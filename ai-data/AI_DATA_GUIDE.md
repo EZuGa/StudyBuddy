@@ -1,10 +1,10 @@
 # StudyDeck AI data-generation guide
 
-Version 1 — a standalone specification for a fresh AI conversation.
+Version 2 — one combined library, organized by subject and chapter.
 
 ## Your task
 
-Turn book chapters supplied by the student into importable quiz data for StudyDeck, a frontend-only study app. Do not assume access to its source code, previous conversations, or existing quizzes. This document, the two accompanying JSON schemas, and the examples describe the complete generation contract.
+Turn book chapters supplied by the student into importable quiz data for StudyDeck, a frontend-only study app. Do not assume access to its source code, previous conversations, or existing quizzes. This document, `library.schema.json`, and `examples/library.example.json` describe the complete generation contract.
 
 Generate ordinary tests and/or terminology quizzes as requested. Never change the application, create a backend, store data in a browser, publish anything, or generate score history. You produce data additions for the student to review.
 
@@ -31,14 +31,13 @@ Keep a brief source-review note outside the JSON: map question IDs to chapter se
 
 ## 3. Output files
 
-Return two separate JSON arrays when both types are requested:
+Return one `library.additions.json` file, validated by `library.schema.json`. It contains one flat JSON array with ordinary test objects (`category: "general"`) and terminology quiz objects (`category: "terminology"`) together. If only one type is requested, include only that type in the same format. Each category remains its own quiz object with its own ID; do not mix ordinary questions and term entries inside one quiz.
 
-- `tests.additions.json`: ordinary quizzes only, validated by `tests.schema.json`.
-- `terminology.additions.json`: shared terminology quizzes only, validated by `terminology.schema.json`.
+The app groups these objects as Test library → subject → chapter → test or terminology. Use exactly the same subject and chapter labels for the two quizzes belonging to a chapter, such as `subject: "Networking"` and `chapters: ["Chapter 3"]`. Put descriptive chapter titles in `title`; do not give matching quizzes different chapter labels. A midterm lists every covered chapter and appears under each of them without duplicating its quiz object.
 
-When only one collection is requested, return only that file. Each file must be a valid JSON array even when it contains just one quiz. Do not wrap them in `{ "tests": ..., "terminology": ... }` and do not put two arrays in one file.
+Do not wrap the array in `{ "tests": ..., "terminology": ... }`, nest subjects/chapters, create separate files for categories, or put two arrays in one file.
 
-Prefer downloadable files if your chat supports them. Otherwise use two separately labeled JSON code blocks, with labels outside the blocks. The file contents must contain JSON only: double-quoted keys/strings, properly escaped quotes/newlines, no comments, trailing commas, Markdown formatting, `undefined`, or omitted placeholder sections. Never use `...` in place of real entries. Keep source-review notes outside the JSON. If the student explicitly requests JSON-only output, resolve blocking ambiguities first and deliver each requested file separately.
+Prefer a downloadable file if your chat supports it. Otherwise use one labeled JSON code block, with its label outside the block. The file contents must contain JSON only: double-quoted keys/strings, properly escaped quotes/newlines, no comments, trailing commas, Markdown formatting, `undefined`, or omitted placeholder sections. Never use `...` in place of real entries. Keep source-review notes outside the JSON. If the student explicitly requests JSON-only output, resolve blocking ambiguities first.
 
 Do not copy the example quizzes into the output. They illustrate structure, not required chapter content.
 
@@ -62,7 +61,7 @@ Every quiz has these fields:
 
 The empty `questions` above only illustrates the envelope; every actual quiz must contain at least one complete question.
 
-- `category`: `general` for ordinary tests, `terminology` for terminology. Ordinary legacy quizzes can omit this, but include it in new output.
+- `category`: required in new data: `general` for ordinary tests, `terminology` for terminology. Only legacy imports may omit it for ordinary tests.
 - `chapters`: a non-empty array of chapter labels. A combined exam lists every included chapter.
 - `kind`: `chapter` or `midterm`. Use `midterm` for a requested combined-chapter exam.
 - `minutes`: a positive whole-number estimate of completion time; it does not enforce a timer.
@@ -73,7 +72,7 @@ The empty `questions` above only illustrates the envelope; every actual quiz mus
 - Reuse an existing ID only when the student intentionally requests an update to that exact quiz/question. A different test or revision should get a new ID so historical scores are not confused with different content.
 - Optional `number` is a display string, such as `"1"` or `"4–6"`. It is not an answer index.
 
-Never output `score`, `percentage`, `completedAt`, `mode`, `terminologyDirection`, `points`, or other runtime/unsupported fields. Feedback mode and terminology direction are chosen in the app.
+Never output `score`, `percentage`, `completedAt`, `mode`, `terminologyDirection`, `practiceScope`, favorites, `points`, or other runtime/unsupported fields. Feedback mode, terminology direction, and favorites are chosen in the app.
 
 ## 5. Ordinary question formats
 
@@ -103,7 +102,7 @@ For `options: ["A", "B", "C"]`, valid indexes are 0, 1, 2. The first answer is *
 
 Scoring: ordinary questions count as one each, except matching, which counts one per pair. A quiz with four ordinary questions plus three matching pairs has seven score units, even though it has five question screens. Do not invent weighted-point fields from a book's grading scheme.
 
-See `examples/tests.example.json` for a complete quiz containing all five formats.
+See the general quiz in `examples/library.example.json` for all five formats, followed by a terminology quiz for the same chapter.
 
 ## 6. Shared terminology entries — both directions
 
@@ -120,7 +119,7 @@ Terminology quizzes must contain written entries only. Store each concept once:
 }
 ```
 
-In **Term → definition**, the app shows `term` and uses `definition` as the example for self-checking. In **Definition → term**, it shows `definition` and automatically checks the typed response against `term` and `acceptedTerms`.
+In **Standard (term → definition)**, the app shows `term` and uses `definition` as the example for self-checking. In **Inverted (definition → term)**, it shows `definition` and automatically checks the typed response against `term` and `acceptedTerms`.
 
 - Do not create separate forward and reverse quiz objects.
 - Do not include `prompt`, `exampleAnswer`, `options`, `correctAnswer`, `acceptedAnswers`, or `explanation` in new terminology entries. The app derives the presentation from the single term–definition pair.
@@ -135,13 +134,13 @@ In **Term → definition**, the app shows `term` and uses `definition` as the ex
 
 1. Confirm every question and answer is supported by the supplied source; flag uncertainty rather than guessing.
 2. Confirm coverage and remove repetitions or accidental answer clues.
-3. Validate ordinary and terminology arrays against their respective standalone JSON schemas (Draft 7). Do not claim you ran validation if you did not actually run it.
+3. Validate the combined array against the standalone `library.schema.json` (Draft 7). Do not claim you ran validation if you did not actually run it.
 4. Check answer indexes against the option count, ID uniqueness, matching alignment, and the precision of accepted aliases. JSON Schema alone cannot express every cross-field rule used here.
 5. If you can run the project's validator, use it on additions with `--against-project`. It is read-only. If you cannot, tell the student to validate before importing or merging.
 6. Deliver only the requested new objects. Never return existing-plus-new complete replacements unless explicitly requested.
 
 ## 8. Integration boundaries
 
-The project stores ordinary tests in `public/tests/tests.json` and terminology in `public/tests/terminology.json`. The student can import additions through the appropriate page to try them, but browser imports last only for that session. Permanent integration means appending the new quiz objects into the existing array in the correct project file, keeping one valid JSON array and preserving existing objects. Do not paste a second array after the first or overwrite the entire file with additions.
+The project stores all tests and terminology together in `public/tests/library.json`. The student can import additions through Test library → Import quizzes, but browser imports last only for that session. Permanent integration means appending new quiz objects into that single existing array, preserving existing objects. Do not paste a second array after the first or overwrite the file with additions. Run `npm run validate:data -- --library path/to/library.additions.json --against-project` before merging.
 
-Existing quiz IDs are linked to saved scores. The validator cannot prove factual correctness, completeness, pedagogical quality, or safety of a content rewrite; a source review is still required. No automatic app edits or deployments are authorized by a request to generate data.
+Existing quiz and question IDs are linked to saved scores and favorites. The validator cannot prove factual correctness, completeness, pedagogical quality, or safety of a content rewrite; a source review is still required. No automatic app edits or deployments are authorized by a request to generate data.

@@ -3,63 +3,497 @@
     "id": "networking-chapter-1",
     "subject": "Networking",
     "title": "Chapter 1: Computer & Networking Fundamentals",
-    "chapters": ["Chapter 1"],
+    "chapters": [
+      "Chapter 1"
+    ],
     "kind": "chapter",
     "minutes": 75,
     "tone": "sky",
     "questions": [
-      { "id": "net-1", "number": "1", "type": "multiple-choice", "prompt": "Which of the following is NOT one of the three basic functions all computers perform?", "options": ["Input", "Processing", "Storage", "Output"], "correctAnswer": 2, "explanation": "The three basic functions in this chapter are input, processing, and output." },
-      { "id": "net-2", "number": "2", "type": "multiple-choice", "prompt": "A network interface card (NIC) can function as which of the following?", "options": ["Input device only", "Output device only", "Both input and output device", "Input, output, and processing device"], "correctAnswer": 3, "explanation": "A NIC receives input, transmits output, and uses onboard processing to handle network communication." },
-      { "id": "net-3", "number": "3", "type": "multiple-choice", "prompt": "Which component interprets and executes instructions in a computer program?", "options": ["GPU", "RAM", "CPU", "Chipset"], "correctAnswer": 2, "explanation": "The central processing unit interprets and executes program instructions." },
-      { "id": "net-4", "number": "4", "type": "multiple-choice", "prompt": "What is the primary advantage of a multicore CPU?", "options": ["It uses less electricity than a single-core CPU", "It can carry out multiple instructions simultaneously", "It eliminates the need for RAM", "It replaces the need for a GPU"], "correctAnswer": 1, "explanation": "Multiple cores let the processor work on multiple instruction streams at the same time." },
-      { "id": "net-5", "number": "5", "type": "multiple-choice", "prompt": "Which type of storage is volatile and loses its data when power is turned off?", "options": ["Hard disk drive", "USB flash drive", "Solid-state drive", "RAM"], "correctAnswer": 3, "explanation": "RAM requires continuous power to retain its contents." },
-      { "id": "net-6", "number": "6", "type": "multiple-choice", "prompt": "How many bytes are in 1 gigabyte when using human-readable decimal notation?", "options": ["1,000,000 bytes", "1,000,000,000 bytes", "1,073,741,824 bytes", "1,024,000,000 bytes"], "correctAnswer": 1, "explanation": "Decimal notation uses powers of 1,000, so one gigabyte is one billion bytes." },
-      { "id": "net-7", "number": "7", "type": "multiple-choice", "prompt": "Which motherboard component controls data transfers between memory, expansion slots, I/O devices, and the CPU?", "options": ["CMOS", "Chipset", "BIOS", "SATA controller"], "correctAnswer": 1, "explanation": "The motherboard chipset manages communication and data transfers among major components." },
-      { "id": "net-8", "number": "8", "type": "multiple-choice", "prompt": "Which expansion slot type is best suited for a high-performance graphics card?", "options": ["PCI bus expansion slot", "IDE connector", "PCI Express bus expansion slot", "SATA connector"], "correctAnswer": 2, "explanation": "Modern high-performance graphics cards use a PCI Express expansion slot." },
-      { "id": "net-9", "number": "9", "type": "multiple-choice", "prompt": "What is the time required for a hard drive's read/write heads to move to the correct location on the platter called?", "options": ["Rotational delay", "Seek time", "Transfer time", "Access time"], "correctAnswer": 1, "explanation": "Seek time measures the movement of the read/write heads to the requested track." },
-      { "id": "net-10", "number": "10", "type": "multiple-choice", "prompt": "Which type of storage device has no moving parts and typically uses flash memory?", "options": ["Hard disk drive", "Optical drive", "Solid-state drive (SSD)", "Magnetic tape drive"], "correctAnswer": 2, "explanation": "An SSD stores data in flash memory and has no mechanical read/write assembly." },
-      { "id": "net-11", "number": "11", "type": "multiple-choice", "prompt": "What is the main function of firmware (BIOS/UEFI) when a computer is first powered on?", "options": ["Load the web browser", "Initialize hardware and begin the boot procedure", "Connect to the network automatically", "Format the hard drive"], "correctAnswer": 1, "explanation": "BIOS or UEFI initializes hardware, performs startup checks, and starts the boot process." },
-      { "id": "net-12", "number": "12", "type": "multiple-choice", "prompt": "Which of the following is the correct order of the boot procedure?", "options": ["Power applied → CPU starts → POST → OS loaded into RAM → boot devices searched → OS services started", "Power applied → CPU starts → POST → boot devices searched → OS loaded into RAM → OS services started", "CPU starts → Power applied → POST → boot devices searched → OS services started → OS loaded into RAM", "Power applied → POST → CPU starts → OS loaded into RAM → boot devices searched → OS services started"], "correctAnswer": 1, "explanation": "After power reaches the system, the CPU starts, POST runs, a boot device is found, the OS loads into RAM, and OS services begin." },
-      { "id": "net-13", "number": "13", "type": "multiple-choice", "prompt": "Which software component receives data from network protocols and forwards it to the physical NIC for transmission?", "options": ["Network client software", "Network server software", "NIC device driver", "Web browser"], "correctAnswer": 2, "explanation": "The NIC device driver connects the operating system's network stack to the physical network interface." },
-      { "id": "net-14", "number": "14", "type": "multiple-choice", "prompt": "In the layers of network communication, which layer packages the message in a format suitable for the network and sends it to the NIC driver?", "options": ["User application", "Network client software", "Network protocol", "Network interface"], "correctAnswer": 2, "explanation": "The network protocol layer packages the message and passes it to the NIC driver." },
-      { "id": "net-15", "number": "15", "type": "multiple-choice", "prompt": "Which network address is used to get a message to the correct computer on a local network?", "options": ["IP address", "MAC address", "DNS name", "Default gateway"], "correctAnswer": 1, "explanation": "A frame uses the destination MAC address to reach the correct interface on the local network." },
-
-      { "id": "net-16", "number": "16", "type": "multiple-choice", "prompt": "True or False: A keyboard is an example of a component that performs only input functions.", "options": ["True", "False"], "correctAnswer": 0, "explanation": "A keyboard sends input to the computer and does not provide computer output." },
-      { "id": "net-17", "number": "17", "type": "multiple-choice", "prompt": "True or False: RAM access time is measured in milliseconds, while hard disk access time is measured in nanoseconds.", "options": ["True", "False"], "correctAnswer": 1, "explanation": "The statement is reversed: RAM is measured in nanoseconds, while hard-drive access is measured in milliseconds." },
-      { "id": "net-18", "number": "18", "type": "multiple-choice", "prompt": "True or False: A bus is a collection of wires that carries data from one place to another inside a computer.", "options": ["True", "False"], "correctAnswer": 0, "explanation": "A bus is a shared set of electrical pathways used to carry data and signals." },
-      { "id": "net-19", "number": "19", "type": "multiple-choice", "prompt": "True or False: The chipset on a motherboard includes the northbridge and southbridge, which manage data transfers between components.", "options": ["True", "False"], "correctAnswer": 0, "explanation": "In the traditional chipset design, the northbridge and southbridge coordinate transfers among major components." },
-      { "id": "net-20", "number": "20", "type": "multiple-choice", "prompt": "True or False: Two computers can communicate using different protocols as long as they both have NICs installed.", "options": ["True", "False"], "correctAnswer": 1, "explanation": "The communicating computers must use compatible network protocols; NICs alone are not enough." },
-      { "id": "net-21", "number": "21", "type": "multiple-choice", "prompt": "True or False: A packet contains source and destination MAC addresses.", "options": ["True", "False"], "correctAnswer": 1, "explanation": "Packets contain logical IP addresses; frames contain physical MAC addresses." },
-      { "id": "net-22", "number": "22", "type": "multiple-choice", "prompt": "True or False: A frame is created when MAC addresses and an error-checking code are added to a packet.", "options": ["True", "False"], "correctAnswer": 0, "explanation": "At the network interface layer, MAC addressing and error-checking information wrap the packet into a frame." },
-      { "id": "net-23", "number": "23", "type": "multiple-choice", "prompt": "True or False: The Internet is an example of a private network.", "options": ["True", "False"], "correctAnswer": 1, "explanation": "The Internet is a public internetwork; an intranet is private." },
-      { "id": "net-24", "number": "24", "type": "multiple-choice", "prompt": "True or False: In a peer-to-peer network, centralized servers control all shared resources and user credentials.", "options": ["True", "False"], "correctAnswer": 1, "explanation": "Peer-to-peer networks have no centralized server controlling all resources or credentials." },
-      { "id": "net-25", "number": "25", "type": "multiple-choice", "prompt": "True or False: A PAN (Personal Area Network) typically uses Bluetooth technology to connect devices.", "options": ["True", "False"], "correctAnswer": 0, "explanation": "Bluetooth is a common short-range technology for personal area networks." },
-
-      { "id": "net-26-35", "number": "26–35", "type": "matching", "prompt": "Match each term on the left with the correct definition on the right.", "pairs": [
-        { "term": "Encapsulation", "definition": "The process of adding headers and trailers to data as it moves down through network layers" },
-        { "term": "Deencapsulation", "definition": "The process of removing headers and trailers as data moves up through network layers" },
-        { "term": "DNS", "definition": "A service that translates computer names to IP addresses" },
-        { "term": "ARP", "definition": "A protocol that automatically discovers a computer's MAC address from its IP address" },
-        { "term": "LAN", "definition": "A network limited to a small geographic area like a single building or floor" },
-        { "term": "WAN", "definition": "A network that spans long distances and uses third-party communication providers" },
-        { "term": "MAN", "definition": "A network spanning a city or large geographic region using WAN technologies" },
-        { "term": "Internet", "definition": "A worldwide public internetwork using TCP/IP and other standard protocols" },
-        { "term": "Intranet", "definition": "A private network that uses Internet technologies but is accessible only to internal users" },
-        { "term": "Extranet", "definition": "A network that allows limited, controlled access to internal resources by outside users" }
-      ], "explanation": "Each network term describes a distinct process, service, scope, or access model." },
-
-      { "id": "net-36", "number": "36", "type": "fill-blank", "prompt": "A collection of 8 bits is called a _____.", "acceptedAnswers": ["byte"], "explanation": "Eight bits form one byte." },
-      { "id": "net-37", "number": "37", "type": "fill-blank", "prompt": "The two chips on a motherboard that control data transfers between major components are collectively called the _____.", "acceptedAnswers": ["chipset", "northbridge and southbridge", "northbridge & southbridge"], "explanation": "The traditional northbridge and southbridge chips together form the motherboard chipset." },
-      { "id": "net-38", "number": "38", "type": "fill-blank", "prompt": "The _____ address is like a “zip code” that gets a message to the correct network, while the _____ address is like a “street address” that gets it to the correct computer.", "acceptedAnswers": ["IP, MAC", "IP and MAC", "IP address, MAC address", "IP address and MAC address", "logical, physical", "logical and physical", "logical address, physical address", "logical address and physical address"], "explanation": "IP is the logical network-level address; MAC is the physical local-interface address." },
-      { "id": "net-39", "number": "39", "type": "fill-blank", "prompt": "The command used to test basic network connectivity between two computers is _____.", "acceptedAnswers": ["ping", "ping command"], "explanation": "The ping command sends echo requests to test whether another host is reachable." },
-      { "id": "net-40", "number": "40", "type": "fill-blank", "prompt": "The Windows server software that provides centralized user account management and security policies is called _____ _____.", "acceptedAnswers": ["Active Directory", "directory service", "Active Directory Domain Services", "AD DS"], "explanation": "Active Directory provides centralized identity, account, and policy management in Windows domains." },
-
-      { "id": "net-41", "number": "41", "type": "written", "prompt": "Explain the difference between short-term storage (RAM) and long-term storage. Give two examples of each and describe why insufficient RAM affects performance.", "exampleAnswer": "RAM is volatile short-term storage used by running programs; examples include DDR4 and DDR5 memory modules. Long-term storage retains data without power; examples include hard disk drives and solid-state drives. With insufficient RAM, the computer relies on much slower disk-based virtual memory, causing noticeable slowdown.", "explanation": "Include volatility, two examples of each storage type, and the performance effect of paging." },
-      { "id": "net-42", "number": "42", "type": "written", "prompt": "Describe the four simplified layers of network communication, starting when a user opens a web browser to request a web page.", "exampleAnswer": "User Application: the user opens a browser and enters a URL. Network Client Software: the browser detects and formats the request. Network Protocol: TCP/IP packages it with source and destination IP addresses to create packets. Network Interface: the NIC driver passes data to the NIC, which adds MAC addresses and error-checking information to create frames and transmit signals.", "explanation": "Name the user application, network client software, network protocol, and network interface layers in order." },
-      { "id": "net-43", "number": "43", "type": "written", "prompt": "A six-person real estate office needs to share files and a printer. It has a limited budget, no dedicated IT staff, and employees want control over access to files on their computers. Recommend peer-to-peer or server-based networking and justify your choice with at least two reasons.", "exampleAnswer": "Recommend a peer-to-peer workgroup. It avoids dedicated server hardware and a server operating system, is inexpensive and simple to set up without IT staff, and lets employees control permissions on their own shared resources. If the office grows beyond roughly ten users, it should consider a server-based model.", "explanation": "A strong answer selects peer-to-peer and supports it with cost, simplicity, and local-control considerations." },
-      { "id": "net-44", "number": "44", "type": "written", "prompt": "A company grows from 20 employees in one office to 150 employees across three buildings in different cities. What network type should it migrate to, and what hardware is needed to connect the locations?", "exampleAnswer": "The company should use a WAN or internetwork design, with a separate LAN at each location. Routers are needed to connect the geographically separated LANs, provide logical separation, and reduce large broadcast domains while allowing communication.", "explanation": "Identify a WAN or internetwork design and routers as the connecting devices." },
-      { "id": "net-45", "number": "45", "type": "written", "prompt": "Explain the difference between a packet and a frame. What addresses does each contain, and at which communication layer is each created?", "exampleAnswer": "A packet contains source and destination IP addresses and is created at the network protocol layer. A frame wraps a packet with source and destination MAC addresses plus error-checking information and is created at the network interface layer before transmission as bits.", "explanation": "Distinguish logical IP addressing in packets from physical MAC addressing and error checking in frames." }
-    ]
+      {
+        "id": "net-1",
+        "number": "1",
+        "type": "multiple-choice",
+        "prompt": "Which of the following is NOT one of the three basic functions all computers perform?",
+        "options": [
+          "Input",
+          "Processing",
+          "Storage",
+          "Output"
+        ],
+        "correctAnswer": 2,
+        "explanation": "The three basic functions in this chapter are input, processing, and output."
+      },
+      {
+        "id": "net-2",
+        "number": "2",
+        "type": "multiple-choice",
+        "prompt": "A network interface card (NIC) can function as which of the following?",
+        "options": [
+          "Input device only",
+          "Output device only",
+          "Both input and output device",
+          "Input, output, and processing device"
+        ],
+        "correctAnswer": 3,
+        "explanation": "A NIC receives input, transmits output, and uses onboard processing to handle network communication."
+      },
+      {
+        "id": "net-3",
+        "number": "3",
+        "type": "multiple-choice",
+        "prompt": "Which component interprets and executes instructions in a computer program?",
+        "options": [
+          "GPU",
+          "RAM",
+          "CPU",
+          "Chipset"
+        ],
+        "correctAnswer": 2,
+        "explanation": "The central processing unit interprets and executes program instructions."
+      },
+      {
+        "id": "net-4",
+        "number": "4",
+        "type": "multiple-choice",
+        "prompt": "What is the primary advantage of a multicore CPU?",
+        "options": [
+          "It uses less electricity than a single-core CPU",
+          "It can carry out multiple instructions simultaneously",
+          "It eliminates the need for RAM",
+          "It replaces the need for a GPU"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Multiple cores let the processor work on multiple instruction streams at the same time."
+      },
+      {
+        "id": "net-5",
+        "number": "5",
+        "type": "multiple-choice",
+        "prompt": "Which type of storage is volatile and loses its data when power is turned off?",
+        "options": [
+          "Hard disk drive",
+          "USB flash drive",
+          "Solid-state drive",
+          "RAM"
+        ],
+        "correctAnswer": 3,
+        "explanation": "RAM requires continuous power to retain its contents."
+      },
+      {
+        "id": "net-6",
+        "number": "6",
+        "type": "multiple-choice",
+        "prompt": "How many bytes are in 1 gigabyte when using human-readable decimal notation?",
+        "options": [
+          "1,000,000 bytes",
+          "1,000,000,000 bytes",
+          "1,073,741,824 bytes",
+          "1,024,000,000 bytes"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Decimal notation uses powers of 1,000, so one gigabyte is one billion bytes."
+      },
+      {
+        "id": "net-7",
+        "number": "7",
+        "type": "multiple-choice",
+        "prompt": "Which motherboard component controls data transfers between memory, expansion slots, I/O devices, and the CPU?",
+        "options": [
+          "CMOS",
+          "Chipset",
+          "BIOS",
+          "SATA controller"
+        ],
+        "correctAnswer": 1,
+        "explanation": "The motherboard chipset manages communication and data transfers among major components."
+      },
+      {
+        "id": "net-8",
+        "number": "8",
+        "type": "multiple-choice",
+        "prompt": "Which expansion slot type is best suited for a high-performance graphics card?",
+        "options": [
+          "PCI bus expansion slot",
+          "IDE connector",
+          "PCI Express bus expansion slot",
+          "SATA connector"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Modern high-performance graphics cards use a PCI Express expansion slot."
+      },
+      {
+        "id": "net-9",
+        "number": "9",
+        "type": "multiple-choice",
+        "prompt": "What is the time required for a hard drive's read/write heads to move to the correct location on the platter called?",
+        "options": [
+          "Rotational delay",
+          "Seek time",
+          "Transfer time",
+          "Access time"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Seek time measures the movement of the read/write heads to the requested track."
+      },
+      {
+        "id": "net-10",
+        "number": "10",
+        "type": "multiple-choice",
+        "prompt": "Which type of storage device has no moving parts and typically uses flash memory?",
+        "options": [
+          "Hard disk drive",
+          "Optical drive",
+          "Solid-state drive (SSD)",
+          "Magnetic tape drive"
+        ],
+        "correctAnswer": 2,
+        "explanation": "An SSD stores data in flash memory and has no mechanical read/write assembly."
+      },
+      {
+        "id": "net-11",
+        "number": "11",
+        "type": "multiple-choice",
+        "prompt": "What is the main function of firmware (BIOS/UEFI) when a computer is first powered on?",
+        "options": [
+          "Load the web browser",
+          "Initialize hardware and begin the boot procedure",
+          "Connect to the network automatically",
+          "Format the hard drive"
+        ],
+        "correctAnswer": 1,
+        "explanation": "BIOS or UEFI initializes hardware, performs startup checks, and starts the boot process."
+      },
+      {
+        "id": "net-12",
+        "number": "12",
+        "type": "multiple-choice",
+        "prompt": "Which of the following is the correct order of the boot procedure?",
+        "options": [
+          "Power applied → CPU starts → POST → OS loaded into RAM → boot devices searched → OS services started",
+          "Power applied → CPU starts → POST → boot devices searched → OS loaded into RAM → OS services started",
+          "CPU starts → Power applied → POST → boot devices searched → OS services started → OS loaded into RAM",
+          "Power applied → POST → CPU starts → OS loaded into RAM → boot devices searched → OS services started"
+        ],
+        "correctAnswer": 1,
+        "explanation": "After power reaches the system, the CPU starts, POST runs, a boot device is found, the OS loads into RAM, and OS services begin."
+      },
+      {
+        "id": "net-13",
+        "number": "13",
+        "type": "multiple-choice",
+        "prompt": "Which software component receives data from network protocols and forwards it to the physical NIC for transmission?",
+        "options": [
+          "Network client software",
+          "Network server software",
+          "NIC device driver",
+          "Web browser"
+        ],
+        "correctAnswer": 2,
+        "explanation": "The NIC device driver connects the operating system's network stack to the physical network interface."
+      },
+      {
+        "id": "net-14",
+        "number": "14",
+        "type": "multiple-choice",
+        "prompt": "In the layers of network communication, which layer packages the message in a format suitable for the network and sends it to the NIC driver?",
+        "options": [
+          "User application",
+          "Network client software",
+          "Network protocol",
+          "Network interface"
+        ],
+        "correctAnswer": 2,
+        "explanation": "The network protocol layer packages the message and passes it to the NIC driver."
+      },
+      {
+        "id": "net-15",
+        "number": "15",
+        "type": "multiple-choice",
+        "prompt": "Which network address is used to get a message to the correct computer on a local network?",
+        "options": [
+          "IP address",
+          "MAC address",
+          "DNS name",
+          "Default gateway"
+        ],
+        "correctAnswer": 1,
+        "explanation": "A frame uses the destination MAC address to reach the correct interface on the local network."
+      },
+      {
+        "id": "net-16",
+        "number": "16",
+        "type": "multiple-choice",
+        "prompt": "True or False: A keyboard is an example of a component that performs only input functions.",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctAnswer": 0,
+        "explanation": "A keyboard sends input to the computer and does not provide computer output."
+      },
+      {
+        "id": "net-17",
+        "number": "17",
+        "type": "multiple-choice",
+        "prompt": "True or False: RAM access time is measured in milliseconds, while hard disk access time is measured in nanoseconds.",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctAnswer": 1,
+        "explanation": "The statement is reversed: RAM is measured in nanoseconds, while hard-drive access is measured in milliseconds."
+      },
+      {
+        "id": "net-18",
+        "number": "18",
+        "type": "multiple-choice",
+        "prompt": "True or False: A bus is a collection of wires that carries data from one place to another inside a computer.",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctAnswer": 0,
+        "explanation": "A bus is a shared set of electrical pathways used to carry data and signals."
+      },
+      {
+        "id": "net-19",
+        "number": "19",
+        "type": "multiple-choice",
+        "prompt": "True or False: The chipset on a motherboard includes the northbridge and southbridge, which manage data transfers between components.",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctAnswer": 0,
+        "explanation": "In the traditional chipset design, the northbridge and southbridge coordinate transfers among major components."
+      },
+      {
+        "id": "net-20",
+        "number": "20",
+        "type": "multiple-choice",
+        "prompt": "True or False: Two computers can communicate using different protocols as long as they both have NICs installed.",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctAnswer": 1,
+        "explanation": "The communicating computers must use compatible network protocols; NICs alone are not enough."
+      },
+      {
+        "id": "net-21",
+        "number": "21",
+        "type": "multiple-choice",
+        "prompt": "True or False: A packet contains source and destination MAC addresses.",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Packets contain logical IP addresses; frames contain physical MAC addresses."
+      },
+      {
+        "id": "net-22",
+        "number": "22",
+        "type": "multiple-choice",
+        "prompt": "True or False: A frame is created when MAC addresses and an error-checking code are added to a packet.",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctAnswer": 0,
+        "explanation": "At the network interface layer, MAC addressing and error-checking information wrap the packet into a frame."
+      },
+      {
+        "id": "net-23",
+        "number": "23",
+        "type": "multiple-choice",
+        "prompt": "True or False: The Internet is an example of a private network.",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctAnswer": 1,
+        "explanation": "The Internet is a public internetwork; an intranet is private."
+      },
+      {
+        "id": "net-24",
+        "number": "24",
+        "type": "multiple-choice",
+        "prompt": "True or False: In a peer-to-peer network, centralized servers control all shared resources and user credentials.",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Peer-to-peer networks have no centralized server controlling all resources or credentials."
+      },
+      {
+        "id": "net-25",
+        "number": "25",
+        "type": "multiple-choice",
+        "prompt": "True or False: A PAN (Personal Area Network) typically uses Bluetooth technology to connect devices.",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Bluetooth is a common short-range technology for personal area networks."
+      },
+      {
+        "id": "net-26-35",
+        "number": "26–35",
+        "type": "matching",
+        "prompt": "Match each term on the left with the correct definition on the right.",
+        "pairs": [
+          {
+            "term": "Encapsulation",
+            "definition": "The process of adding headers and trailers to data as it moves down through network layers"
+          },
+          {
+            "term": "Deencapsulation",
+            "definition": "The process of removing headers and trailers as data moves up through network layers"
+          },
+          {
+            "term": "DNS",
+            "definition": "A service that translates computer names to IP addresses"
+          },
+          {
+            "term": "ARP",
+            "definition": "A protocol that automatically discovers a computer's MAC address from its IP address"
+          },
+          {
+            "term": "LAN",
+            "definition": "A network limited to a small geographic area like a single building or floor"
+          },
+          {
+            "term": "WAN",
+            "definition": "A network that spans long distances and uses third-party communication providers"
+          },
+          {
+            "term": "MAN",
+            "definition": "A network spanning a city or large geographic region using WAN technologies"
+          },
+          {
+            "term": "Internet",
+            "definition": "A worldwide public internetwork using TCP/IP and other standard protocols"
+          },
+          {
+            "term": "Intranet",
+            "definition": "A private network that uses Internet technologies but is accessible only to internal users"
+          },
+          {
+            "term": "Extranet",
+            "definition": "A network that allows limited, controlled access to internal resources by outside users"
+          }
+        ],
+        "explanation": "Each network term describes a distinct process, service, scope, or access model."
+      },
+      {
+        "id": "net-36",
+        "number": "36",
+        "type": "fill-blank",
+        "prompt": "A collection of 8 bits is called a _____.",
+        "acceptedAnswers": [
+          "byte"
+        ],
+        "explanation": "Eight bits form one byte."
+      },
+      {
+        "id": "net-37",
+        "number": "37",
+        "type": "fill-blank",
+        "prompt": "The two chips on a motherboard that control data transfers between major components are collectively called the _____.",
+        "acceptedAnswers": [
+          "chipset",
+          "northbridge and southbridge",
+          "northbridge & southbridge"
+        ],
+        "explanation": "The traditional northbridge and southbridge chips together form the motherboard chipset."
+      },
+      {
+        "id": "net-38",
+        "number": "38",
+        "type": "fill-blank",
+        "prompt": "The _____ address is like a “zip code” that gets a message to the correct network, while the _____ address is like a “street address” that gets it to the correct computer.",
+        "acceptedAnswers": [
+          "IP, MAC",
+          "IP and MAC",
+          "IP address, MAC address",
+          "IP address and MAC address",
+          "logical, physical",
+          "logical and physical",
+          "logical address, physical address",
+          "logical address and physical address"
+        ],
+        "explanation": "IP is the logical network-level address; MAC is the physical local-interface address."
+      },
+      {
+        "id": "net-39",
+        "number": "39",
+        "type": "fill-blank",
+        "prompt": "The command used to test basic network connectivity between two computers is _____.",
+        "acceptedAnswers": [
+          "ping",
+          "ping command"
+        ],
+        "explanation": "The ping command sends echo requests to test whether another host is reachable."
+      },
+      {
+        "id": "net-40",
+        "number": "40",
+        "type": "fill-blank",
+        "prompt": "The Windows server software that provides centralized user account management and security policies is called _____ _____.",
+        "acceptedAnswers": [
+          "Active Directory",
+          "directory service",
+          "Active Directory Domain Services",
+          "AD DS"
+        ],
+        "explanation": "Active Directory provides centralized identity, account, and policy management in Windows domains."
+      },
+      {
+        "id": "net-41",
+        "number": "41",
+        "type": "written",
+        "prompt": "Explain the difference between short-term storage (RAM) and long-term storage. Give two examples of each and describe why insufficient RAM affects performance.",
+        "exampleAnswer": "RAM is volatile short-term storage used by running programs; examples include DDR4 and DDR5 memory modules. Long-term storage retains data without power; examples include hard disk drives and solid-state drives. With insufficient RAM, the computer relies on much slower disk-based virtual memory, causing noticeable slowdown.",
+        "explanation": "Include volatility, two examples of each storage type, and the performance effect of paging."
+      },
+      {
+        "id": "net-42",
+        "number": "42",
+        "type": "written",
+        "prompt": "Describe the four simplified layers of network communication, starting when a user opens a web browser to request a web page.",
+        "exampleAnswer": "User Application: the user opens a browser and enters a URL. Network Client Software: the browser detects and formats the request. Network Protocol: TCP/IP packages it with source and destination IP addresses to create packets. Network Interface: the NIC driver passes data to the NIC, which adds MAC addresses and error-checking information to create frames and transmit signals.",
+        "explanation": "Name the user application, network client software, network protocol, and network interface layers in order."
+      },
+      {
+        "id": "net-43",
+        "number": "43",
+        "type": "written",
+        "prompt": "A six-person real estate office needs to share files and a printer. It has a limited budget, no dedicated IT staff, and employees want control over access to files on their computers. Recommend peer-to-peer or server-based networking and justify your choice with at least two reasons.",
+        "exampleAnswer": "Recommend a peer-to-peer workgroup. It avoids dedicated server hardware and a server operating system, is inexpensive and simple to set up without IT staff, and lets employees control permissions on their own shared resources. If the office grows beyond roughly ten users, it should consider a server-based model.",
+        "explanation": "A strong answer selects peer-to-peer and supports it with cost, simplicity, and local-control considerations."
+      },
+      {
+        "id": "net-44",
+        "number": "44",
+        "type": "written",
+        "prompt": "A company grows from 20 employees in one office to 150 employees across three buildings in different cities. What network type should it migrate to, and what hardware is needed to connect the locations?",
+        "exampleAnswer": "The company should use a WAN or internetwork design, with a separate LAN at each location. Routers are needed to connect the geographically separated LANs, provide logical separation, and reduce large broadcast domains while allowing communication.",
+        "explanation": "Identify a WAN or internetwork design and routers as the connecting devices."
+      },
+      {
+        "id": "net-45",
+        "number": "45",
+        "type": "written",
+        "prompt": "Explain the difference between a packet and a frame. What addresses does each contain, and at which communication layer is each created?",
+        "exampleAnswer": "A packet contains source and destination IP addresses and is created at the network protocol layer. A frame wraps a packet with source and destination MAC addresses plus error-checking information and is created at the network interface layer before transmission as bits.",
+        "explanation": "Distinguish logical IP addressing in packets from physical MAC addressing and error checking in frames."
+      }
+    ],
+    "category": "general"
   },
   {
     "id": "networking-chapter-2",
@@ -1467,6 +1901,355 @@
         "type": "written",
         "prompt": "Network redesign. A single switched LAN contains 200 workstations and four servers, and monitoring shows excessive broadcasts. Propose a Chapter-2-level redesign that reduces broadcast impact while preserving communication between groups. Explain the roles of switches, router interfaces, broadcast domains, routing tables, and client default gateways.",
         "exampleAnswer": "Divide the large LAN into smaller departmental LANs, each built from switches, and connect each LAN to a different router interface. Each router interface delimits a separate broadcast domain, so a broadcast remains within its originating department instead of interrupting all 204 hosts. Give each LAN a distinct IP network. Configure the router’s routing table so it knows the attached networks and configure every client’s default gateway as the router interface on that client’s own network. The switches continue local frame forwarding, while the router forwards IP packets between departments without forwarding their local broadcasts."
+      }
+    ],
+    "category": "general"
+  },
+  {
+    "id": "networking-terminology-chapter-1",
+    "category": "terminology",
+    "subject": "Networking",
+    "title": "Chapter 1: Core terminology",
+    "chapters": [
+      "Chapter 1"
+    ],
+    "kind": "chapter",
+    "minutes": 20,
+    "tone": "sage",
+    "questions": [
+      {
+        "id": "net-terms-ch1-1",
+        "number": "1",
+        "type": "written",
+        "term": "Encapsulation",
+        "definition": "The process of adding headers and trailers to data as it moves down through network layers."
+      },
+      {
+        "id": "net-terms-ch1-2",
+        "number": "2",
+        "type": "written",
+        "term": "Deencapsulation",
+        "definition": "The process of removing headers and trailers as data moves up through network layers.",
+        "acceptedTerms": [
+          "Decapsulation",
+          "De-encapsulation"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-3",
+        "number": "3",
+        "type": "written",
+        "term": "DNS",
+        "definition": "A service that translates computer names to IP addresses.",
+        "acceptedTerms": [
+          "Domain Name System"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-4",
+        "number": "4",
+        "type": "written",
+        "term": "ARP",
+        "definition": "A protocol that automatically discovers a computer's MAC address from its IP address.",
+        "acceptedTerms": [
+          "Address Resolution Protocol"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-5",
+        "number": "5",
+        "type": "written",
+        "term": "LAN",
+        "definition": "A network limited to a small geographic area like a single building or floor.",
+        "acceptedTerms": [
+          "Local Area Network"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-6",
+        "number": "6",
+        "type": "written",
+        "term": "WAN",
+        "definition": "A network that spans long distances and uses third-party communication providers.",
+        "acceptedTerms": [
+          "Wide Area Network"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-7",
+        "number": "7",
+        "type": "written",
+        "term": "MAN",
+        "definition": "A network spanning a city or large geographic region using WAN technologies.",
+        "acceptedTerms": [
+          "Metropolitan Area Network"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-8",
+        "number": "8",
+        "type": "written",
+        "term": "Internet",
+        "definition": "A worldwide public internetwork using TCP/IP and other standard protocols.",
+        "acceptedTerms": [
+          "The Internet"
+        ]
+      },
+      {
+        "id": "net-terms-ch1-9",
+        "number": "9",
+        "type": "written",
+        "term": "Intranet",
+        "definition": "A private network that uses Internet technologies but is accessible only to internal users."
+      },
+      {
+        "id": "net-terms-ch1-10",
+        "number": "10",
+        "type": "written",
+        "term": "Extranet",
+        "definition": "A network that allows limited, controlled access to internal resources by outside users."
+      }
+    ]
+  },
+  {
+    "id": "networking-terminology-chapter-2",
+    "category": "terminology",
+    "subject": "Networking",
+    "title": "Chapter 2: Hardware terminology",
+    "chapters": [
+      "Chapter 2"
+    ],
+    "kind": "chapter",
+    "minutes": 54,
+    "tone": "sage",
+    "questions": [
+      {
+        "id": "net-terms-ch2-1",
+        "number": "1",
+        "type": "written",
+        "term": "Repeater",
+        "definition": "A device that regenerates weakened bit signals to their original strength so a network connection can cover a greater distance."
+      },
+      {
+        "id": "net-terms-ch2-2",
+        "number": "2",
+        "type": "written",
+        "term": "Hub",
+        "definition": "A multiport repeater that regenerates incoming bit signals and sends them through every other connected port without inspecting frame addresses."
+      },
+      {
+        "id": "net-terms-ch2-3",
+        "number": "3",
+        "type": "written",
+        "term": "Bandwidth",
+        "definition": "The maximum data-carrying capacity of a network connection, usually measured in bits per second."
+      },
+      {
+        "id": "net-terms-ch2-4",
+        "number": "4",
+        "type": "written",
+        "term": "Throughput",
+        "definition": "The actual amount of data transferred over time, including protocol headers and the effects of real-world delays."
+      },
+      {
+        "id": "net-terms-ch2-5",
+        "number": "5",
+        "type": "written",
+        "term": "Goodput",
+        "definition": "The rate at which useful application payload is delivered, excluding protocol overhead such as headers."
+      },
+      {
+        "id": "net-terms-ch2-6",
+        "number": "6",
+        "type": "written",
+        "term": "Latency",
+        "definition": "The cumulative end-to-end delay experienced by data as it travels from sender to receiver."
+      },
+      {
+        "id": "net-terms-ch2-7",
+        "number": "7",
+        "type": "written",
+        "term": "Buffering",
+        "definition": "Temporarily storing packets or data while a device waits for processing or transmission to catch up."
+      },
+      {
+        "id": "net-terms-ch2-8",
+        "number": "8",
+        "type": "written",
+        "term": "Collision",
+        "definition": "Overlapping transmissions on a shared network medium, such as a hub-based Ethernet network, that require the affected data to be retransmitted."
+      },
+      {
+        "id": "net-terms-ch2-9",
+        "number": "9",
+        "type": "written",
+        "term": "Switch",
+        "definition": "A device that connects computers within a LAN and uses destination MAC addresses to forward frames to the appropriate ports."
+      },
+      {
+        "id": "net-terms-ch2-10",
+        "number": "10",
+        "type": "written",
+        "term": "MAC address table",
+        "definition": "A switch table that maps learned source MAC addresses to the ports on which they were received. The switch consults it to forward frames.",
+        "acceptedTerms": [
+          "Switching table",
+          "MAC table",
+          "Forwarding table"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-11",
+        "number": "11",
+        "type": "written",
+        "term": "MAC address aging",
+        "definition": "The removal of a learned MAC-to-port entry after it has not been refreshed for an inactivity period, preventing obsolete mappings from remaining indefinitely.",
+        "acceptedTerms": [
+          "MAC aging",
+          "MAC table aging"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-12",
+        "number": "12",
+        "type": "written",
+        "term": "Full-duplex",
+        "definition": "Communication in which a connection can send and receive data simultaneously.",
+        "acceptedTerms": [
+          "Full-duplex communication"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-13",
+        "number": "13",
+        "type": "written",
+        "term": "Half-duplex",
+        "definition": "Communication in which a shared connection can transmit in either direction, but not in both directions at the same time.",
+        "acceptedTerms": [
+          "Half-duplex communication"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-14",
+        "number": "14",
+        "type": "written",
+        "term": "Wireless access point (AP)",
+        "definition": "A device that connects wireless clients to a WLAN and commonly connects that wireless network to a wired Ethernet network.",
+        "acceptedTerms": [
+          "AP",
+          "Access point",
+          "Wireless access point",
+          "WAP"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-15",
+        "number": "15",
+        "type": "written",
+        "term": "Network interface card (NIC)",
+        "definition": "The hardware interface that connects a computer to copper, fiber, or wireless media and converts between frames, bits, and signals.",
+        "acceptedTerms": [
+          "NIC",
+          "Network interface card",
+          "Network adapter",
+          "Network interface controller"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-16",
+        "number": "16",
+        "type": "written",
+        "term": "MAC address",
+        "definition": "A physical interface address used for local frame delivery. In Ethernet it is 48 bits long and is commonly written as six hexadecimal byte pairs.",
+        "acceptedTerms": [
+          "Media Access Control address",
+          "Physical address"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-17",
+        "number": "17",
+        "type": "written",
+        "term": "Organizationally unique identifier (OUI)",
+        "definition": "The first 24 bits of a MAC address, identifying the organization or manufacturer assigned that address prefix.",
+        "acceptedTerms": [
+          "OUI",
+          "Organizationally unique identifier"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-18",
+        "number": "18",
+        "type": "written",
+        "term": "Unicast",
+        "definition": "Communication addressed to one specific destination."
+      },
+      {
+        "id": "net-terms-ch2-19",
+        "number": "19",
+        "type": "written",
+        "term": "Multicast",
+        "definition": "Communication addressed to a participating group of destinations rather than a single host or every host."
+      },
+      {
+        "id": "net-terms-ch2-20",
+        "number": "20",
+        "type": "written",
+        "term": "Broadcast",
+        "definition": "Communication addressed to all devices in the local broadcast domain. The Ethernet broadcast address is FF-FF-FF-FF-FF-FF."
+      },
+      {
+        "id": "net-terms-ch2-21",
+        "number": "21",
+        "type": "written",
+        "term": "Promiscuous mode",
+        "definition": "A NIC mode that disables normal destination filtering so a packet analyzer can inspect every frame visible to that interface."
+      },
+      {
+        "id": "net-terms-ch2-22",
+        "number": "22",
+        "type": "written",
+        "term": "Service set identifier (SSID)",
+        "definition": "The wireless network name configured on an access point that clients use to identify and select the network.",
+        "acceptedTerms": [
+          "SSID",
+          "Service set identifier"
+        ]
+      },
+      {
+        "id": "net-terms-ch2-23",
+        "number": "23",
+        "type": "written",
+        "term": "Router",
+        "definition": "A device that connects IP networks and forwards packets using their destination IP addresses and a routing table. It normally does not forward local broadcast frames between networks."
+      },
+      {
+        "id": "net-terms-ch2-24",
+        "number": "24",
+        "type": "written",
+        "term": "Broadcast domain",
+        "definition": "The set of devices that can receive a local Layer-2 broadcast. Router interfaces normally form boundaries between broadcast domains."
+      },
+      {
+        "id": "net-terms-ch2-25",
+        "number": "25",
+        "type": "written",
+        "term": "Routing table",
+        "definition": "A table that associates destination IP networks with the appropriate outgoing interface or next hop used to reach them."
+      },
+      {
+        "id": "net-terms-ch2-26",
+        "number": "26",
+        "type": "written",
+        "term": "Default route",
+        "definition": "The route used when no more-specific route matches a packet’s destination network."
+      },
+      {
+        "id": "net-terms-ch2-27",
+        "number": "27",
+        "type": "written",
+        "term": "Default gateway",
+        "definition": "The local router interface to which a host sends traffic destined for a different IP network."
       }
     ]
   }

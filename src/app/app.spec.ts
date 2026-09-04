@@ -33,7 +33,7 @@ describe('App', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('renders subjects first and reveals tests after a subject is selected', () => {
+  it('renders subjects, then chapters, then the chapter quizzes', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
@@ -47,7 +47,11 @@ describe('App', () => {
     biology?.click();
     fixture.detectChanges();
 
-    expect(compiled.textContent).toContain('Biology tests');
+    expect(compiled.textContent).toContain('Your chapters');
+    expect(compiled.querySelector('.test-card')).toBeNull();
+    compiled.querySelector<HTMLButtonElement>('.chapter-card')!.click();
+    fixture.detectChanges();
+    expect(compiled.textContent).toContain('Chapter 1');
     expect(compiled.textContent).toContain('Cells');
   });
 
@@ -121,21 +125,24 @@ describe('App', () => {
     expect(app['result']()).toMatchObject({ score: 1, total: 2, percentage: 50 });
   });
 
-  it('keeps the two libraries separate and retains subject-first filtering', () => {
+  it('groups both quiz types in the same subject and chapter', () => {
     const app = TestBed.createComponent(App).componentInstance;
     app['tests'].set([testFixture, multiTest, terminologyTest]);
-    expect(app['libraryTests']().map((test) => test.id)).toEqual([testFixture.id, multiTest.id]);
-    app['navigate']('terminology');
+    expect(app['libraryTests']().map((test) => test.id)).toEqual([testFixture.id, multiTest.id, terminologyTest.id]);
+    app['navigate']('library');
     expect(app['selectedSubject']()).toBeNull();
-    expect(app['subjects']()).toMatchObject([{ name: 'Networking', tests: 1, questions: 1 }]);
+    expect(app['subjects']()).toMatchObject([{ name: 'Biology', tests: 1 }, { name: 'Networking', tests: 2 }]);
     app['chooseSubject']('Networking');
-    expect(app['filteredTests']()).toEqual([terminologyTest]);
+    expect(app['chapters']()).toMatchObject([{ name: 'Chapter 2', tests: 1, terminology: 1 }]);
+    app['chooseChapter']('Chapter 2');
+    expect(app['filteredTests']()).toEqual([multiTest, terminologyTest]);
     app['search'].set('unmatched');
     expect(app['filteredTests']()).toEqual([]);
     app['navigate']('library');
     expect(app['search']()).toBe('');
     expect(app['selectedSubject']()).toBeNull();
-    expect(app['libraryTests']()).toHaveLength(2);
+    expect(app['selectedChapter']()).toBeNull();
+    expect(app['libraryTests']()).toHaveLength(3);
   });
 
   it('requires a written definition before revealing, then self-checks and saves it', () => {
@@ -159,7 +166,8 @@ describe('App', () => {
     expect(app['latestFor'](terminologyTest.id)?.percentage).toBe(100);
     expect(app['latestFor'](multiTest.id)).toBeUndefined();
     app['exitTest']();
-    expect(app['page']()).toBe('terminology');
+    expect(app['page']()).toBe('library');
+    expect(app['selectedChapter']()).toBe('Chapter 2');
     expect(app['selectedSubject']()).toBe('Networking');
   });
 
@@ -251,8 +259,9 @@ describe('App', () => {
     const app = fixture.componentInstance;
     const compiled = fixture.nativeElement as HTMLElement;
     app['tests'].set([sharedTerminologyTest]);
-    app['navigate']('terminology');
+    app['navigate']('library');
     app['chooseSubject']('Networking');
+    app['chooseChapter']('Chapter 2');
     fixture.detectChanges();
     compiled.querySelector<HTMLButtonElement>('.start-button')!.click();
     fixture.detectChanges();

@@ -2,7 +2,7 @@ export type QuestionType = 'multiple-choice' | 'multiple-select' | 'written' | '
 export type FeedbackMode = 'instant' | 'end';
 export type TerminologyDirection = 'define' | 'recall';
 export type PracticeScope = 'all' | 'favorites';
-export type AppPage = 'library' | 'terminology' | 'history' | 'taking' | 'written-review' | 'results';
+export type AppPage = 'library' | 'history' | 'taking' | 'written-review' | 'results';
 
 export interface TestQuestion {
   id: string;

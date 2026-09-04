@@ -6,9 +6,7 @@ import { fileURLToPath } from 'node:url';
 const kitDirectory = dirname(fileURLToPath(import.meta.url));
 const projectDirectory = resolve(kitDirectory, '..');
 const ajv = new Ajv({ allErrors: true, strict: true });
-const validators = Object.fromEntries(['tests', 'terminology'].map((kind) => [
-  kind, ajv.compile(readJson(resolve(kitDirectory, `${kind}.schema.json`))),
-]));
+const validate = ajv.compile(readJson(resolve(kitDirectory, 'library.schema.json')));
 
 export function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8').replace(/^\uFEFF/, ''));
@@ -46,9 +44,7 @@ export function validateDocuments(documents) {
     else map.set(id, location);
   };
 
-  for (const { kind, data, label = kind } of documents) {
-    const validate = validators[kind];
-    if (!validate) { errors.push(`${label}: unknown collection kind "${kind}".`); continue; }
+  for (const { data, label = 'library' } of documents) {
     if (!validate(data)) {
       for (const error of validate.errors ?? []) {
         const field = error.params.missingProperty ?? error.params.additionalProperty;
@@ -66,7 +62,7 @@ export function validateDocuments(documents) {
         const path = `${location}/questions/${questionIndex}`;
         registerId(questionIds, question.id, path);
 
-        if (kind === 'terminology') {
+        if (quiz.category === 'terminology') {
           const key = normalizeTerm(question.term);
           if (!key) errors.push(`${path}: term must remain non-empty after answer normalization.`);
           if (seenTerms.has(key)) errors.push(`${path}: duplicate term "${question.term}" within this quiz.`);
@@ -107,9 +103,9 @@ export function validateDocuments(documents) {
 const usage = `StudyDeck data validator (read-only)
   npm run validate:data
   npm run validate:data -- --examples
-  npm run validate:data -- --tests path/to/tests.additions.json --terminology path/to/terminology.additions.json --against-project
+  npm run validate:data -- --library path/to/library.additions.json --against-project
 
-Either input flag can be used alone. --against-project checks additions for ID
+One library file contains ordinary tests and terminology. --against-project checks additions for ID
 collisions with existing quizzes; do not use it for complete replacement files.
 Warnings require human review but do not fail validation. Errors exit with code 1.
 This checks structure and consistency, not factual accuracy against a chapter.`;
@@ -124,21 +120,20 @@ export function runCli(args = process.argv.slice(2)) {
       if (argument === '--help' || argument === '-h') { console.log(usage); return 0; }
       if (argument === '--examples') { examples = true; continue; }
       if (argument === '--against-project') { againstProject = true; continue; }
-      if (argument === '--tests' || argument === '--terminology') {
+      if (argument === '--library') {
         const path = args[++index];
         if (!path || path.startsWith('--')) throw new Error(`${argument} requires a file path.`);
-        const kind = argument.slice(2);
-        if (inputs.some((input) => input.kind === kind)) throw new Error(`${argument} may be supplied only once.`);
-        inputs.push({ kind, path: resolve(path) });
+        if (inputs.length) throw new Error(`${argument} may be supplied only once.`);
+        inputs.push({ path: resolve(path) });
         continue;
       }
       throw new Error(`Unknown argument: ${argument}. Use --help.`);
     }
     if (examples && (inputs.length || againstProject)) throw new Error('--examples cannot be combined with other input options.');
     if (againstProject && !inputs.length) throw new Error('--against-project requires at least one additions file.');
-    const projectInputs = ['tests', 'terminology'].map((kind) => ({ kind, path: resolve(projectDirectory, `public/tests/${kind}.json`) }));
-    const selected = examples ? ['tests', 'terminology'].map((kind) => ({ kind, path: resolve(kitDirectory, `examples/${kind}.example.json`) })) : inputs.length ? inputs : projectInputs;
-    const documents = [...(againstProject ? projectInputs : []), ...selected].map(({ kind, path }) => ({ kind, label: path, data: readJson(path) }));
+    const projectInputs = [{ path: resolve(projectDirectory, 'public/tests/library.json') }];
+    const selected = examples ? [{ path: resolve(kitDirectory, 'examples/library.example.json') }] : inputs.length ? inputs : projectInputs;
+    const documents = [...(againstProject ? projectInputs : []), ...selected].map(({ path }) => ({ label: path, data: readJson(path) }));
     const { errors, warnings } = validateDocuments(documents);
     warnings.forEach((warning) => console.warn(`WARNING ${warning}`));
     if (errors.length) {

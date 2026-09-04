@@ -56,6 +56,7 @@ describe('Favorite question practice', () => {
     favorites.toggle(quiz.id, 'choice');
     favorites.toggle(terms.id, 'lan');
     app['chooseSubject']('Networking');
+    app['chooseChapter']('Chapter 1');
     fixture.detectChanges();
     root.querySelector<HTMLButtonElement>('.card-bottom .favorites-practice')!.click();
     fixture.detectChanges();

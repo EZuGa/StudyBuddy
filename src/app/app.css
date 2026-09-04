@@ -116,6 +116,17 @@ h1 { margin-bottom: 10px; max-width: 680px; font: 600 clamp(34px, 4vw, 50px)/1.0
 @media (max-width: 480px) { .direction-chooser { grid-template-columns: 1fr; } }
 
 /* Written review */
+.library-breadcrumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; color: var(--muted); font-size: .875rem; }
+.library-breadcrumbs button { min-height: 44px; padding: 6px 0; border: 0; background: none; color: #436c59; font-weight: 650; }.library-breadcrumbs button:hover { text-decoration: underline; }.library-breadcrumbs [aria-current] { color: var(--ink); }
+.chapter-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.chapter-card { padding: 24px; min-width: 0; border: 1px solid var(--line); border-radius: 15px; background: white; text-align: left; box-shadow: 0 6px 24px #1f292606; }
+.chapter-card:hover { border-color: var(--sage); background: #fbfdfc; }.chapter-card:focus-visible, .library-breadcrumbs button:focus-visible { outline: 2px solid #436c59; outline-offset: 4px; }
+.chapter-card-heading { display: flex; align-items: center; justify-content: space-between; color: #436c59; font-size: 22px; }.chapter-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--sage-soft); }
+.chapter-card h3 { margin: 24px 0 16px; min-height: 0; font-size: 26px; }.chapter-contents { display: flex; gap: 8px; flex-wrap: wrap; }.chapter-contents span { padding: 6px 9px; border-radius: 7px; font-size: .875rem; background: var(--sky-soft); color: #366781; }.chapter-contents span + span { background: var(--sage-soft); color: #436c59; }.chapter-card > p { margin: 20px 0 0; font-size: .875rem; color: var(--muted); }
+.subject-row > .quiz-category { font-size: .875rem; padding: 5px 8px; }.subject-row { flex-wrap: wrap; }
+@media (max-width: 1100px) { .chapter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .chapter-grid { grid-template-columns: 1fr; } }
+
 .question-topline, .review-question-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .question-topline { margin-bottom: 20px; }.question-topline .type-label { margin: 0; }
 .review-question-heading { margin-bottom: 10px; }.review-question-heading > span { color: var(--muted); font-size: .75rem; font-weight: 750; letter-spacing: .5px; }

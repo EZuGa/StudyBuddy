@@ -16,38 +16,33 @@ describe('TestDataService', () => {
 
   afterEach(() => http.verify());
 
-  it('loads chapter and terminology quizzes from separate project files', async () => {
+  it('loads chapter and terminology quizzes from one combined project file', async () => {
     const result = firstValueFrom(service.loadTests());
-    http.expectOne('/tests/tests.json').flush([
+    http.expectOne('/tests/library.json').flush([
       { id: 'chapter-1', subject: 'Networking', title: 'Chapter 1', chapters: ['Chapter 1'], questions: [{ id: 'q1', type: 'multiple-choice', prompt: 'Pick one.', options: ['A', 'B'], correctAnswer: 0 }] },
-    ]);
-    http.expectOne('/tests/terminology.json').flush([
-      { id: 'terms-1', subject: 'Networking', title: 'Terminology', chapters: ['Chapter 1'], questions: [{ id: 'term-1', type: 'written', prompt: 'Define LAN.', exampleAnswer: 'A local area network.' }] },
+      { id: 'terms-1', category: 'terminology', subject: 'Networking', title: 'Terminology', chapters: ['Chapter 1'], questions: [{ id: 'term-1', type: 'written', term: 'LAN', definition: 'A local area network.' }] },
     ]);
     expect((await result).map((test) => [test.id, test.category])).toEqual([['chapter-1', 'general'], ['terms-1', 'terminology']]);
   });
 
   it('allows empty project collections without accepting empty imports', async () => {
     const result = firstValueFrom(service.loadTests());
-    http.expectOne('/tests/tests.json').flush([]);
-    http.expectOne('/tests/terminology.json').flush([]);
+    http.expectOne('/tests/library.json').flush([]);
     expect(await result).toEqual([]);
     expect(() => service.parseTests([])).toThrowError(/does not contain any tests/);
   });
 
-  it('enforces written-only questions in the terminology file even without a category', async () => {
+  it('enforces written-only questions for terminology in the combined file', async () => {
     const result = expect(firstValueFrom(service.loadTests())).rejects.toThrow(/Every question must be a written response/);
-    http.expectOne('/tests/tests.json').flush([]);
-    http.expectOne('/tests/terminology.json').flush([
-      { id: 'bad-term', subject: 'Networking', title: 'Invalid terminology', chapters: ['Chapter 1'], questions: [{ id: 'q1', type: 'multiple-choice', prompt: 'Pick one.', options: ['A', 'B'], correctAnswer: 0 }] },
+    http.expectOne('/tests/library.json').flush([
+      { id: 'bad-term', category: 'terminology', subject: 'Networking', title: 'Invalid terminology', chapters: ['Chapter 1'], questions: [{ id: 'q1', type: 'multiple-choice', prompt: 'Pick one.', options: ['A', 'B'], correctAnswer: 0 }] },
     ]);
     await result;
   });
 
-  it('reports a missing terminology file instead of silently omitting it', async () => {
+  it('reports a missing combined library file', async () => {
     const result = expect(firstValueFrom(service.loadTests())).rejects.toMatchObject({ status: 404 });
-    http.expectOne('/tests/tests.json').flush([]);
-    http.expectOne('/tests/terminology.json').flush('Missing', { status: 404, statusText: 'Not Found' });
+    http.expectOne('/tests/library.json').flush('Missing', { status: 404, statusText: 'Not Found' });
     await result;
   });
 
@@ -107,6 +102,10 @@ describe('TestDataService', () => {
       { id: 'chapter', subject: 'Networking', title: 'Chapter test', chapters: ['Chapter 1'], questions: [{ id: 'choice', type: 'multiple-choice', prompt: 'Select one.', options: ['A', 'B'], correctAnswer: 0 }] },
     ]);
     expect(quizzes.map((test) => test.category)).toEqual(['terminology', 'general']);
+  });
+
+  it.each([[], [''], ['   '], undefined])('rejects missing chapter labels so quizzes cannot disappear from navigation: %j', (chapters) => {
+    expect(() => service.parseTests({ id: 'bad', subject: 'Networking', title: 'Bad chapters', chapters, questions: [{ id: 'q', type: 'written', prompt: 'Explain.', exampleAnswer: 'Example.' }] })).toThrow(/non-empty chapters/);
   });
 
   it('places untagged written-only imports into the terminology collection', () => {

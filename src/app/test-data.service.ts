@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { forkJoin, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { TestDefinition, TestQuestion } from './models';
 
 @Injectable({ providedIn: 'root' })
@@ -8,15 +8,8 @@ export class TestDataService {
   private readonly http = inject(HttpClient);
 
   loadTests(): Observable<TestDefinition[]> {
-    return forkJoin([
-      this.loadTestFile('/tests/tests.json'),
-      this.loadTestFile('/tests/terminology.json', true),
-    ]).pipe(map((collections) => collections.flat()));
-  }
-
-  private loadTestFile(path: string, terminologyOnly = false): Observable<TestDefinition[]> {
-    return this.http.get<unknown>(path).pipe(map((data) =>
-      Array.isArray(data) && data.length === 0 ? [] : this.parseTests(data, terminologyOnly),
+    return this.http.get<unknown>('/tests/library.json').pipe(map((data) =>
+      Array.isArray(data) && data.length === 0 ? [] : this.parseTests(data),
     ));
   }
 
@@ -40,8 +33,8 @@ export class TestDataService {
     for (const key of required) {
       if (typeof item[key] !== 'string' || !item[key]) throw new Error(`Test ${index + 1} needs a ${key}.`);
     }
-    if (!Array.isArray(item['chapters']) || !item['chapters'].every((part) => typeof part === 'string')) {
-      throw new Error(`“${item['title']}” needs a chapters array.`);
+    if (!Array.isArray(item['chapters']) || !item['chapters'].length || !item['chapters'].every((part) => typeof part === 'string' && part.trim())) {
+      throw new Error(`“${item['title']}” needs a non-empty chapters array.`);
     }
     if (!Array.isArray(item['questions']) || !item['questions'].length) {
       throw new Error(`“${item['title']}” needs at least one question.`);

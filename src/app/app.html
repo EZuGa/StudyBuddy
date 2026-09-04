@@ -1,10 +1,9 @@
-@if (page() === 'library' || page() === 'terminology' || page() === 'history') {
+@if (page() === 'library' || page() === 'history') {
   <div class="app-shell">
     <aside class="sidebar">
       <button class="brand" type="button" (click)="navigate('library')" aria-label="StudyDeck home"><span class="brand-mark">S</span><span>StudyDeck</span></button>
       <nav aria-label="Main navigation">
         <button class="nav-item" [class.active]="page() === 'library'" type="button" (click)="navigate('library')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5v-16ZM20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5a2.5 2.5 0 0 1 2.5 2.5v-16Z"/></svg>Test library</button>
-        <button class="nav-item" [class.active]="page() === 'terminology'" type="button" (click)="navigate('terminology')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 4 5 5M4 20l5-1L21 7a2 2 0 0 0-5-5L4 14v6ZM13 20h8"/></svg>Terminology</button>
         <button class="nav-item" [class.active]="page() === 'history'" type="button" (click)="navigate('history')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m6 10V5m6 14v-7m4 7H2"/></svg>Score history</button>
         <button class="nav-item" type="button" (click)="openImport()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m0 0 4 4m-4-4L8 7M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/></svg>Import tests</button>
       </nav>
@@ -19,65 +18,75 @@
       </header>
       @if (mobileMenuOpen()) {
         <div class="mobile-nav">
-          <button type="button" (click)="navigate('library')">Test library</button><button type="button" (click)="navigate('terminology')">Terminology</button><button type="button" (click)="navigate('history')">Score history</button><button type="button" (click)="openImport()">Import tests</button>
+          <button type="button" (click)="navigate('library')">Test library</button><button type="button" (click)="navigate('history')">Score history</button><button type="button" (click)="openImport()">Import tests</button>
         </div>
       }
 
-      @if (page() === 'library' || page() === 'terminology') {
+      @if (page() === 'library') {
         <section class="intro">
-          @if (page() === 'terminology') {
-            <div><p class="eyebrow">IN YOUR OWN WORDS</p><h1>Terminology practice</h1><p>Learn the language of each subject, one written definition at a time.</p></div>
-          } @else {
-            <div><p class="eyebrow">YOUR STUDY SPACE</p><h1>Ready to make it stick?</h1><p>Pick a test, choose how you want feedback, and see what you’ve mastered.</p></div>
-          }
-          <button class="primary-button" type="button" (click)="openImport()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>{{ page() === 'terminology' ? 'Import terminology' : 'Import a test' }}</button>
+          <div><p class="eyebrow">YOUR STUDY SPACE</p><h1>Ready to make it stick?</h1><p>Choose a chapter, then practice its tests or terminology.</p></div>
+          <button class="primary-button" type="button" (click)="openImport()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Import quizzes</button>
         </section>
 
-        @if (page() === 'terminology') {
-          <section class="terminology-note" aria-label="About terminology practice"><span>✎</span><div><strong>One collection, two directions</strong><p>Write a definition in your own words, or read the definition and type the term. Both directions use the same entries. Written answers only, with no choices to pick from.</p></div><small>YOUR WORDS.<br>YOUR UNDERSTANDING.</small></section>
-        } @else {
         <section class="stats" aria-label="Study summary">
           <article><span class="stat-icon coral">✓</span><div><strong>{{ attempts().length }}</strong><small>Tests completed</small></div></article>
           <article><span class="stat-icon sage">↗</span><div><strong>{{ averageScore() === null ? '—' : averageScore() + '%' }}</strong><small>Average score</small></div></article>
           <article><span class="stat-icon amber">◆</span><div><strong>{{ streak() }} {{ streak() === 1 ? 'day' : 'days' }}</strong><small>Current streak</small></div></article>
         </section>
-        }
 
         <section class="library" id="library">
           @if (loading()) {
-            <div class="section-heading"><div><h2>Your subjects</h2><p>Choose a subject to see its {{ page() === 'terminology' ? 'terminology quizzes' : 'tests' }}</p></div></div>
+            <div class="section-heading"><div><h2>Your subjects</h2><p>Choose a subject to see its chapters</p></div></div>
             <div class="loading-grid" aria-label="Loading tests">@for (item of [1,2,3,4]; track item) { <span></span> }</div>
           } @else if (loadError()) {
             <div class="empty-state error-state"><span>!</span><h3>Library unavailable</h3><p>{{ loadError() }}</p></div>
           } @else if (!selectedSubject()) {
             <div class="section-heading">
-              <div><h2>Your subjects</h2><p>{{ subjects().length }} {{ subjects().length === 1 ? 'subject' : 'subjects' }} in your {{ page() === 'terminology' ? 'terminology collection' : 'library' }}</p></div>
+              <div><h2>Your subjects</h2><p>{{ subjects().length }} {{ subjects().length === 1 ? 'subject' : 'subjects' }} · Tests and terminology together</p></div>
             </div>
             <div class="toolbar subject-toolbar">
               <label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input type="search" [value]="search()" (input)="updateSearch($event)" placeholder="Search subjects" /></label>
             </div>
             @if (!filteredSubjects().length) {
-              <div class="empty-state"><span>⌕</span><h3>{{ subjects().length ? 'No matching subjects' : 'No quizzes yet' }}</h3><p>{{ subjects().length ? 'Try a shorter search.' : (page() === 'terminology' ? 'Import a written terminology quiz to get started.' : 'Import a test to get started.') }}</p>@if (subjects().length) { <button type="button" (click)="search.set('')">Clear search</button> } @else { <button type="button" (click)="openImport()">{{ page() === 'terminology' ? 'Import terminology' : 'Import a test' }}</button> }</div>
+              <div class="empty-state"><span>⌕</span><h3>{{ subjects().length ? 'No matching subjects' : 'No quizzes yet' }}</h3><p>{{ subjects().length ? 'Try a shorter search.' : 'Import a test or terminology quiz to get started.' }}</p>@if (subjects().length) { <button type="button" (click)="search.set('')">Clear search</button> } @else { <button type="button" (click)="openImport()">Import quizzes</button> }</div>
             } @else {
               <div class="subject-grid">
                 @for (subject of filteredSubjects(); track subject.name) {
                   <button type="button" [class]="'subject-card ' + subject.tone" (click)="chooseSubject(subject.name)">
                     <div class="subject-card-top"><span class="subject-card-icon">{{ subjectSymbol(subject.name) }}</span><span class="subject-arrow">→</span></div>
                     <p>SUBJECT</p><h3>{{ subject.name }}</h3>
-                    <div class="subject-details"><span><strong>{{ subject.tests }}</strong> {{ subject.tests === 1 ? 'test' : 'tests' }}</span><i></i><span><strong>{{ subject.questions }}</strong> {{ page() === 'terminology' ? 'terms' : 'questions' }}</span></div>
+                    <div class="subject-details"><span><strong>{{ subject.chapters }}</strong> {{ subject.chapters === 1 ? 'chapter' : 'chapters' }}</span><i></i><span><strong>{{ subject.tests }}</strong> {{ subject.tests === 1 ? 'quiz' : 'quizzes' }}</span></div>
                     <div class="subject-progress"><div><span>{{ subject.practiced }} of {{ subject.tests }} practiced</span><span>{{ subject.chapters }} {{ subject.chapters === 1 ? 'chapter' : 'chapters' }}</span></div><span class="progress-track"><i [style.width.%]="subject.tests ? subject.practiced / subject.tests * 100 : 0"></i></span></div>
                   </button>
                 }
               </div>
             }
+          } @else if (!selectedChapter()) {
+            <nav class="library-breadcrumbs" aria-label="Library path"><button type="button" (click)="showSubjects()">Test library</button><span aria-hidden="true">/</span><span aria-current="page">{{ selectedSubject() }}</span></nav>
+            <div class="section-heading"><div><p class="eyebrow">{{ selectedSubject() }}</p><h2>Your chapters</h2><p>Choose a chapter to see its tests and terminology.</p></div></div>
+            <div class="toolbar"><label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input type="search" [value]="search()" (input)="updateSearch($event)" placeholder="Search chapters" /></label></div>
+            @if (!filteredChapters().length) {
+              <div class="empty-state"><span>⌕</span><h3>No matching chapters</h3><p>Try a shorter search.</p><button type="button" (click)="search.set('')">Clear search</button></div>
+            } @else {
+              <div class="chapter-grid">
+                @for (chapter of filteredChapters(); track chapter.name) {
+                  <button class="chapter-card" type="button" (click)="chooseChapter(chapter.name)">
+                    <div class="chapter-card-heading"><span class="chapter-icon" aria-hidden="true">▤</span><span aria-hidden="true">→</span></div>
+                    <h3>{{ chapter.name }}</h3>
+                    <div class="chapter-contents"><span>{{ chapter.tests }} {{ chapter.tests === 1 ? 'test' : 'tests' }}</span><span>{{ chapter.terminology }} terminology {{ chapter.terminology === 1 ? 'quiz' : 'quizzes' }}</span></div>
+                    <p>{{ chapter.practiced }} of {{ chapter.total }} quizzes practiced</p>
+                  </button>
+                }
+              </div>
+            }
           } @else {
-            <button class="back-to-subjects" type="button" (click)="showSubjects()">← All subjects</button>
+            <nav class="library-breadcrumbs" aria-label="Library path"><button type="button" (click)="showSubjects()">Test library</button><span aria-hidden="true">/</span><button type="button" (click)="chooseSubject(selectedSubject()!)">{{ selectedSubject() }}</button><span aria-hidden="true">/</span><span aria-current="page">{{ selectedChapter() }}</span></nav>
             <div class="section-heading subject-test-heading">
-              <div><p class="eyebrow">{{ selectedSubject() }}</p><h2>{{ selectedSubject() }} {{ page() === 'terminology' ? 'terminology' : 'tests' }}</h2><p>{{ filteredTests().length }} {{ filteredTests().length === 1 ? 'test' : 'tests' }} ready to practice</p></div>
+              <div><p class="eyebrow">{{ selectedSubject() }}</p><h2>{{ selectedChapter() }}</h2><p>Choose a test or a terminology quiz.</p></div>
               <div class="view-switch" aria-label="Change view"><button [class.selected]="!listView()" type="button" (click)="listView.set(false)" aria-label="Grid view">▦</button><button [class.selected]="listView()" type="button" (click)="listView.set(true)" aria-label="List view">☷</button></div>
             </div>
             <div class="toolbar">
-              <label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input type="search" [value]="search()" (input)="updateSearch($event)" placeholder="Search {{ selectedSubject() }} tests" /></label>
+              <label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input type="search" [value]="search()" (input)="updateSearch($event)" placeholder="Search tests and terminology" /></label>
             </div>
             @if (!filteredTests().length) {
               <div class="empty-state"><span>⌕</span><h3>No matching tests</h3><p>Try a shorter search.</p><button type="button" (click)="search.set('')">Clear search</button></div>
@@ -92,7 +101,7 @@
                       @else { <span class="not-started">Not attempted</span> }
                     </div>
                     <div class="card-copy">
-                      <div class="subject-row"><p class="subject">{{ test.subject }}</p>@if (test.category === 'terminology') { <span class="written-badge">Written only</span> } @else if (test.kind === 'midterm') { <span>Midterm</span> }</div>
+                      <div class="subject-row"><p class="subject">{{ test.subject }}</p><span class="quiz-category" [class.written-badge]="test.category === 'terminology'">{{ test.category === 'terminology' ? 'Terminology' : 'Test' }}</span>@if (test.kind === 'midterm') { <span>Midterm</span> }</div>
                       <h3>{{ test.title }}</h3><p class="chapters">{{ chapterSummary(test) }}@if (supportsReverse(test)) { · Two directions }</p>
                     </div>
                     <div class="card-bottom">
@@ -288,7 +297,7 @@
 
 @if (page() === 'results' && activeTest(); as test) {
   <div class="results-shell">
-    <header class="test-header"><button class="brand" type="button" (click)="navigate('library')"><span class="brand-mark">S</span><span>StudyDeck</span></button><button class="text-button" type="button" (click)="exitTest()">{{ test.category === 'terminology' ? 'Back to terminology' : 'Back to library' }}</button></header>
+    <header class="test-header"><button class="brand" type="button" (click)="navigate('library')"><span class="brand-mark">S</span><span>StudyDeck</span></button><button class="text-button" type="button" (click)="exitTest()">Back to chapter</button></header>
     @if (result(); as score) {
       <main class="results-area">
         <section class="result-hero">
@@ -373,11 +382,11 @@
   <div class="modal-backdrop" role="presentation">
     <section class="import-modal" role="dialog" aria-modal="true" aria-labelledby="import-title">
       <button class="modal-close" type="button" (click)="closeImport()" aria-label="Close">×</button>
-      <span class="import-icon">↥</span><p class="eyebrow">ADD TO YOUR LIBRARY</p><h2 id="import-title">{{ page() === 'terminology' ? 'Import terminology' : 'Import a test' }}</h2><p class="modal-intro">{{ page() === 'terminology' ? 'Each written entry has one term and one definition, shared by both directions. Use acceptedTerms for alternate names or abbreviations. Imported quizzes will appear on this page.' : 'Choose a StudyDeck JSON file. You can import one test or a whole collection.' }}</p>
+      <span class="import-icon">↥</span><p class="eyebrow">ADD TO YOUR LIBRARY</p><h2 id="import-title">Import quizzes</h2><p class="modal-intro">Choose a StudyDeck JSON file with tests, terminology, or both. Subject and chapter labels place each quiz in the library. Use category “terminology” for shared term–definition entries.</p>
       <label class="drop-zone"><input type="file" accept="application/json,.json" (change)="importFile($event)" /><span>＋</span><strong>Choose a JSON file</strong><small>Maximum 2 MB recommended</small></label>
       @if (importStatus(); as status) { <div [class]="'import-status ' + status.tone"><span>{{ status.tone === 'success' ? '✓' : '!' }}</span>{{ status.text }}</div> }
-      <div class="storage-note"><span>i</span><p><strong>A quick note about saving</strong>Imported tests stay until this page is refreshed. A browser cannot write into the project folder. To keep one permanently, add it to <code>{{ page() === 'terminology' ? 'public/tests/terminology.json' : 'public/tests/tests.json' }}</code>. Scores are saved in this browser.</p></div>
-      <button class="template-button" type="button" (click)="downloadTemplate()">↓ Download a test template</button>
+      <div class="storage-note"><span>i</span><p><strong>A quick note about saving</strong>Imported quizzes stay until this page is refreshed. To keep them permanently, add them to <code>public/tests/library.json</code>. Scores and favorites stay saved in this browser.</p></div>
+      <button class="template-button" type="button" (click)="downloadTemplate()">↓ Download a combined library template</button>
     </section>
   </div>
 }

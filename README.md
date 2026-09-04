@@ -4,21 +4,27 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Generate new quizzes with AI
 
-The portable [AI data kit](ai-data/README.md) contains a standalone guide, JSON schemas, complete examples, a copy-paste prompt, and a read-only validator. Attach its reference files in a fresh AI conversation, then paste your book chapter. Start with [the prompt template](ai-data/PROMPT_TEMPLATE.md).
+The portable [AI data kit](ai-data/README.md) contains a standalone guide, a combined JSON schema and example, a copy-paste prompt, and a read-only validator. Attach its three reference files in a fresh AI conversation, then paste your book chapter. Start with [the prompt template](ai-data/PROMPT_TEMPLATE.md).
 
-Run `npm run validate:data` to check the current collections, or `npm run validate:data -- --tests path/to/tests.additions.json --terminology path/to/terminology.additions.json --against-project` to check new files for structural mistakes and ID collisions before adding them. Source accuracy still requires review. No existing quizzes or saved scores are changed by validation.
+Run `npm run validate:data` to check the combined library, or `npm run validate:data -- --library path/to/library.additions.json --against-project` to check additions for structural mistakes and ID collisions. Source accuracy still requires review. No existing quizzes, saved scores, or favorites are changed by validation.
+
+## One chapter-based library
+
+Navigate **Test library → subject → chapter → test or terminology**. Both quiz categories live together in `public/tests/library.json`, one flat array of quiz objects. The `category` field is `general` or `terminology`; `subject` and `chapters` determine where a quiz appears. Use the same chapter labels for its test and terminology quiz. Midterms list all included chapters and appear under each, without duplicating their data.
+
+The former separate collections have been merged. All existing quiz IDs, question IDs, answers, and ordering within quizzes are preserved, so score history and favorites still work. Import quizzes accepts either or both categories, and its downloadable template includes both. Browser imports are temporary; add permanent content to the combined project file.
 
 ## Terminology quizzes
 
-The **Terminology** page contains a subject-first collection of written-only quizzes. On the start screen, choose **Standard (term → definition)** to type or handwrite definitions and self-check them, or **Inverted (definition → term)** to type automatically graded terms. Both support immediate feedback or answers at the end. **Practice again** reopens these choices, with your previous settings selected. Scores share the quiz ID but track the direction separately; previous terminology scores count as Standard.
+Choose a **Terminology** quiz inside any chapter. On its start screen, choose **Standard (term → definition)** to type or handwrite definitions and self-check them, or **Inverted (definition → term)** to type automatically graded terms. Both support immediate feedback or answers at the end. **Practice again** reopens these choices, with your previous settings selected. Scores share the quiz ID but track the direction separately; previous terminology scores count as Standard.
 
-Permanent terminology quizzes live in `public/tests/terminology.json`; regular tests live in `public/tests/tests.json`. Every terminology question stores one shared object with `id`, `type: "written"`, `term`, and `definition`. Both directions read this same entry—there are no separate reverse quizzes or duplicated definitions. Optional `acceptedTerms` lists alternate answers for reverse grading, which ignores capitalization, extra whitespace, trailing sentence punctuation, and hyphen differences.
+Every terminology question in `public/tests/library.json` stores one shared object with `id`, `type: "written"`, `term`, and `definition`. Both directions read this same entry—there are no separate reverse quizzes or duplicated definitions. Optional `acceptedTerms` lists alternate answers for reverse grading, which ignores capitalization, extra whitespace, trailing sentence punctuation, and hyphen differences.
 
 ```json
 { "id": "lan", "type": "written", "term": "LAN", "definition": "A network covering a small geographic area.", "acceptedTerms": ["Local area network"] }
 ```
 
-Keep `category: "terminology"` on the quiz when sharing it as an import. The Terminology page's downloadable template uses this format. Older written `prompt`/`exampleAnswer` imports still work in the ordinary direction; reverse practice requires explicit term–definition entries. Browser imports remain session-only, and either project file can be an empty array.
+Keep `category: "terminology"` on the quiz when sharing it as an import. Older written `prompt`/`exampleAnswer` entries still work in the ordinary direction; reverse practice requires explicit term–definition entries. The combined project library may be an empty array.
 
 ## Favorites practice
 

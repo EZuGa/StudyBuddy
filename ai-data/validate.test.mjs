@@ -4,11 +4,12 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { readJson, validateDocuments } from './validate.mjs';
 
-const exampleTests = readJson(new URL('./examples/tests.example.json', import.meta.url));
-const exampleTerms = readJson(new URL('./examples/terminology.example.json', import.meta.url));
+const exampleLibrary = readJson(new URL('./examples/library.example.json', import.meta.url));
+const exampleTests = exampleLibrary.filter((quiz) => quiz.category === 'general');
+const exampleTerms = exampleLibrary.filter((quiz) => quiz.category === 'terminology');
 const validatorPath = fileURLToPath(new URL('./validate.mjs', import.meta.url));
-const testsDocument = (data) => ({ kind: 'tests', label: 'tests.json', data });
-const termsDocument = (data) => ({ kind: 'terminology', label: 'terminology.json', data });
+const testsDocument = (data) => ({ label: 'general-additions', data });
+const termsDocument = (data) => ({ label: 'terminology-additions', data });
 const checkQuestion = (update) => {
   const data = structuredClone(exampleTests);
   update(data[0].questions, data[0]);
@@ -24,8 +25,7 @@ test('all example formats validate and validation does not mutate data', () => {
 
 test('current project collections satisfy the generation contract', () => {
   const result = validateDocuments([
-    testsDocument(readJson(new URL('../public/tests/tests.json', import.meta.url))),
-    termsDocument(readJson(new URL('../public/tests/terminology.json', import.meta.url))),
+    { label: 'library.json', data: readJson(new URL('../public/tests/library.json', import.meta.url)) },
   ]);
   assert.deepEqual(result.errors, []);
 });
@@ -115,7 +115,7 @@ test('multi-blank prompts receive a review warning', () => {
 
 test('CLI validates examples and reports failed input/arguments with exit code 1', () => {
   assert.equal(spawnSync(process.execPath, [validatorPath, '--examples'], { encoding: 'utf8' }).status, 0);
-  for (const args of [['--tests'], ['--wrong'], ['--against-project'], ['--examples', '--against-project'], ['--tests', 'missing-data-file.json']]) {
+  for (const args of [['--library'], ['--wrong'], ['--against-project'], ['--examples', '--against-project'], ['--library', 'missing-data-file.json']]) {
     const result = spawnSync(process.execPath, [validatorPath, ...args], { encoding: 'utf8' });
     assert.equal(result.status, 1);
     assert.match(result.stderr, /Validation failed/);
@@ -123,8 +123,18 @@ test('CLI validates examples and reports failed input/arguments with exit code 1
 });
 
 test('CLI detects project collisions when an additions file reuses existing IDs', () => {
-  const existingPath = fileURLToPath(new URL('../public/tests/terminology.json', import.meta.url));
-  const result = spawnSync(process.execPath, [validatorPath, '--terminology', existingPath, '--against-project'], { encoding: 'utf8' });
+  const existingPath = fileURLToPath(new URL('../public/tests/library.json', import.meta.url));
+  const result = spawnSync(process.execPath, [validatorPath, '--library', existingPath, '--against-project'], { encoding: 'utf8' });
   assert.equal(result.status, 1);
   assert.match(result.stderr, /duplicate id/);
+});
+
+test('one library accepts both categories but rejects missing or mismatched categories', () => {
+  assert.deepEqual(validateDocuments([{ data: exampleLibrary }]), { errors: [], warnings: [] });
+  const missing = structuredClone(exampleLibrary);
+  delete missing[0].category;
+  hasError(validateDocuments([{ data: missing }]), /category/);
+  const wrong = structuredClone(exampleLibrary);
+  wrong[1].category = 'general';
+  assert.ok(validateDocuments([{ data: wrong }]).errors.length);
 });
