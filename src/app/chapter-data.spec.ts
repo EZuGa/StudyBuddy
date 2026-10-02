@@ -22,26 +22,26 @@ describe('Project chapter data integration', () => {
     return fixture;
   }
 
-  it('renders exactly two chapters, each containing quiz and terminology from its own object', () => {
-    expect(library).toHaveLength(2);
-    expect(library.map((chapter) => [chapter.quiz.questions.length, chapter.terminology.questions.length])).toEqual([[36, 10], [100, 27]]);
+  it('renders all project chapters, each containing quiz and terminology from its own object', () => {
+    expect(library.map((chapter) => chapter.id)).toContain('networking-chapter-3');
+    expect(library.slice(0, 2).map((chapter) => [chapter.quiz.questions.length, chapter.terminology.questions.length])).toEqual([[36, 10], [100, 27]]);
     const fixture = loadApp();
     const app = fixture.componentInstance;
     const root = fixture.nativeElement as HTMLElement;
     root.querySelector<HTMLButtonElement>('.subject-card')!.click();
     fixture.detectChanges();
-    expect(root.querySelectorAll('.chapter-card')).toHaveLength(2);
+    expect(root.querySelectorAll('.chapter-card')).toHaveLength(library.length);
     for (const chapter of library) {
       app['chooseChapter'](chapter.title);
       fixture.detectChanges();
       expect(app['filteredTests']().map((test) => test.id)).toEqual([chapter.quiz.id, chapter.terminology.id]);
       expect(root.querySelectorAll('.test-card')).toHaveLength(2);
     }
-    expect(app['tests']().reduce((count, quiz) => count + quiz.questions.length, 0)).toBe(173);
+    const questionCount = library.reduce((count, chapter) => count + chapter.quiz.questions.length + chapter.terminology.questions.length, 0);
+    expect(app['tests']().reduce((count, quiz) => count + quiz.questions.length, 0)).toBe(questionCount);
   });
 
-  it('retains saved scores and favorites for nested activities and supports both term directions', () => {
-    const chapter = library[0];
+  it.each(library)('retains scores, favorites, and both term directions for $title', (chapter) => {
     localStorage.setItem('studydeck-favorites-v1', JSON.stringify([
       { testId: chapter.quiz.id, questionId: chapter.quiz.questions[0].id },
       { testId: chapter.terminology.id, questionId: chapter.terminology.questions[0].id },
@@ -50,7 +50,8 @@ describe('Project chapter data integration', () => {
       { id: 'saved-score', testId: chapter.quiz.id, testTitle: chapter.quiz.title, subject: chapter.subject, score: 20, total: 40, percentage: 50, mode: 'end', completedAt: '2026-09-03T12:00:00Z' },
     ]));
     const app = loadApp().componentInstance;
-    const [quiz, terms] = app['tests']();
+    const quiz = app['tests']().find((test) => test.id === chapter.quiz.id)!;
+    const terms = app['tests']().find((test) => test.id === chapter.terminology.id)!;
     expect(app['latestFor'](quiz.id)?.percentage).toBe(50);
     const favorites = TestBed.inject(FavoritesService);
     expect(favorites.questionsFor(quiz).map((question) => question.id)).toEqual([chapter.quiz.questions[0].id]);
@@ -73,11 +74,11 @@ describe('Project chapter data integration', () => {
     const input = { files: [{ text: async () => JSON.stringify([chapter]) }], value: 'chapter.json' };
     await app['importFile']({ target: input } as unknown as Event);
     expect(app['importStatus']()?.tone).toBe('success');
-    expect(app['tests']()).toHaveLength(4);
+    expect(app['tests']()).toHaveLength(library.length * 2);
     expect(app['tests']().find((test) => test.id === quiz.id)?.title).toBe(quiz.title);
     expect(app['tests']().find((test) => test.id === chapter.terminology.id)?.title).toBe('Updated terminology');
     app['chooseSubject'](chapter.subject);
-    expect(app['chapters']()).toHaveLength(2);
+    expect(app['chapters']()).toHaveLength(library.length);
     expect(input.value).toBe('');
   });
 });

@@ -2240,5 +2240,1688 @@
         }
       ]
     }
+  },
+  {
+    "id": "networking-chapter-3",
+    "subject": "Networking",
+    "title": "Chapter 3",
+    "kind": "chapter",
+    "quiz": {
+      "id": "networking-chapter-3-quiz",
+      "title": "Chapter 3: Network Topologies and Technologies",
+      "minutes": 90,
+      "tone": "sky",
+      "questions": [
+        {
+          "id": "networking-chapter-3-q001",
+          "number": "1",
+          "type": "multiple-choice",
+          "prompt": "Which description identifies a network's physical topology?",
+          "options": [
+            "The order in which stations may transmit",
+            "The arrangement of cables and connections between devices",
+            "The format of a frame header",
+            "The protocol used to recover lost data"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Physical topology describes how devices are connected. Logical topology describes the path data follows."
+        },
+        {
+          "id": "networking-chapter-3-q002",
+          "number": "2",
+          "type": "multiple-choice",
+          "prompt": "A technician replaces an Ethernet hub with a switch without moving any cables. What changes?",
+          "options": [
+            "The physical star becomes a ring",
+            "Both topologies must stay the same",
+            "The physical star becomes a bus",
+            "The logical bus becomes switched while the physical star remains"
+          ],
+          "correctAnswer": 3,
+          "explanation": "The central device determines the logical topology of a physical star: a hub repeats signals, while a switch forwards frames between ports."
+        },
+        {
+          "id": "networking-chapter-3-q003",
+          "number": "3",
+          "type": "multiple-select",
+          "prompt": "Which limitations apply to the legacy coaxial physical bus described in the chapter? Select all correct answers.",
+          "options": [
+            "A cable break can interrupt the entire bus",
+            "Stations always communicate in full-duplex mode",
+            "Both ends require termination",
+            "Adding or removing a station can interrupt communication"
+          ],
+          "correctAnswers": [
+            0,
+            2,
+            3
+          ],
+          "explanation": "The bus requires continuous, terminated cabling and uses half-duplex communication. A break or a change that removes termination disrupts it."
+        },
+        {
+          "id": "networking-chapter-3-q004",
+          "number": "4",
+          "type": "multiple-choice",
+          "prompt": "Why is a terminator installed at each end of a physical bus?",
+          "options": [
+            "To regenerate weakened signals",
+            "To assign MAC addresses to stations",
+            "To absorb signals and prevent them from bouncing back",
+            "To convert half-duplex traffic into full-duplex traffic"
+          ],
+          "correctAnswer": 2,
+          "explanation": "A terminator uses resistance to absorb signals at the cable end, preventing reflections from corrupting later transmissions."
+        },
+        {
+          "id": "networking-chapter-3-q005",
+          "number": "5",
+          "type": "multiple-choice",
+          "prompt": "Which limits does the chapter give for one legacy thin-coax bus segment without a repeater?",
+          "options": [
+            "30 computers and 185 meters",
+            "100 computers and 30 meters",
+            "185 computers and 100 meters",
+            "500 computers and 100 kilometers"
+          ],
+          "correctAnswer": 0,
+          "explanation": "The physical bus section specifies 30 stations and 185 meters because signals weaken along the cable and at connections."
+        },
+        {
+          "id": "networking-chapter-3-q006",
+          "number": "6",
+          "type": "multiple-select",
+          "prompt": "Which are advantages of a physical star over the legacy physical bus? Select all correct answers.",
+          "options": [
+            "It eliminates the central point of failure",
+            "It always requires less cabling",
+            "It supports faster networking technologies",
+            "It permits centralized traffic monitoring and management"
+          ],
+          "correctAnswers": [
+            2,
+            3
+          ],
+          "explanation": "A central switch supports faster links and management features, but remains a potential point of failure and can require more cabling."
+        },
+        {
+          "id": "networking-chapter-3-q007",
+          "number": "7",
+          "type": "multiple-choice",
+          "prompt": "All computers connected to one switch lose connectivity when that switch loses power. Which star-topology weakness does this illustrate?",
+          "options": [
+            "Signal bounce at an unterminated endpoint",
+            "A single point of failure at the central device",
+            "A token that cannot complete its circuit",
+            "Interference between overlapping radio channels"
+          ],
+          "correctAnswer": 1,
+          "explanation": "The central device is a shared dependency for the computers attached to that star."
+        },
+        {
+          "id": "networking-chapter-3-q008",
+          "number": "8",
+          "type": "multiple-choice",
+          "prompt": "Several access switches connect to a faster central switch, and computers connect to those access switches. Which topology is this?",
+          "options": [
+            "Physical bus",
+            "Full mesh",
+            "Single physical ring",
+            "Extended star"
+          ],
+          "correctAnswer": 3,
+          "explanation": "An extended or hierarchical star joins multiple stars through a central device. Faster central links help carry combined traffic."
+        },
+        {
+          "id": "networking-chapter-3-q009",
+          "number": "9",
+          "type": "multiple-choice",
+          "prompt": "Two buildings need a direct wireless link between their networks. Which arrangement fits?",
+          "options": [
+            "A point-to-point wireless bridge",
+            "An unterminated coaxial bus",
+            "An ad hoc connection among every employee laptop",
+            "A token ring through both buildings"
+          ],
+          "correctAnswer": 0,
+          "explanation": "A wireless bridge can connect two buildings with a direct point-to-point link."
+        },
+        {
+          "id": "networking-chapter-3-q010",
+          "number": "10",
+          "type": "multiple-choice",
+          "prompt": "Several branch sites communicate through a central connection, with all branch traffic passing through the central device. Which topology describes this?",
+          "options": [
+            "Full mesh",
+            "Physical ring",
+            "Point-to-multipoint",
+            "A single point-to-point link"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Point-to-multipoint connects one central device to multiple others, with communication passing through that central device."
+        },
+        {
+          "id": "networking-chapter-3-q011",
+          "number": "11",
+          "type": "written",
+          "prompt": "Contrast a full mesh with a partial mesh, and explain the reliability-versus-cost tradeoff.",
+          "exampleAnswer": "In a full mesh, every device has a direct connection to every other device. A partial mesh provides some redundant connections without connecting every pair. Alternate paths improve fault tolerance, but additional links, cabling, and ports raise costs."
+        },
+        {
+          "id": "networking-chapter-3-q012",
+          "number": "12",
+          "type": "matching",
+          "prompt": "Match each network arrangement to its logical topology.",
+          "pairs": [
+            {
+              "term": "Hub-based Ethernet",
+              "definition": "A shared bus in which connected stations hear transmitted signals"
+            },
+            {
+              "term": "Switched Ethernet",
+              "definition": "Temporary forwarding paths between source and destination ports"
+            },
+            {
+              "term": "Token ring with an MAU",
+              "definition": "An ordered ring implemented inside a central device"
+            }
+          ],
+          "explanation": "A similar physical star can support a logical bus, switched paths, or a logical ring depending on its central device."
+        },
+        {
+          "id": "networking-chapter-3-q013",
+          "number": "13",
+          "type": "multiple-choice",
+          "prompt": "A token ring MAU has several unused ports. How does its logical ring handle them?",
+          "options": [
+            "It requires a terminator on every unused port",
+            "It bypasses unused ports and passes data to the next connected station",
+            "It broadcasts the token through every empty port",
+            "It changes the network to a switched Ethernet topology"
+          ],
+          "correctAnswer": 1,
+          "explanation": "The MAU implements the ring internally and bypasses ports that have no connected station."
+        },
+        {
+          "id": "networking-chapter-3-q014",
+          "number": "14",
+          "type": "written",
+          "prompt": "Four hubs are connected to four separate ports of a central switch, with PCs on each hub and no other links. How many collision domains are present, and why?",
+          "exampleAnswer": "There are four collision domains, one for each hub and its attached PCs. Each switch port bounds its attached collision domain, so collisions on one hub do not propagate through the switch to another hub."
+        },
+        {
+          "id": "networking-chapter-3-q015",
+          "number": "15",
+          "type": "multiple-choice",
+          "prompt": "What does a network technology primarily describe in this chapter?",
+          "options": [
+            "Only the arrangement of desks in a building",
+            "Only the names of the applications using the network",
+            "Only the IP addresses assigned to computers",
+            "How an interface accesses the medium and sends frames, including their structure"
+          ],
+          "correctAnswer": 3,
+          "explanation": "A network technology describes frame transmission and medium access, and may also specify cabling and frame format."
+        },
+        {
+          "id": "networking-chapter-3-q016",
+          "number": "16",
+          "type": "multiple-select",
+          "prompt": "Which statements describe the UTP LAN cabling discussed in the chapter? Select all correct answers.",
+          "options": [
+            "It contains four twisted pairs of copper wires",
+            "It is immune to electrical interference",
+            "Its typical NIC-to-switch length limit is 100 meters",
+            "It carries information as pulses of light"
+          ],
+          "correctAnswers": [
+            0,
+            2
+          ],
+          "explanation": "UTP uses copper pairs and is susceptible to electrical interference. The chapter gives a 100-meter limit for typical LAN links."
+        },
+        {
+          "id": "networking-chapter-3-q017",
+          "number": "17",
+          "type": "multiple-choice",
+          "prompt": "A wired link must cross an electrically noisy area and reach farther than a typical UTP LAN link. Which medium best fits?",
+          "options": [
+            "Category 3 UTP",
+            "Thin coaxial bus cabling",
+            "Fiber-optic cabling",
+            "A shorter UTP patch cable"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Fiber carries light, resists electrical interference, and supports longer distances than typical UTP LAN links."
+        },
+        {
+          "id": "networking-chapter-3-q018",
+          "number": "18",
+          "type": "matching",
+          "prompt": "Match each signaling method to its description.",
+          "pairs": [
+            {
+              "term": "Baseband",
+              "definition": "Digital pulses use the medium's bandwidth for a transmission"
+            },
+            {
+              "term": "Broadband",
+              "definition": "Separate frequency channels carry multiple signals on one medium"
+            }
+          ],
+          "explanation": "The chapter contrasts baseband LAN signaling with the multiple frequency channels used by cable TV and cable Internet."
+        },
+        {
+          "id": "networking-chapter-3-q019",
+          "number": "19",
+          "type": "multiple-choice",
+          "prompt": "Which Ethernet destination address represents a broadcast?",
+          "options": [
+            "00:00:00:00:00:00",
+            "FF:FF:FF:FF:FF:FF",
+            "255.255.255.0",
+            "127.0.0.1"
+          ],
+          "correctAnswer": 1,
+          "explanation": "An Ethernet broadcast destination contains all binary 1s, expressed as twelve hexadecimal Fs."
+        },
+        {
+          "id": "networking-chapter-3-q020",
+          "number": "20",
+          "type": "fill-blank",
+          "prompt": "An Ethernet MAC address contains ____ bits.",
+          "acceptedAnswers": [
+            "48",
+            "48 bits",
+            "forty-eight",
+            "forty eight"
+          ],
+          "explanation": "A MAC address contains 48 bits, written as 12 hexadecimal digits or 6 bytes."
+        },
+        {
+          "id": "networking-chapter-3-q021",
+          "number": "21",
+          "type": "multiple-choice",
+          "prompt": "What is the size of the ordinary Ethernet header described in the chapter?",
+          "options": [
+            "4 bytes",
+            "12 bytes",
+            "46 bytes",
+            "14 bytes"
+          ],
+          "correctAnswer": 3,
+          "explanation": "The two 6-byte MAC addresses plus the 2-byte Type field total 14 bytes."
+        },
+        {
+          "id": "networking-chapter-3-q022",
+          "number": "22",
+          "type": "multiple-choice",
+          "prompt": "What does the Ethernet Type field identify?",
+          "options": [
+            "The network protocol carried in the data field",
+            "The switch port that should receive the frame",
+            "The maximum cable length for the link",
+            "The CRC calculated for the frame"
+          ],
+          "correctAnswer": 0,
+          "explanation": "The Type field identifies the encapsulated protocol, such as IPv4, IPv6, or ARP."
+        },
+        {
+          "id": "networking-chapter-3-q023",
+          "number": "23",
+          "type": "matching",
+          "prompt": "Match each part of the ordinary Ethernet frame to its length.",
+          "pairs": [
+            {
+              "term": "Destination MAC address",
+              "definition": "6 bytes"
+            },
+            {
+              "term": "Type field",
+              "definition": "2 bytes"
+            },
+            {
+              "term": "Data field",
+              "definition": "46–1500 bytes"
+            },
+            {
+              "term": "Frame check sequence",
+              "definition": "4 bytes"
+            }
+          ],
+          "explanation": "The ordinary frame has a 14-byte header, a variable data field, and a 4-byte FCS trailer."
+        },
+        {
+          "id": "networking-chapter-3-q024",
+          "number": "24",
+          "type": "multiple-choice",
+          "prompt": "Excluding the exceptions discussed for additional fields and jumbo frames, which frame-size range does the chapter give for Ethernet?",
+          "options": [
+            "46–1500 bytes",
+            "14–1518 bytes",
+            "64–1518 bytes",
+            "64–9000 bytes"
+          ],
+          "correctAnswer": 2,
+          "explanation": "The ordinary minimum is 14 + 46 + 4 = 64 bytes; the ordinary maximum is 14 + 1500 + 4 = 1518 bytes."
+        },
+        {
+          "id": "networking-chapter-3-q025",
+          "number": "25",
+          "type": "multiple-choice",
+          "prompt": "Before transmitting on half-duplex Ethernet, what should a station do?",
+          "options": [
+            "Request a token from the switch",
+            "Listen to determine whether the medium is busy",
+            "Send a clear-to-send message to an AP",
+            "Wait for an acknowledgment of a frame it has not sent"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Carrier sense in CSMA/CD requires listening before sending on a half-duplex shared medium."
+        },
+        {
+          "id": "networking-chapter-3-q026",
+          "number": "26",
+          "type": "multiple-choice",
+          "prompt": "Two half-duplex Ethernet stations detect a collision. What happens next?",
+          "options": [
+            "Both continue transmitting the same frames without interruption",
+            "A router repairs the damaged frames",
+            "The stations permanently disable their NICs",
+            "The stations wait random intervals and attempt transmission again"
+          ],
+          "correctAnswer": 3,
+          "explanation": "CSMA/CD uses a random waiting interval before retrying, helping avoid repeated simultaneous transmissions."
+        },
+        {
+          "id": "networking-chapter-3-q027",
+          "number": "27",
+          "type": "multiple-choice",
+          "prompt": "Two hubs are connected together, with no switch or router between their attached computers. What is the collision-domain result?",
+          "options": [
+            "All computers share one collision domain",
+            "Every hub port becomes its own collision domain",
+            "Every pair of computers gets a private collision domain",
+            "There can be no collisions because there are two hubs"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Hubs propagate signals across their connected segments, extending the same collision domain."
+        },
+        {
+          "id": "networking-chapter-3-q028",
+          "number": "28",
+          "type": "multiple-select",
+          "prompt": "Which statements describe full-duplex Ethernet between a NIC and a switch? Select all correct answers.",
+          "options": [
+            "CSMA/CD resolves collisions on the link",
+            "The NIC must alternate between sending and receiving",
+            "The NIC can send and receive simultaneously",
+            "CSMA/CD is unnecessary because collisions do not occur"
+          ],
+          "correctAnswers": [
+            2,
+            3
+          ],
+          "explanation": "Full-duplex operation supports simultaneous traffic in both directions and eliminates the need for collision detection."
+        },
+        {
+          "id": "networking-chapter-3-q029",
+          "number": "29",
+          "type": "multiple-choice",
+          "prompt": "Can a collision occur on an Ethernet link between one NIC and one switch port?",
+          "options": [
+            "Yes, on every full-duplex transmission",
+            "Yes, if the link operates in half-duplex mode",
+            "No, a switch prevents it in every duplex mode",
+            "Only if the NIC uses fiber instead of copper"
+          ],
+          "correctAnswer": 1,
+          "explanation": "A half-duplex NIC and switch port can transmit at the same time and collide. Full-duplex operation removes that possibility."
+        },
+        {
+          "id": "networking-chapter-3-q030",
+          "number": "30",
+          "type": "multiple-choice",
+          "prompt": "A received Ethernet frame fails its CRC check. What does Ethernet itself do?",
+          "options": [
+            "Correct every corrupted bit using the CRC",
+            "Guarantee retransmission by the receiving application",
+            "Send the frame back as an acknowledgment",
+            "Discard the damaged frame"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Ethernet detects and discards corrupted frames. Recovery of damaged or missing data is handled by higher-layer protocols or applications."
+        },
+        {
+          "id": "networking-chapter-3-q031",
+          "number": "31",
+          "type": "written",
+          "prompt": "Explain why Ethernet is called a best-effort delivery system even though it checks for errors.",
+          "exampleAnswer": "Ethernet can detect frame damage with a CRC and discard a damaged frame, but ordinary delivery does not include an acknowledgment or a guarantee that the destination received it. Higher-layer protocols or applications handle reliability and recovery. Collision retries are a separate exception described for half-duplex Ethernet."
+        },
+        {
+          "id": "networking-chapter-3-q032",
+          "number": "32",
+          "type": "multiple-choice",
+          "prompt": "In the designation 100BaseT, what do 100, Base, and T mean?",
+          "options": [
+            "100 Mbps, baseband signaling, twisted-pair cabling",
+            "100 meters, broadband signaling, token passing",
+            "100 bytes, baseband signaling, thin coaxial cabling",
+            "100 stations, broadband signaling, twisted-pair cabling"
+          ],
+          "correctAnswer": 0,
+          "explanation": "The naming scheme identifies transmission speed, signaling method, and medium."
+        },
+        {
+          "id": "networking-chapter-3-q033",
+          "number": "33",
+          "type": "matching",
+          "prompt": "Match each Ethernet designation to its speed and medium.",
+          "pairs": [
+            {
+              "term": "10BaseT",
+              "definition": "10 Mbps over twisted pair"
+            },
+            {
+              "term": "100BaseTX",
+              "definition": "100 Mbps over twisted pair"
+            },
+            {
+              "term": "100BaseFX",
+              "definition": "100 Mbps over fiber"
+            },
+            {
+              "term": "1000BaseT",
+              "definition": "1 Gbps over twisted pair"
+            }
+          ],
+          "explanation": "The prefix supplies the rate, while T and F distinguish twisted-pair and fiber implementations."
+        },
+        {
+          "id": "networking-chapter-3-q034",
+          "number": "34",
+          "type": "multiple-choice",
+          "prompt": "How does 1000BaseT use the four wire pairs during full-duplex operation?",
+          "options": [
+            "Two pairs send and the other two receive exclusively",
+            "One pair carries all data while three provide redundancy",
+            "Every pair sends and receives simultaneously",
+            "Only two pairs carry data, as in 100BaseTX"
+          ],
+          "correctAnswer": 2,
+          "explanation": "1000BaseT uses all four pairs, with simultaneous transmission and reception on each pair."
+        },
+        {
+          "id": "networking-chapter-3-q035",
+          "number": "35",
+          "type": "multiple-choice",
+          "prompt": "Why were 2.5GBaseT and 5GBaseT useful for newer access-point uplinks?",
+          "options": [
+            "They made fiber-optic cabling mandatory for every AP",
+            "They offered more than 1 Gbps using existing Cat 5e/6 cabling",
+            "They reduced AP uplinks to 100 Mbps for compatibility",
+            "They allowed full-duplex communication through Ethernet hubs"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Faster Wi-Fi could exceed a 1 Gbps wired uplink. These Ethernet options increased capacity without requiring a new cabling plant in the chapter's scenario."
+        },
+        {
+          "id": "networking-chapter-3-q036",
+          "number": "36",
+          "type": "multiple-select",
+          "prompt": "Which characteristics does the chapter assign to 10GBaseT? Select all correct answers.",
+          "options": [
+            "It supports 10 Gbps hubs",
+            "It uses only two wire pairs",
+            "It operates only in full-duplex mode",
+            "It uses four pairs of Cat 6A or Cat 7 cabling"
+          ],
+          "correctAnswers": [
+            2,
+            3
+          ],
+          "explanation": "The chapter describes 10GBaseT as a four-pair, full-duplex-only technology using higher-grade cabling."
+        },
+        {
+          "id": "networking-chapter-3-q037",
+          "number": "37",
+          "type": "multiple-choice",
+          "prompt": "Which Gigabit Ethernet fiber option uses long-wavelength lasers and can reach farther than 1000BaseSX?",
+          "options": [
+            "1000BaseLX",
+            "1000BaseCX",
+            "100BaseT4",
+            "10BaseT"
+          ],
+          "correctAnswer": 0,
+          "explanation": "1000BaseLX uses long-wavelength optics; 1000BaseSX uses short-wavelength optics and shorter-distance multimode fiber."
+        },
+        {
+          "id": "networking-chapter-3-q038",
+          "number": "38",
+          "type": "multiple-choice",
+          "prompt": "Which option uses short twinax copper links, with a 25-meter limit in the chapter?",
+          "options": [
+            "100BaseFX",
+            "1000BaseLX",
+            "1000BaseCX",
+            "10GBaseER"
+          ],
+          "correctAnswer": 2,
+          "explanation": "1000BaseCX uses shielded copper jumper or twinax cables, usually within equipment racks or wiring closets."
+        },
+        {
+          "id": "networking-chapter-3-q039",
+          "number": "39",
+          "type": "written",
+          "prompt": "A company replaces a 1 Gbps central switch with one supporting 1 and 10 Gbps. Explain why every desktop does not automatically gain a 10 Gbps connection.",
+          "exampleAnswer": "Each link depends on the speed supported by its NIC, switch port, and cabling. A 1 Gbps NIC still connects at its supported speed. The mixed-speed switch permits staged upgrades, but compatible NICs and suitable cabling are needed for faster links."
+        },
+        {
+          "id": "networking-chapter-3-q040",
+          "number": "40",
+          "type": "multiple-choice",
+          "prompt": "Which Wi-Fi mode requires stations to connect through an access point?",
+          "options": [
+            "Ad hoc mode",
+            "Infrastructure mode",
+            "Token-passing mode",
+            "Point-to-point Ethernet mode"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Infrastructure mode uses a central AP. Ad hoc mode allows direct communication without that central device."
+        },
+        {
+          "id": "networking-chapter-3-q041",
+          "number": "41",
+          "type": "multiple-choice",
+          "prompt": "A small temporary wireless network lets devices communicate directly without an AP. Which mode is it using?",
+          "options": [
+            "Infrastructure",
+            "Extended star Ethernet",
+            "FDDI",
+            "Ad hoc"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Ad hoc, also called peer-to-peer mode, has no central access point."
+        },
+        {
+          "id": "networking-chapter-3-q042",
+          "number": "42",
+          "type": "multiple-choice",
+          "prompt": "For the overlapping 2.4 GHz channels described in the chapter, which three-channel plan avoids overlap?",
+          "options": [
+            "1, 6, and 11",
+            "1, 2, and 3",
+            "4, 5, and 6",
+            "9, 10, and 11"
+          ],
+          "correctAnswer": 0,
+          "explanation": "The chapter's 2.4 GHz channels are wider than their spacing, so channels five apart avoid overlapping each other."
+        },
+        {
+          "id": "networking-chapter-3-q043",
+          "number": "43",
+          "type": "written",
+          "prompt": "A 2.4 GHz WLAN becomes unreliable when a nearby microwave oven runs. Explain the likely cause and one adjustment described in the chapter.",
+          "exampleAnswer": "Radio interference from the microwave can degrade the Wi-Fi signal. Checking channel activity and selecting a less affected channel may reduce the interference, although a channel change is not guaranteed to solve it."
+        },
+        {
+          "id": "networking-chapter-3-q044",
+          "number": "44",
+          "type": "matching",
+          "prompt": "Match each antenna to the placement it best suits.",
+          "pairs": [
+            {
+              "term": "Omnidirectional antenna",
+              "definition": "A central location serving devices spread horizontally around it"
+            },
+            {
+              "term": "Unidirectional antenna",
+              "definition": "One end of a long narrow area or a focused link to another building"
+            }
+          ],
+          "explanation": "A broad horizontal radiation pattern suits surrounding clients; a focused pattern suits a specific direction."
+        },
+        {
+          "id": "networking-chapter-3-q045",
+          "number": "45",
+          "type": "multiple-choice",
+          "prompt": "Why does the chapter's Wi-Fi access method use collision avoidance instead of wired Ethernet-style collision detection?",
+          "options": [
+            "Wi-Fi has no shared transmission medium",
+            "Wireless stations cannot use random backoff",
+            "A transmitting wireless station cannot listen for another transmission at the same time",
+            "An AP requires stations to hold a token before every frame"
+          ],
+          "correctAnswer": 2,
+          "explanation": "A wireless transmitter cannot detect a collision by listening while it sends. CSMA/CA uses acknowledgments and retries to handle unsuccessful transmissions."
+        },
+        {
+          "id": "networking-chapter-3-q046",
+          "number": "46",
+          "type": "multiple-choice",
+          "prompt": "In the acknowledged Wi-Fi exchange described in the chapter, no acknowledgment returns. What does the sender do?",
+          "options": [
+            "Assume delivery succeeded",
+            "Wait for a random backoff interval and try again",
+            "Disable all other clients permanently",
+            "Change to a token-passing protocol"
+          ],
+          "correctAnswer": 1,
+          "explanation": "A missing acknowledgment signals an unsuccessful exchange, so the station waits before retrying."
+        },
+        {
+          "id": "networking-chapter-3-q047",
+          "number": "47",
+          "type": "multiple-choice",
+          "prompt": "Two wireless clients can both reach an AP but cannot hear each other. What problem can this create?",
+          "options": [
+            "A coaxial termination failure",
+            "A duplicate token problem",
+            "A full-duplex Ethernet collision",
+            "The hidden node problem"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Clients that cannot hear each other may try to transmit together because they cannot sense one another's transmissions."
+        },
+        {
+          "id": "networking-chapter-3-q048",
+          "number": "48",
+          "type": "multiple-choice",
+          "prompt": "Which exchange can help manage the hidden node problem before data transmission?",
+          "options": [
+            "RTS followed by CTS",
+            "CRC followed by FCS",
+            "ARP followed by a token",
+            "A preamble followed by a terminator"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Request-to-send and clear-to-send messages reserve a transmission opportunity and inform other stations to defer."
+        },
+        {
+          "id": "networking-chapter-3-q049",
+          "number": "49",
+          "type": "multiple-choice",
+          "prompt": "A Wi-Fi connection switches to a lower transmission rate as a laptop moves behind several walls. Which explanation fits the chapter?",
+          "options": [
+            "Its MAC address became shorter",
+            "The AP changed to a physical ring",
+            "Reduced signal quality can require a lower rate for reliable communication",
+            "All wireless standards use a fixed rate regardless of conditions"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Distance, obstacles, and interference can reduce the sustainable wireless rate."
+        },
+        {
+          "id": "networking-chapter-3-q050",
+          "number": "50",
+          "type": "matching",
+          "prompt": "Match each Wi-Fi signal effect to its description.",
+          "pairs": [
+            {
+              "term": "Absorption",
+              "definition": "Material takes in signal energy and weakens the signal"
+            },
+            {
+              "term": "Refraction",
+              "definition": "A signal bends when entering a medium of different density"
+            },
+            {
+              "term": "Diffraction",
+              "definition": "A wave bends around an obstacle"
+            },
+            {
+              "term": "Reflection",
+              "definition": "A signal bounces from a reflective surface"
+            },
+            {
+              "term": "Scattering",
+              "definition": "Small irregular objects redirect a signal unpredictably"
+            }
+          ],
+          "explanation": "These mechanisms affect radio signals differently and can reduce signal quality or alter the direction of travel."
+        },
+        {
+          "id": "networking-chapter-3-q051",
+          "number": "51",
+          "type": "multiple-choice",
+          "prompt": "Copies of a radio signal reach a receiver along different paths and arrive at different times. What is this called?",
+          "options": [
+            "Broadband",
+            "Multipath",
+            "Token passing",
+            "Baseband"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Reflections can create multiple paths and arrival times. The chapter explains both the potential distortion and MIMO's use of such signals."
+        },
+        {
+          "id": "networking-chapter-3-q052",
+          "number": "52",
+          "type": "multiple-choice",
+          "prompt": "Which change improves signal-to-noise ratio?",
+          "options": [
+            "A weaker useful signal with unchanged noise",
+            "More interference with unchanged signal strength",
+            "Equal increases in useful signal and noise power",
+            "A stronger useful signal relative to background noise"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Signal-to-noise ratio compares the useful signal with noise; improving that relationship helps reliable reception."
+        },
+        {
+          "id": "networking-chapter-3-q053",
+          "number": "53",
+          "type": "multiple-choice",
+          "prompt": "A file containing 60 megabits of application data takes 3 seconds to transfer. What is the goodput?",
+          "options": [
+            "20 Mbps",
+            "63 Mbps",
+            "180 Mbps",
+            "20 MB/s"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Goodput is application data divided by elapsed time: 60 megabits / 3 seconds = 20 megabits per second."
+        },
+        {
+          "id": "networking-chapter-3-q054",
+          "number": "54",
+          "type": "matching",
+          "prompt": "Match each performance term to what it measures or represents.",
+          "pairs": [
+            {
+              "term": "Throughput",
+              "definition": "Actual data transfer rate after losses to errors and acknowledgments"
+            },
+            {
+              "term": "Goodput",
+              "definition": "Application data delivered per unit of time, excluding protocol overhead"
+            },
+            {
+              "term": "Overhead",
+              "definition": "Extra traffic such as headers, acknowledgments, and retransmissions"
+            }
+          ],
+          "explanation": "The chapter distinguishes actual network transfer from the portion that is useful application data."
+        },
+        {
+          "id": "networking-chapter-3-q055",
+          "number": "55",
+          "type": "matching",
+          "prompt": "Match each Wi-Fi generation name to its IEEE standard.",
+          "pairs": [
+            {
+              "term": "Wi-Fi 4",
+              "definition": "802.11n"
+            },
+            {
+              "term": "Wi-Fi 5",
+              "definition": "802.11ac"
+            },
+            {
+              "term": "Wi-Fi 6",
+              "definition": "802.11ax"
+            },
+            {
+              "term": "Wi-Fi 7",
+              "definition": "802.11be"
+            }
+          ],
+          "explanation": "These are the generation labels used in the chapter; its note distinguishes them from unofficial labels for earlier standards."
+        },
+        {
+          "id": "networking-chapter-3-q056",
+          "number": "56",
+          "type": "multiple-choice",
+          "prompt": "Which improvement did 802.11n introduce in the chapter's comparison?",
+          "options": [
+            "A return to a single antenna for all data",
+            "Token passing between access points",
+            "MIMO antennas supporting multiple data streams",
+            "A requirement to use coaxial cabling"
+          ],
+          "correctAnswer": 2,
+          "explanation": "802.11n uses multiple antennas and separately processed data streams to improve wireless transfer capacity."
+        },
+        {
+          "id": "networking-chapter-3-q057",
+          "number": "57",
+          "type": "multiple-choice",
+          "prompt": "What capability distinguishes multiuser MIMO in the chapter?",
+          "options": [
+            "It prevents all reflection in a room",
+            "An AP can transmit to multiple client stations simultaneously",
+            "It removes the need for client antennas",
+            "It converts every WLAN into a token ring"
+          ],
+          "correctAnswer": 1,
+          "explanation": "MU-MIMO supports simultaneous transmissions to multiple clients, with beamforming directing signals toward receiving devices."
+        },
+        {
+          "id": "networking-chapter-3-q058",
+          "number": "58",
+          "type": "multiple-choice",
+          "prompt": "Which additional frequency band does the chapter associate with Wi-Fi 6E?",
+          "options": [
+            "900 MHz",
+            "60 GHz",
+            "1 GHz",
+            "6 GHz"
+          ],
+          "correctAnswer": 3,
+          "explanation": "The chapter describes Wi-Fi 6E as extending Wi-Fi 6 operation to the 6 GHz band."
+        },
+        {
+          "id": "networking-chapter-3-q059",
+          "number": "59",
+          "type": "multiple-choice",
+          "prompt": "What channel-width change does the chapter describe for Wi-Fi 7 in the 6 GHz band?",
+          "options": [
+            "Channels can be 320 MHz wide",
+            "Channels are restricted to 5 MHz",
+            "Channels shrink to 1 MHz",
+            "Channel width becomes unrelated to bandwidth"
+          ],
+          "correctAnswer": 0,
+          "explanation": "The chapter describes doubling channel width to 320 MHz in the 6 GHz band for Wi-Fi 7."
+        },
+        {
+          "id": "networking-chapter-3-q060",
+          "number": "60",
+          "type": "multiple-select",
+          "prompt": "Which statements explain the need for Wi-Fi security and compatible encryption settings? Select all correct answers.",
+          "options": [
+            "Radio signals stop at a building's exterior walls",
+            "WEP is the strongest protocol listed in the chapter",
+            "Devices outside a building may detect its wireless signals",
+            "Clients must support the encryption protocol configured on the AP"
+          ],
+          "correctAnswers": [
+            2,
+            3
+          ],
+          "explanation": "Wireless signals can extend beyond the intended space. The AP and clients need compatible protection, and the chapter identifies WEP as weak."
+        },
+        {
+          "id": "networking-chapter-3-q061",
+          "number": "61",
+          "type": "written",
+          "prompt": "Why can a Wi-Fi link's advertised rate be much higher than its useful file-transfer rate?",
+          "exampleAnswer": "Interference, errors, retransmissions, and acknowledgments reduce actual throughput. Packet and frame headers also consume capacity without carrying file content. Goodput counts only application data delivered over time, so it can be lower than both the rated rate and throughput."
+        },
+        {
+          "id": "networking-chapter-3-q062",
+          "number": "62",
+          "type": "multiple-choice",
+          "prompt": "Which combination describes token ring as presented in the chapter?",
+          "options": [
+            "IEEE 802.3 with a physical bus and logical star",
+            "IEEE 802.11 with a physical mesh and logical bus",
+            "IEEE 802.5 with a physical star and logical ring",
+            "IEEE 802.3 with a physical ring and logical mesh"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Token ring follows IEEE 802.5 and typically uses an MAU to create a logical ring within physical star cabling."
+        },
+        {
+          "id": "networking-chapter-3-q063",
+          "number": "63",
+          "type": "multiple-choice",
+          "prompt": "In token-passing access, which station may transmit data?",
+          "options": [
+            "Every station as soon as it has data",
+            "The station currently holding the token",
+            "Only the station nearest the central device",
+            "The station with the lowest MAC address"
+          ],
+          "correctAnswer": 1,
+          "explanation": "The token grants permission to transmit for a limited time. Stations without data pass it onward."
+        },
+        {
+          "id": "networking-chapter-3-q064",
+          "number": "64",
+          "type": "multiple-select",
+          "prompt": "Which tradeoffs are associated with token passing? Select all correct answers.",
+          "options": [
+            "Every station must resolve CSMA/CD collisions before sending",
+            "A station with data may need to wait for the token",
+            "Only the token holder transmits, preventing contention collisions",
+            "Creating and managing tokens adds equipment complexity and cost"
+          ],
+          "correctAnswers": [
+            1,
+            2,
+            3
+          ],
+          "explanation": "Controlled turns avoid contention collisions, but impose token-waiting time and require more complex equipment."
+        },
+        {
+          "id": "networking-chapter-3-q065",
+          "number": "65",
+          "type": "multiple-choice",
+          "prompt": "Why did FDDI use dual rings?",
+          "options": [
+            "To let Ethernet hubs operate at 10 Gbps",
+            "To eliminate all fiber-optic cabling",
+            "To provide a separate ring for each IP address",
+            "To provide redundancy if a ring path or device fails"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Dual rings provide an alternate path, helping overcome a single ring's vulnerability to a failure."
+        },
+        {
+          "id": "networking-chapter-3-q066",
+          "number": "66",
+          "type": "multiple-choice",
+          "prompt": "Which description matches standard FDDI in the chapter?",
+          "options": [
+            "100 Mbps, token passing, usually dual fiber-optic rings",
+            "10 Mbps, CSMA/CD, a single coaxial bus",
+            "1 Gbps, CSMA/CA, a wireless star",
+            "100 Mbps, broadband TV channels, a coaxial tree"
+          ],
+          "correctAnswer": 0,
+          "explanation": "FDDI is presented as a 100 Mbps token-passing technology with dual rings, usually using fiber-optic cabling."
+        },
+        {
+          "id": "networking-chapter-3-q067",
+          "number": "67",
+          "type": "written",
+          "prompt": "Explain why switched Ethernet displaced token ring and FDDI in the chapter's historical account.",
+          "exampleAnswer": "Ethernet delivered increasing bandwidth at lower cost. Switched full-duplex links avoided the collision delays of shared Ethernet, while token-based technologies carried greater complexity and expense. Their earlier advantages became less compelling."
+        },
+        {
+          "id": "networking-chapter-3-q068",
+          "number": "68",
+          "type": "written",
+          "prompt": "An office needs mobile laptop access in a second building across a street, plus access to servers in the main building. There is clear line of sight, and no wired crossing is available. Propose a topology and technology arrangement using this chapter.",
+          "exampleAnswer": "Use an 802.11 infrastructure WLAN with an AP for the mobile laptops. Link the buildings with a point-to-point wireless bridge, using focused antennas where appropriate. Connect the bridge and AP into the switched Ethernet LAN so laptops can reach the main-building servers. This adds an infrastructure wireless network and a point-to-point interbuilding link."
+        },
+        {
+          "id": "networking-chapter-3-q069",
+          "number": "69",
+          "type": "written",
+          "prompt": "During a packet-capture lab, which Ethernet header fields would you inspect to identify the sending NIC, receiving NIC, and encapsulated protocol?",
+          "exampleAnswer": "Inspect Source MAC Address for the sending NIC, Destination MAC Address for the intended receiving NIC or broadcast destination, and Type for the encapsulated protocol. IP addresses belong to the IP header inside the frame, not these Ethernet address fields."
+        }
+      ]
+    },
+    "terminology": {
+      "id": "networking-chapter-3-terminology",
+      "title": "Chapter 3: Terminology",
+      "minutes": 45,
+      "tone": "sage",
+      "questions": [
+        {
+          "id": "networking-chapter-3-term001",
+          "number": "1",
+          "type": "written",
+          "term": "Physical topology",
+          "definition": "The arrangement of network cabling and the connections that join devices."
+        },
+        {
+          "id": "networking-chapter-3-term002",
+          "number": "2",
+          "type": "written",
+          "term": "Logical topology",
+          "definition": "The path or pattern that data follows as it travels between devices on a network."
+        },
+        {
+          "id": "networking-chapter-3-term003",
+          "number": "3",
+          "type": "written",
+          "term": "Physical bus topology",
+          "definition": "A layout in which computers attach along one continuous cable segment with termination at both ends.",
+          "acceptedTerms": [
+            "Physical bus",
+            "Bus topology"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term004",
+          "number": "4",
+          "type": "written",
+          "term": "Physical star topology",
+          "definition": "A layout in which each endpoint has its own cable to a central device such as a switch or hub.",
+          "acceptedTerms": [
+            "Physical star",
+            "Star topology"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term005",
+          "number": "5",
+          "type": "written",
+          "term": "Extended star topology",
+          "definition": "A hierarchy in which a central switch connects to other switches, each serving its own group of endpoints.",
+          "acceptedTerms": [
+            "Extended star",
+            "Hierarchical star",
+            "Hierarchical star topology"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term006",
+          "number": "6",
+          "type": "written",
+          "term": "Physical ring topology",
+          "definition": "A cable layout that connects devices in a closed loop, including a connection from the last device back to the first.",
+          "acceptedTerms": [
+            "Physical ring",
+            "Ring topology"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term007",
+          "number": "7",
+          "type": "written",
+          "term": "Point-to-point topology",
+          "definition": "A direct communication link joining exactly two devices.",
+          "acceptedTerms": [
+            "Point-to-point",
+            "Point-to-point connection"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term008",
+          "number": "8",
+          "type": "written",
+          "term": "Point-to-multipoint topology",
+          "definition": "An arrangement in which one central device communicates with multiple other devices and their communication passes through that center.",
+          "acceptedTerms": [
+            "PMP",
+            "PMP topology",
+            "Point-to-multipoint"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term009",
+          "number": "9",
+          "type": "written",
+          "term": "Mesh topology",
+          "definition": "An arrangement of interconnected devices with redundant paths, implemented with connections between all pairs or only selected pairs.",
+          "acceptedTerms": [
+            "Mesh"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term010",
+          "number": "10",
+          "type": "written",
+          "term": "Signal propagation",
+          "definition": "The movement of a transmitted electrical or other network signal through the communication medium."
+        },
+        {
+          "id": "networking-chapter-3-term011",
+          "number": "11",
+          "type": "written",
+          "term": "Signal bounce",
+          "definition": "An electrical signal reaching an unterminated cable end and traveling back along the cable, potentially interfering with later signals.",
+          "acceptedTerms": [
+            "Reflection",
+            "Signal reflection"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term012",
+          "number": "12",
+          "type": "written",
+          "term": "Terminator",
+          "definition": "A resistive component at the end of a legacy bus cable that absorbs signals to prevent them from returning along the cable."
+        },
+        {
+          "id": "networking-chapter-3-term013",
+          "number": "13",
+          "type": "written",
+          "term": "Network backbone",
+          "definition": "The high-capacity connections used to carry traffic between LANs or between switches.",
+          "acceptedTerms": [
+            "Backbone"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term014",
+          "number": "14",
+          "type": "written",
+          "term": "Wireless bridge",
+          "definition": "A radio-based point-to-point connection that links separate networks, such as the LANs in two buildings."
+        },
+        {
+          "id": "networking-chapter-3-term015",
+          "number": "15",
+          "type": "written",
+          "term": "Logical bus topology",
+          "definition": "A shared-media arrangement in which connected stations hear transmissions and share the available bandwidth, even when the cabling forms a star.",
+          "acceptedTerms": [
+            "Logical bus",
+            "Shared media topology"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term016",
+          "number": "16",
+          "type": "written",
+          "term": "Switched topology",
+          "definition": "A logical arrangement that creates temporary forwarding paths between source and destination ports so separate device pairs can communicate concurrently.",
+          "acceptedTerms": [
+            "Switched logical topology",
+            "Logical switched topology",
+            "Switched point-to-point topology"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term017",
+          "number": "17",
+          "type": "written",
+          "term": "Multistation access unit",
+          "definition": "The central device in a token ring network whose internal electronics pass data around an ordered loop and bypass unused ports.",
+          "acceptedTerms": [
+            "MAU",
+            "MSAU"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term018",
+          "number": "18",
+          "type": "written",
+          "term": "Network technology",
+          "definition": "The rules an interface uses to access a medium and send frames, often specifying frame structure and acceptable media.",
+          "acceptedTerms": [
+            "Network architecture",
+            "Data Link layer technology",
+            "Network interface layer technology"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term019",
+          "number": "19",
+          "type": "written",
+          "term": "Unshielded twisted pair",
+          "definition": "LAN cabling consisting of four pairs of copper wires twisted together inside a jacket, susceptible to electrical interference.",
+          "acceptedTerms": [
+            "UTP",
+            "UTP cabling"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term020",
+          "number": "20",
+          "type": "written",
+          "term": "Fiber-optic cabling",
+          "definition": "A medium that carries pulses of light through thin glass strands, supports long distances, and is immune to electrical interference.",
+          "acceptedTerms": [
+            "Fiber-optic cable",
+            "Optical fiber"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term021",
+          "number": "21",
+          "type": "written",
+          "term": "Coaxial cable",
+          "definition": "The cable medium used for early physical-bus Ethernet and still used for cable TV and cable-modem Internet access.",
+          "acceptedTerms": [
+            "Coaxial cabling",
+            "Coax"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term022",
+          "number": "22",
+          "type": "written",
+          "term": "Baseband",
+          "definition": "Signaling that sends digital pulses using the medium's bandwidth for one transmission, as described for Ethernet LANs.",
+          "acceptedTerms": [
+            "Baseband signaling",
+            "Baseband transmission"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term023",
+          "number": "23",
+          "type": "written",
+          "term": "Broadband",
+          "definition": "Signaling that divides a medium into separate frequency channels so it can carry multiple signals, as in cable TV and cable Internet.",
+          "acceptedTerms": [
+            "Broadband signaling",
+            "Broadband transmission"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term024",
+          "number": "24",
+          "type": "written",
+          "term": "MAC address",
+          "definition": "A 48-bit physical identifier of a network interface, commonly written as twelve hexadecimal digits.",
+          "acceptedTerms": [
+            "Physical address",
+            "Media access control address"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term025",
+          "number": "25",
+          "type": "written",
+          "term": "Frame",
+          "definition": "The unit of network information transmitted and received by NICs and forwarded by switches, containing a header, data, and a trailer.",
+          "acceptedTerms": [
+            "Ethernet frame"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term026",
+          "number": "26",
+          "type": "written",
+          "term": "Frame check sequence",
+          "definition": "The four-byte Ethernet trailer field that stores an error-checking value for detecting damage in transit.",
+          "acceptedTerms": [
+            "FCS"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term027",
+          "number": "27",
+          "type": "written",
+          "term": "Cyclic redundancy check",
+          "definition": "A mathematically calculated error-detection value that a receiver recomputes and compares with the transmitted value to detect altered data.",
+          "acceptedTerms": [
+            "CRC"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term028",
+          "number": "28",
+          "type": "written",
+          "term": "Media access method",
+          "definition": "The rules governing how and when a network interface may transmit onto a communication medium.",
+          "acceptedTerms": [
+            "Media access control"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term029",
+          "number": "29",
+          "type": "written",
+          "term": "CSMA/CD",
+          "definition": "The half-duplex Ethernet access algorithm that listens before transmitting, detects simultaneous transmissions, and retries after a random wait.",
+          "acceptedTerms": [
+            "Carrier Sense Multiple Access with Collision Detection"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term030",
+          "number": "30",
+          "type": "written",
+          "term": "Collision",
+          "definition": "An event in which two or more devices transmit simultaneously onto the same shared medium and their signals interfere."
+        },
+        {
+          "id": "networking-chapter-3-term031",
+          "number": "31",
+          "type": "written",
+          "term": "Collision domain",
+          "definition": "The shared Ethernet segment or group of hub-connected segments across which interfering simultaneous transmissions can propagate, bounded by switch or router ports."
+        },
+        {
+          "id": "networking-chapter-3-term032",
+          "number": "32",
+          "type": "written",
+          "term": "Half-duplex",
+          "definition": "Communication in which a station can send and receive data, but cannot do both at the same time.",
+          "acceptedTerms": [
+            "Half-duplex communication",
+            "Half-duplex mode"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term033",
+          "number": "33",
+          "type": "written",
+          "term": "Full-duplex",
+          "definition": "Communication in which a station can send and receive at the same time; on a switched Ethernet link, collision detection is unnecessary.",
+          "acceptedTerms": [
+            "Full-duplex communication",
+            "Full-duplex mode"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term034",
+          "number": "34",
+          "type": "written",
+          "term": "10BaseT",
+          "definition": "An Ethernet variant providing 10 Mbps over Category 3 or higher twisted-pair cabling using two wire pairs.",
+          "acceptedTerms": [
+            "10BaseT Ethernet"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term035",
+          "number": "35",
+          "type": "written",
+          "term": "100BaseTX",
+          "definition": "The common 100 Mbps twisted-pair Ethernet variant that uses two wire pairs, one for sending and one for receiving.",
+          "acceptedTerms": [
+            "100BaseT",
+            "100BaseTX Ethernet"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term036",
+          "number": "36",
+          "type": "written",
+          "term": "100BaseFX",
+          "definition": "A 100 Mbps fiber-based Ethernet variant useful for backbone links, longer cable runs, and electrically noisy locations.",
+          "acceptedTerms": [
+            "100BaseFX Ethernet"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term037",
+          "number": "37",
+          "type": "written",
+          "term": "1000BaseT",
+          "definition": "The twisted-pair Gigabit Ethernet variant that uses all four pairs and can transmit and receive on each pair simultaneously.",
+          "acceptedTerms": [
+            "1000BaseT Ethernet"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term038",
+          "number": "38",
+          "type": "written",
+          "term": "2.5GBaseT and 5GBaseT",
+          "definition": "The paired Ethernet options providing 2.5 and 5 Gbps on existing Cat 5e/6 cabling, useful for faster access-point uplinks.",
+          "acceptedTerms": [
+            "2.5/5GBaseT",
+            "2.5/5 GBaseT",
+            "2.5GBaseT/5GBaseT",
+            "802.3bz",
+            "IEEE 802.3bz"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term039",
+          "number": "39",
+          "type": "written",
+          "term": "10GBaseT",
+          "definition": "The full-duplex-only 10 Gbps twisted-pair Ethernet variant described as using four pairs of Cat 6A or Cat 7 cabling.",
+          "acceptedTerms": [
+            "10GBaseT Ethernet"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term040",
+          "number": "40",
+          "type": "written",
+          "term": "Wi-Fi",
+          "definition": "The IEEE 802.11 family of networking technologies that carries local network traffic using radio signals.",
+          "acceptedTerms": [
+            "Wireless LAN",
+            "WLAN"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term041",
+          "number": "41",
+          "type": "written",
+          "term": "Hotspot",
+          "definition": "A location offering access to a public wireless LAN, such as a library or cafe.",
+          "acceptedTerms": [
+            "Wi-Fi hotspot"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term042",
+          "number": "42",
+          "type": "written",
+          "term": "Infrastructure mode",
+          "definition": "A wireless operating mode in which stations connect through a central access point before communicating with other devices.",
+          "acceptedTerms": [
+            "Infrastructure"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term043",
+          "number": "43",
+          "type": "written",
+          "term": "Ad hoc mode",
+          "definition": "A wireless operating mode in which devices communicate directly without a central access point, often for small or temporary installations.",
+          "acceptedTerms": [
+            "Ad hoc",
+            "Peer-to-peer mode"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term044",
+          "number": "44",
+          "type": "written",
+          "term": "Omnidirectional antenna",
+          "definition": "An antenna that covers surrounding devices in a broad pattern, typically strongest horizontally around its axis and weaker above and below it.",
+          "acceptedTerms": [
+            "Omnidirectional"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term045",
+          "number": "45",
+          "type": "written",
+          "term": "Unidirectional antenna",
+          "definition": "An antenna that focuses radio energy in one direction, useful for a narrow space or a link between buildings.",
+          "acceptedTerms": [
+            "Unidirectional",
+            "Directional antenna"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term046",
+          "number": "46",
+          "type": "written",
+          "term": "CSMA/CA",
+          "definition": "The wireless access algorithm that listens for the medium, seeks to avoid simultaneous transmissions, and uses acknowledgments and retry delays for unsuccessful exchanges.",
+          "acceptedTerms": [
+            "Carrier Sense Multiple Access with Collision Avoidance"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term047",
+          "number": "47",
+          "type": "written",
+          "term": "Distributed coordination function",
+          "definition": "The 802.11 access method described as using a collision-avoidance algorithm to coordinate stations sharing the wireless medium.",
+          "acceptedTerms": [
+            "DCF"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term048",
+          "number": "48",
+          "type": "written",
+          "term": "Backoff",
+          "definition": "A waiting interval before retrying transmission; the chapter describes a random delay after an unsuccessful wireless exchange."
+        },
+        {
+          "id": "networking-chapter-3-term049",
+          "number": "49",
+          "type": "written",
+          "term": "Hidden node problem",
+          "definition": "A wireless condition in which clients can reach the access point but cannot hear each other, so their transmissions may interfere without mutual awareness.",
+          "acceptedTerms": [
+            "Hidden node",
+            "Hidden nodes"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term050",
+          "number": "50",
+          "type": "written",
+          "term": "Request-to-send",
+          "definition": "The initial control message a wireless station sends to ask an access point for permission to transmit when optional handshaking is enabled.",
+          "acceptedTerms": [
+            "RTS"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term051",
+          "number": "51",
+          "type": "written",
+          "term": "Clear-to-send",
+          "definition": "The control reply granting a wireless station permission to transmit after it asks the access point, allowing other stations to defer.",
+          "acceptedTerms": [
+            "CTS"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term052",
+          "number": "52",
+          "type": "written",
+          "term": "Attenuation",
+          "definition": "A reduction in signal strength, such as the weakening that occurs when radio waves pass through dense material."
+        },
+        {
+          "id": "networking-chapter-3-term053",
+          "number": "53",
+          "type": "written",
+          "term": "Absorption",
+          "definition": "A process in which material takes in radio signal energy, leaving a weaker signal after it passes through the material."
+        },
+        {
+          "id": "networking-chapter-3-term054",
+          "number": "54",
+          "type": "written",
+          "term": "Refraction",
+          "definition": "The bending of a radio wave as it passes between media of different densities, changing its direction of travel."
+        },
+        {
+          "id": "networking-chapter-3-term055",
+          "number": "55",
+          "type": "written",
+          "term": "Diffraction",
+          "definition": "The bending of a wave around an obstacle, which can distort the wave or redirect part of it."
+        },
+        {
+          "id": "networking-chapter-3-term056",
+          "number": "56",
+          "type": "written",
+          "term": "Reflection",
+          "definition": "The bouncing of a radio wave from a dense reflective surface, creating a copy that may follow a different path to the receiver.",
+          "acceptedTerms": [
+            "Signal reflection"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term057",
+          "number": "57",
+          "type": "written",
+          "term": "Scattering",
+          "definition": "The unpredictable redirection of radio energy by small irregular objects such as leaves, dust, or water droplets."
+        },
+        {
+          "id": "networking-chapter-3-term058",
+          "number": "58",
+          "type": "written",
+          "term": "Multipath",
+          "definition": "The arrival of copies of the same radio signal along different routes and at different times, potentially causing distortion.",
+          "acceptedTerms": [
+            "Multipath signals"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term059",
+          "number": "59",
+          "type": "written",
+          "term": "Signal-to-noise ratio",
+          "definition": "A comparison of useful signal strength with the level of background interference affecting reception.",
+          "acceptedTerms": [
+            "SNR"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term060",
+          "number": "60",
+          "type": "written",
+          "term": "Throughput",
+          "definition": "The actual data transfer rate after accounting for losses to errors and acknowledgments, before excluding protocol headers from the delivered data."
+        },
+        {
+          "id": "networking-chapter-3-term061",
+          "number": "61",
+          "type": "written",
+          "term": "Goodput",
+          "definition": "The rate at which useful application data is delivered, excluding protocol headers and other network overhead."
+        },
+        {
+          "id": "networking-chapter-3-term062",
+          "number": "62",
+          "type": "written",
+          "term": "Overhead",
+          "definition": "Network traffic beyond the application content, including packet and frame headers, acknowledgments, and retransmissions.",
+          "acceptedTerms": [
+            "Network overhead"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term063",
+          "number": "63",
+          "type": "written",
+          "term": "MIMO",
+          "definition": "An antenna technique that uses multiple separately processed signal paths or data streams to improve wireless capacity, introduced in 802.11n.",
+          "acceptedTerms": [
+            "Multiple-input/multiple-output",
+            "Multiple input multiple output"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term064",
+          "number": "64",
+          "type": "written",
+          "term": "MU-MIMO",
+          "definition": "A wireless capability that lets an access point send data to several client stations at the same time.",
+          "acceptedTerms": [
+            "Multiuser MIMO",
+            "Multi-user MIMO",
+            "Multiuser multiple-input/multiple-output",
+            "Multi-user multiple-input/multiple-output"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term065",
+          "number": "65",
+          "type": "written",
+          "term": "Beamforming",
+          "definition": "A technique that directs an access point's radio transmission toward a receiving device instead of spreading it uniformly in all directions."
+        },
+        {
+          "id": "networking-chapter-3-term066",
+          "number": "66",
+          "type": "written",
+          "term": "Token ring",
+          "definition": "The IEEE 802.5 LAN technology that usually uses physical star cabling while passing a special permission frame around a logical loop.",
+          "acceptedTerms": [
+            "Token ring network"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term067",
+          "number": "67",
+          "type": "written",
+          "term": "Token passing",
+          "definition": "A controlled access method in which a special frame circulates between stations and only its current holder may transmit data.",
+          "acceptedTerms": [
+            "Token-passing media access method"
+          ]
+        },
+        {
+          "id": "networking-chapter-3-term068",
+          "number": "68",
+          "type": "written",
+          "term": "Fiber Distributed Data Interface",
+          "definition": "A legacy 100 Mbps networking technology that uses token passing and usually two fiber-optic rings for redundancy.",
+          "acceptedTerms": [
+            "FDDI"
+          ]
+        }
+      ]
+    }
   }
 ]
