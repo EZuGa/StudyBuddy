@@ -3923,5 +3923,1261 @@
         }
       ]
     }
+  },
+  {
+    "id": "networking-chapter-8",
+    "subject": "Networking",
+    "title": "Chapter 8",
+    "kind": "chapter",
+    "quiz": {
+      "id": "networking-chapter-8-quiz",
+      "title": "Chapter 8: Network Hardware in Depth",
+      "minutes": 60,
+      "tone": "sky",
+      "questions": [
+        {
+          "id": "networking-chapter-8-q001",
+          "number": "1",
+          "type": "multiple-choice",
+          "prompt": "A switch receives a unicast frame on port 4 from a MAC address it has never seen. What does it learn from that frame?",
+          "options": [
+            "The destination MAC address belongs to port 4.",
+            "The sender's IP address belongs to port 4.",
+            "The source MAC address belongs to port 4.",
+            "The source MAC address belongs to every port in the VLAN."
+          ],
+          "correctAnswer": 2,
+          "explanation": "The switch learns the source MAC address and associates it with the port that received the frame."
+        },
+        {
+          "id": "networking-chapter-8-q002",
+          "number": "2",
+          "type": "multiple-choice",
+          "prompt": "A switch has no table entry for a frame's unicast destination. How does it forward the frame?",
+          "options": [
+            "It returns the frame to the sender.",
+            "It sends the frame out the other forwarding ports in the same VLAN.",
+            "It sends the frame only to a router's port.",
+            "It waits for the aging time to expire before sending the frame."
+          ],
+          "correctAnswer": 1,
+          "explanation": "An unknown unicast is flooded within its VLAN. The switch excludes the ingress port."
+        },
+        {
+          "id": "networking-chapter-8-q003",
+          "number": "3",
+          "type": "multiple-choice",
+          "prompt": "A server disconnects and stops sending frames. What eventually removes its dynamically learned MAC entry from the switch table?",
+          "options": [
+            "A destination lookup",
+            "Port aggregation",
+            "A speed negotiation",
+            "The entry's aging timer"
+          ],
+          "correctAnswer": 3,
+          "explanation": "A dynamic entry expires when frames from its source MAC address have not refreshed it within the aging interval."
+        },
+        {
+          "id": "networking-chapter-8-q004",
+          "number": "4",
+          "type": "multiple-select",
+          "prompt": "A technician checks a copper Ethernet link. Which statements describe features discussed in the chapter? Select all correct answers.",
+          "options": [
+            "Autonegotiation can select a speed and duplex mode supported by both ends.",
+            "Full-duplex requires devices to take turns transmitting.",
+            "Auto-MDIX can swap the transmit and receive pin assignments as needed.",
+            "Full-duplex allows both ends to transmit at the same time."
+          ],
+          "correctAnswers": [
+            0,
+            2,
+            3
+          ],
+          "explanation": "Autonegotiation resolves link speed and duplex, auto-MDIX adapts to the cable pairing, and full-duplex allows simultaneous transmission and reception."
+        },
+        {
+          "id": "networking-chapter-8-q005",
+          "number": "5",
+          "type": "matching",
+          "prompt": "Match each switching method to the amount of the frame it inspects before forwarding.",
+          "pairs": [
+            {
+              "term": "Cut-through switching",
+              "definition": "Reads the addressing information and starts forwarding before receiving the complete frame."
+            },
+            {
+              "term": "Fragment-free switching",
+              "definition": "Reads enough to check for an undersized frame without checking the full frame for errors."
+            },
+            {
+              "term": "Store-and-forward switching",
+              "definition": "Buffers the full frame and verifies its frame check sequence."
+            }
+          ],
+          "explanation": "The methods trade forwarding latency for how thoroughly they can check the frame."
+        },
+        {
+          "id": "networking-chapter-8-q006",
+          "number": "6",
+          "type": "multiple-choice",
+          "prompt": "A switch must reject damaged frames that are still a valid size and fail the frame check sequence. Which forwarding method can do this?",
+          "options": [
+            "Store-and-forward switching",
+            "Fragment-free switching",
+            "Cut-through switching"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Valid-size frames can still be corrupted. Store-and-forward checks the complete frame before sending it on."
+        },
+        {
+          "id": "networking-chapter-8-q007",
+          "number": "7",
+          "type": "multiple-choice",
+          "prompt": "A multicast video stream should reach only ports with interested receivers. What can a managed switch use to make that forwarding decision?",
+          "options": [
+            "Port aggregation",
+            "Auto-MDIX",
+            "IGMP snooping",
+            "MAC address aging"
+          ],
+          "correctAnswer": 2,
+          "explanation": "IGMP snooping lets a switch track multicast group membership and limit multicast forwarding to the relevant ports."
+        },
+        {
+          "id": "networking-chapter-8-q008",
+          "number": "8",
+          "type": "written",
+          "prompt": "Two access switches have redundant links. Explain how spanning tree prevents a switching loop while keeping an alternate path available.",
+          "exampleAnswer": "Spanning tree leaves a loop-free set of forwarding paths by blocking a redundant path. If an active link fails, it recalculates which ports can forward and can put the alternate path into service."
+        },
+        {
+          "id": "networking-chapter-8-q009",
+          "number": "9",
+          "type": "multiple-choice",
+          "prompt": "A campus with redundant switch links needs faster recovery to a loop-free topology after a link failure. Which spanning-tree enhancement addresses that need?",
+          "options": [
+            "IGMP snooping",
+            "Rapid Spanning Tree Protocol",
+            "Power over Ethernet",
+            "Automatic link aggregation"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Rapid Spanning Tree Protocol converges faster after a topology change than traditional Spanning Tree Protocol."
+        },
+        {
+          "id": "networking-chapter-8-q010",
+          "number": "10",
+          "type": "multiple-choice",
+          "prompt": "An edge port intended for a workstation receives a spanning-tree control frame from a newly connected switch. Which protection can disable that edge port?",
+          "options": [
+            "MAC address aging",
+            "Auto-MDIX",
+            "VLAN tagging",
+            "BPDU Guard"
+          ],
+          "correctAnswer": 3,
+          "explanation": "BPDU Guard protects an edge port by disabling it when it receives a spanning-tree control frame."
+        },
+        {
+          "id": "networking-chapter-8-q011",
+          "number": "11",
+          "type": "multiple-choice",
+          "prompt": "A project has staff on several floors. They should share one broadcast domain, while other staff on those floors should be in a different broadcast domain. Which feature supports this design?",
+          "options": [
+            "Virtual LANs",
+            "Port speed negotiation",
+            "Port aggregation",
+            "Auto-MDIX"
+          ],
+          "correctAnswer": 0,
+          "explanation": "VLAN membership lets the switch group ports into logical broadcast domains independently of physical location."
+        },
+        {
+          "id": "networking-chapter-8-q012",
+          "number": "12",
+          "type": "fill-blank",
+          "prompt": "On an IEEE 802.1Q trunk, the _____ identifies the VLAN associated with a tagged Ethernet frame.",
+          "acceptedAnswers": [
+            "VLAN tag",
+            "802.1Q tag"
+          ],
+          "explanation": "The tag lets a device on the far end of a trunk associate the frame with the proper VLAN."
+        },
+        {
+          "id": "networking-chapter-8-q013",
+          "number": "13",
+          "type": "multiple-choice",
+          "prompt": "Two hosts are connected to the same multilayer switch and are assigned to different VLANs with different IP subnets. What capability lets the switch carry traffic between them?",
+          "options": [
+            "Interport MAC address learning",
+            "Multicast group tracking",
+            "Layer 3 routing",
+            "Link aggregation"
+          ],
+          "correctAnswer": 2,
+          "explanation": "A multilayer switch can route IP packets between the VLANs. Ordinary Layer 2 forwarding stays within a VLAN."
+        },
+        {
+          "id": "networking-chapter-8-q014",
+          "number": "14",
+          "type": "multiple-choice",
+          "prompt": "A lab has dedicated workstation jacks. The administrator wants a switch port to allow only the assigned device's MAC address. Which option fits?",
+          "options": [
+            "Put every workstation in the same VLAN.",
+            "Apply switch port security to the port.",
+            "Set the port to store-and-forward switching.",
+            "Aggregate the port with the uplink."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Switch port security can limit the number and identity of MAC addresses allowed on a port."
+        },
+        {
+          "id": "networking-chapter-8-q015",
+          "number": "15",
+          "type": "multiple-choice",
+          "prompt": "A busy uplink needs more combined capacity for several simultaneous conversations. Both switches support bundling their physical interfaces. Which feature should the administrator use?",
+          "options": [
+            "Rapid Spanning Tree Protocol",
+            "IP route summarization",
+            "Power over Ethernet",
+            "Link aggregation"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Link aggregation combines multiple physical links into one logical connection with greater aggregate capacity."
+        },
+        {
+          "id": "networking-chapter-8-q016",
+          "number": "16",
+          "type": "matching",
+          "prompt": "Match each switch interface or feature to its job.",
+          "pairs": [
+            {
+              "term": "PoE-capable Ethernet port",
+              "definition": "Provides power and a data connection over the same Ethernet cable."
+            },
+            {
+              "term": "SFP slot",
+              "definition": "Accepts an interchangeable interface module for compatible fiber or copper media."
+            },
+            {
+              "term": "Console port",
+              "definition": "Provides a direct management connection for initial configuration."
+            }
+          ],
+          "explanation": "A switch can use different ports for powered endpoints, replaceable network interfaces, and local management."
+        },
+        {
+          "id": "networking-chapter-8-q017",
+          "number": "17",
+          "type": "multiple-choice",
+          "prompt": "Two IP networks are joined by a router. A workstation sends an Ethernet broadcast intended for its own LAN. What happens at the router?",
+          "options": [
+            "The router floods the Ethernet frame into both networks.",
+            "The broadcast frame stays on the originating LAN.",
+            "The router adds a VLAN tag and forwards it into the other network.",
+            "The router replaces the source MAC address and floods it out the other interface."
+          ],
+          "correctAnswer": 1,
+          "explanation": "A router separates Layer 2 broadcast domains, so it does not forward the original local Ethernet broadcast to another network."
+        },
+        {
+          "id": "networking-chapter-8-q018",
+          "number": "18",
+          "type": "multiple-choice",
+          "prompt": "A router forwards an IP packet over an Ethernet link to another router. What destination MAC address goes in the outgoing Ethernet frame?",
+          "options": [
+            "The destination host's MAC address on its remote subnet",
+            "The original sender's MAC address",
+            "The next router's MAC address on the outgoing link",
+            "The forwarding router's outgoing MAC address"
+          ],
+          "correctAnswer": 2,
+          "explanation": "The router builds a new Ethernet frame for the outgoing link. On a route through another router, that next hop is the Ethernet destination."
+        },
+        {
+          "id": "networking-chapter-8-q019",
+          "number": "19",
+          "type": "matching",
+          "prompt": "Match the routing table information to what it tells an administrator.",
+          "pairs": [
+            {
+              "term": "Destination network",
+              "definition": "The network prefix covered by the route."
+            },
+            {
+              "term": "Next hop",
+              "definition": "The next router or outgoing interface used to continue toward the destination."
+            },
+            {
+              "term": "Metric",
+              "definition": "The numeric path cost under the route's selection rules."
+            },
+            {
+              "term": "Administrative distance",
+              "definition": "The router's preference for a route source when sources offer a route to the same prefix."
+            }
+          ],
+          "explanation": "Destination, forwarding information, path cost, and source preference answer different questions about a route."
+        },
+        {
+          "id": "networking-chapter-8-q020",
+          "number": "20",
+          "type": "multiple-choice",
+          "prompt": "An engineer assigns an IP address to an active router interface. The subnet attached to that interface appears in the routing table without a routing protocol or manual route entry. How was the route derived?",
+          "options": [
+            "It was advertised by an exterior gateway protocol.",
+            "It was entered as a static route.",
+            "It was learned from a distance-vector neighbor.",
+            "The network is directly connected."
+          ],
+          "correctAnswer": 3,
+          "explanation": "An active interface allows the router to reach its attached subnet directly."
+        },
+        {
+          "id": "networking-chapter-8-q021",
+          "number": "21",
+          "type": "fill-blank",
+          "prompt": "If no more specific route matches a packet's destination, the router can use its _____, if one is present.",
+          "acceptedAnswers": [
+            "default route"
+          ],
+          "explanation": "A default route is the fallback for destinations that have no more specific match."
+        },
+        {
+          "id": "networking-chapter-8-q022",
+          "number": "22",
+          "type": "multiple-choice",
+          "prompt": "A router uses RIP. Path A reaches a destination in one hop over a slower link. Path B reaches the same destination in two hops over faster links. Which path does RIP prefer?",
+          "options": [
+            "Path A, because it has fewer hops.",
+            "Path B, because its links have greater bandwidth.",
+            "Both paths, because they reach the same destination.",
+            "Path B, because it passes through more routers."
+          ],
+          "correctAnswer": 0,
+          "explanation": "RIP uses hop count. Faster links do not change the RIP metric."
+        },
+        {
+          "id": "networking-chapter-8-q023",
+          "number": "23",
+          "type": "multiple-choice",
+          "prompt": "Two internal paths reach the same destination. The two-hop path has total configured OSPF cost 12, and the one-hop path has cost 30. Which path does OSPF prefer?",
+          "options": [
+            "The one-hop path, because it passes through fewer routers.",
+            "Both paths, because they connect the same networks.",
+            "The two-hop path, because it has lower total cost.",
+            "The one-hop path, because its cost is higher."
+          ],
+          "correctAnswer": 2,
+          "explanation": "OSPF uses the total path cost, so the route with cost 12 wins."
+        },
+        {
+          "id": "networking-chapter-8-q024",
+          "number": "24",
+          "type": "multiple-select",
+          "prompt": "Which of these are link-state routing protocols discussed in Chapter 8? Select all correct answers.",
+          "options": [
+            "RIPv2",
+            "OSPF",
+            "BGP",
+            "IS-IS"
+          ],
+          "correctAnswers": [
+            1,
+            3
+          ],
+          "explanation": "OSPF and IS-IS calculate paths using link-state information. RIPv2 is distance-vector and BGP is path-vector."
+        },
+        {
+          "id": "networking-chapter-8-q025",
+          "number": "25",
+          "type": "multiple-choice",
+          "prompt": "After an uplink fails, which observation best shows that the routing network has converged?",
+          "options": [
+            "A router has started sending an update about the failed link.",
+            "The routers have updated their routing information to reflect the failed link and the available paths.",
+            "The timestamps on every route have reached the same value.",
+            "Every router now has the same next hop for each destination."
+          ],
+          "correctAnswer": 1,
+          "explanation": "Convergence occurs when routing information has settled after a topology change. Routers can legitimately use different next hops."
+        },
+        {
+          "id": "networking-chapter-8-q026",
+          "number": "26",
+          "type": "multiple-choice",
+          "prompt": "A company needs to exchange routes with an ISP in a separate autonomous system. Which protocol from the chapter is designed for this role?",
+          "options": [
+            "OSPF",
+            "IS-IS",
+            "RIPv2",
+            "BGP"
+          ],
+          "correctAnswer": 3,
+          "explanation": "BGP exchanges routing information between autonomous systems. OSPF, IS-IS, and RIPv2 are interior gateway protocols."
+        },
+        {
+          "id": "networking-chapter-8-q027",
+          "number": "27",
+          "type": "multiple-choice",
+          "prompt": "A router can advertise one larger network prefix in place of several more specific prefixes it covers. What technique is this?",
+          "options": [
+            "Route summarization",
+            "Port aggregation",
+            "Link-state convergence",
+            "Packet filtering"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Route summarization represents several network destinations with a single, less specific routing entry."
+        },
+        {
+          "id": "networking-chapter-8-q028",
+          "number": "28",
+          "type": "written",
+          "prompt": "A growing network relies on manually configured routes and now has a backup link between sites. Why could traffic still stop after the primary route fails, and what change could reduce downtime?",
+          "exampleAnswer": "A router that relies solely on the manually configured primary route may have no alternate route to use even when a backup link is working. A dynamic routing protocol can learn the backup route and recalculate paths after the failure."
+        },
+        {
+          "id": "networking-chapter-8-q029",
+          "number": "29",
+          "type": "multiple-select",
+          "prompt": "An administrator wants a router to allow traffic to a server subnet from only an approved client subnet and for only an approved protocol. Which ACL fields help express the policy? Select all correct answers.",
+          "options": [
+            "Source address or subnet",
+            "Destination address or subnet",
+            "Link speed in megabits per second",
+            "Protocol"
+          ],
+          "correctAnswers": [
+            0,
+            1,
+            3
+          ],
+          "explanation": "An ACL can filter by source and destination addresses and by protocol. The administrator also chooses the interface and direction where the rule applies."
+        },
+        {
+          "id": "networking-chapter-8-q030",
+          "number": "30",
+          "type": "multiple-choice",
+          "prompt": "A new enterprise switch has no management IP address configured. Which connection does the chapter describe for initial local setup?",
+          "options": [
+            "An Ethernet connection to a trunk port",
+            "A link to an SFP data port",
+            "A terminal emulator connected to the console port",
+            "A wireless connection using the switch's SSID"
+          ],
+          "correctAnswer": 2,
+          "explanation": "A local console session provides direct access to the Cisco IOS command line before network management is configured."
+        },
+        {
+          "id": "networking-chapter-8-q031",
+          "number": "31",
+          "type": "matching",
+          "prompt": "Match each Cisco IOS prompt to the work available in that mode.",
+          "pairs": [
+            {
+              "term": "Switch>",
+              "definition": "View basic status information using a limited command set."
+            },
+            {
+              "term": "Switch#",
+              "definition": "Use the elevated EXEC command set to inspect the running configuration."
+            },
+            {
+              "term": "Switch(config)#",
+              "definition": "Change settings that affect the device as a whole."
+            }
+          ],
+          "explanation": "The prompt distinguishes user EXEC, privileged EXEC, and global configuration mode."
+        },
+        {
+          "id": "networking-chapter-8-q032",
+          "number": "32",
+          "type": "multiple-choice",
+          "prompt": "A technician wants to see which MAC addresses a Cisco switch learned and the interfaces associated with them. Which read-only command gives that information?",
+          "options": [
+            "show mac address-table",
+            "show ip route",
+            "show version",
+            "show ip interface brief"
+          ],
+          "correctAnswer": 0,
+          "explanation": "The MAC address table lists learned MAC addresses and the switch interfaces associated with them."
+        },
+        {
+          "id": "networking-chapter-8-q033",
+          "number": "33",
+          "type": "multiple-choice",
+          "prompt": "Which read-only Cisco IOS command displays networks known to a router and how to reach them?",
+          "options": [
+            "show version",
+            "show ip interface brief",
+            "show mac address-table",
+            "show ip route"
+          ],
+          "correctAnswer": 3,
+          "explanation": "The routing table displayed by show ip route contains destination routes and their forwarding information."
+        },
+        {
+          "id": "networking-chapter-8-q034",
+          "number": "34",
+          "type": "multiple-choice",
+          "prompt": "An administrator is reviewing a change that must survive a reboot. Which configuration should contain the saved change?",
+          "options": [
+            "The MAC address table",
+            "The startup configuration",
+            "The dynamic routing table",
+            "The running configuration in RAM only"
+          ],
+          "correctAnswer": 1,
+          "explanation": "The running configuration contains the active settings. The startup configuration stores the settings that are loaded at boot."
+        },
+        {
+          "id": "networking-chapter-8-q035",
+          "number": "35",
+          "type": "multiple-select",
+          "prompt": "Which are basic wireless settings on the access point described in the chapter? Select all correct answers.",
+          "options": [
+            "Wireless network name",
+            "Routing administrative distance",
+            "Radio operating mode",
+            "Wireless channel"
+          ],
+          "correctAnswers": [
+            0,
+            2,
+            3
+          ],
+          "explanation": "Network name, radio mode, and channel define aspects of how clients discover or connect to the wireless network."
+        },
+        {
+          "id": "networking-chapter-8-q036",
+          "number": "36",
+          "type": "multiple-choice",
+          "prompt": "An access point and all client devices support WEP, WPA, WPA2, and WPA3. Which option provides the strongest protection of those listed?",
+          "options": [
+            "WPA",
+            "WEP",
+            "WPA2",
+            "WPA3"
+          ],
+          "correctAnswer": 3,
+          "explanation": "WPA3 is the strongest of the four security protocols compared in the chapter."
+        },
+        {
+          "id": "networking-chapter-8-q037",
+          "number": "37",
+          "type": "multiple-choice",
+          "prompt": "A campus Wi-Fi network checks each user's credentials against a central authentication service. Which protocol does the chapter associate with this arrangement?",
+          "options": [
+            "OFDMA",
+            "IGMP",
+            "RADIUS",
+            "STP"
+          ],
+          "correctAnswer": 2,
+          "explanation": "RADIUS lets an access point use a central service for enterprise authentication."
+        },
+        {
+          "id": "networking-chapter-8-q038",
+          "number": "38",
+          "type": "multiple-choice",
+          "prompt": "A café wants guests to have internet access while preventing guests on the same wireless access point from communicating directly with each other. Which feature addresses this?",
+          "options": [
+            "SSID broadcast",
+            "AP isolation",
+            "Repeater mode",
+            "Adjustable transmit power"
+          ],
+          "correctAnswer": 1,
+          "explanation": "AP isolation separates wireless clients so their traffic cannot go directly to each other through the access point."
+        },
+        {
+          "id": "networking-chapter-8-q039",
+          "number": "39",
+          "type": "written",
+          "prompt": "An office wants a private Wi-Fi network and a guest Wi-Fi network on the same access point. Explain how multiple SSIDs and VLAN support help separate their traffic on the wired network.",
+          "exampleAnswer": "The access point can publish a separate SSID for each wireless network and associate each SSID with a different wired VLAN. This lets the same access point place staff and guest traffic in separate broadcast domains."
+        },
+        {
+          "id": "networking-chapter-8-q040",
+          "number": "40",
+          "type": "matching",
+          "prompt": "Match the wireless setting or mode to its purpose.",
+          "pairs": [
+            {
+              "term": "Repeater mode",
+              "definition": "Extends an existing wireless network's coverage."
+            },
+            {
+              "term": "Bridge mode",
+              "definition": "Connects two physically separate wired networks over a wireless link."
+            },
+            {
+              "term": "Adjustable transmit power",
+              "definition": "Changes the strength of the access point's transmitted signal."
+            }
+          ],
+          "explanation": "These options solve different problems involving coverage, connectivity between sites, and signal range."
+        },
+        {
+          "id": "networking-chapter-8-q041",
+          "number": "41",
+          "type": "multiple-choice",
+          "prompt": "Battery-powered sensors send brief readings periodically. Which Wi-Fi feature coordinates times for their radios to wake and exchange traffic?",
+          "options": [
+            "Target Wake Time",
+            "AP isolation",
+            "Wi-Fi Multimedia",
+            "Orthogonal frequency-division multiple access"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Target Wake Time schedules wake periods so clients can sleep between traffic exchanges and conserve power."
+        },
+        {
+          "id": "networking-chapter-8-q042",
+          "number": "42",
+          "type": "fill-blank",
+          "prompt": "The Wi-Fi feature that divides a channel into smaller resource units so multiple clients can use it efficiently is called _____.",
+          "acceptedAnswers": [
+            "OFDMA",
+            "Orthogonal frequency-division multiple access",
+            "Orthogonal frequency division multiple access",
+            "Orthogonal frequency-division multiple-access"
+          ],
+          "explanation": "OFDMA allocates parts of the same radio channel to different clients during a transmission opportunity."
+        },
+        {
+          "id": "networking-chapter-8-q043",
+          "number": "43",
+          "type": "multiple-choice",
+          "prompt": "Two network adapters use the same PCIe generation. One is labeled x4 and the other x1. What does x4 specify?",
+          "options": [
+            "A link speed of 4 Gbps",
+            "Four physical Ethernet ports",
+            "A fourth-generation PCIe adapter",
+            "Four PCIe lanes"
+          ],
+          "correctAnswer": 3,
+          "explanation": "The number after x is the lane count. At the same PCIe generation, more lanes offer greater potential bus bandwidth."
+        },
+        {
+          "id": "networking-chapter-8-q044",
+          "number": "44",
+          "type": "multiple-choice",
+          "prompt": "A technician needs to add a network adapter to a laptop without opening its case. Which interface from the chapter suits an external adapter?",
+          "options": [
+            "PCI Express x16",
+            "PCI-X",
+            "USB",
+            "PCI"
+          ],
+          "correctAnswer": 2,
+          "explanation": "A USB network adapter connects to an external port and can be added without opening the computer."
+        },
+        {
+          "id": "networking-chapter-8-q045",
+          "number": "45",
+          "type": "multiple-choice",
+          "prompt": "Traffic arrives in bursts at a server's network adapter faster than the adapter can process it. Which NIC feature temporarily holds the incoming data?",
+          "options": [
+            "RAM buffering",
+            "Wake-on-LAN",
+            "PXE",
+            "Protocol offload"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Extra buffer memory gives the NIC temporary space for traffic when it is arriving faster than it can be processed."
+        },
+        {
+          "id": "networking-chapter-8-q046",
+          "number": "46",
+          "type": "multiple-choice",
+          "prompt": "A network adapter initiates data transfers across the computer's bus to system memory without asking the CPU to manage each transfer. Which feature enables that?",
+          "options": [
+            "Automatic link aggregation",
+            "Bus mastering",
+            "Wake-on-LAN",
+            "Preboot Execution Environment"
+          ],
+          "correctAnswer": 1,
+          "explanation": "With bus mastering, the adapter can manage transfers to and from system memory while the CPU does other work."
+        },
+        {
+          "id": "networking-chapter-8-q047",
+          "number": "47",
+          "type": "matching",
+          "prompt": "Match each NIC feature or design to the requirement it serves.",
+          "pairs": [
+            {
+              "term": "NIC failover",
+              "definition": "Automatically moves traffic to a standby connection when the primary connection fails."
+            },
+            {
+              "term": "Automatic link aggregation",
+              "definition": "Combines multiple links for more aggregate bandwidth."
+            },
+            {
+              "term": "Hot plugging",
+              "definition": "Lets supported hardware be installed or removed while the server remains powered on."
+            }
+          ],
+          "explanation": "Failover maintains connectivity, aggregation increases combined capacity, and hot plugging helps service the hardware while the server runs."
+        },
+        {
+          "id": "networking-chapter-8-q048",
+          "number": "48",
+          "type": "multiple-choice",
+          "prompt": "A server sends large backups while carrying live voice traffic. Which adapter feature helps give the time-sensitive voice traffic priority?",
+          "options": [
+            "Wake-on-LAN",
+            "RAM buffering",
+            "Bus mastering",
+            "Quality of service"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Quality of service can assign higher transmission priority to time-sensitive traffic such as voice."
+        },
+        {
+          "id": "networking-chapter-8-q049",
+          "number": "49",
+          "type": "fill-blank",
+          "prompt": "An administrator wants to wake a sleeping PC remotely by sending a special network packet. The feature is called _____.",
+          "acceptedAnswers": [
+            "Wake-on-LAN",
+            "Wake on LAN",
+            "WoL"
+          ],
+          "explanation": "Wake-on-LAN enables a compatible network adapter to recognize a special packet and signal the computer to wake."
+        },
+        {
+          "id": "networking-chapter-8-q050",
+          "number": "50",
+          "type": "multiple-choice",
+          "prompt": "A diskless workstation needs to start using boot software delivered from the network. Which feature supports that requirement?",
+          "options": [
+            "Wake-on-LAN",
+            "Hot plugging",
+            "Preboot Execution Environment",
+            "Automatic link aggregation"
+          ],
+          "correctAnswer": 2,
+          "explanation": "PXE lets a computer obtain boot software over the network before its operating system starts."
+        }
+      ]
+    },
+    "terminology": {
+      "id": "networking-chapter-8-terminology",
+      "title": "Chapter 8: Terminology",
+      "minutes": 35,
+      "tone": "sage",
+      "questions": [
+        {
+          "id": "networking-chapter-8-term001",
+          "number": "1",
+          "type": "written",
+          "term": "Managed switch",
+          "definition": "An Ethernet switching device with administrator-configurable options, such as individual link speeds, VLANs, and security settings."
+        },
+        {
+          "id": "networking-chapter-8-term002",
+          "number": "2",
+          "type": "written",
+          "term": "Auto-negotiate mode",
+          "definition": "A connection setting that lets Ethernet devices exchange capabilities and automatically agree on a shared link speed and duplex setting.",
+          "acceptedTerms": [
+            "Auto-negotiation",
+            "Autonegotiation"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term003",
+          "number": "3",
+          "type": "written",
+          "term": "Auto-MDIX",
+          "definition": "A port feature that automatically swaps Ethernet transmit and receive pairs when needed so either a crossover or straight-through cable can be used."
+        },
+        {
+          "id": "networking-chapter-8-term004",
+          "number": "4",
+          "type": "written",
+          "term": "MAC address table",
+          "definition": "A switch's learned record of which ports lead to specific hardware addresses.",
+          "acceptedTerms": [
+            "Switching table",
+            "MAC table"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term005",
+          "number": "5",
+          "type": "written",
+          "term": "Aging time",
+          "definition": "The inactivity period after which a switch removes a dynamically learned MAC address from its forwarding table.",
+          "acceptedTerms": [
+            "MAC aging time"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term006",
+          "number": "6",
+          "type": "written",
+          "term": "Cut-through switching",
+          "definition": "A method that starts sending an incoming frame once the switch has read enough of its header to choose an outgoing port.",
+          "acceptedTerms": [
+            "Fast-forward switching"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term007",
+          "number": "7",
+          "type": "written",
+          "term": "Fragment-free switching",
+          "definition": "A method that reads enough of an incoming frame to reject one shorter than the network's minimum frame length before forwarding."
+        },
+        {
+          "id": "networking-chapter-8-term008",
+          "number": "8",
+          "type": "written",
+          "term": "Store-and-forward switching",
+          "definition": "A method that buffers an entire incoming frame and verifies its frame check sequence before sending it onward."
+        },
+        {
+          "id": "networking-chapter-8-term009",
+          "number": "9",
+          "type": "written",
+          "term": "IGMP snooping",
+          "definition": "A switch feature that examines multicast membership messages to decide which ports should receive a multicast stream."
+        },
+        {
+          "id": "networking-chapter-8-term010",
+          "number": "10",
+          "type": "written",
+          "term": "Broadcast storm",
+          "definition": "An overwhelming volume of Ethernet broadcasts that can arise when switches forward the same frames repeatedly through a Layer 2 loop."
+        },
+        {
+          "id": "networking-chapter-8-term011",
+          "number": "11",
+          "type": "written",
+          "term": "Spanning Tree Protocol",
+          "definition": "The Ethernet protocol in which switches exchange information to prevent Layer 2 loops by keeping redundant paths from forwarding until needed.",
+          "acceptedTerms": [
+            "STP"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term012",
+          "number": "12",
+          "type": "written",
+          "term": "Rapid Spanning Tree Protocol",
+          "definition": "The enhancement to the original IEEE 802.1D Ethernet loop-prevention protocol that restores a usable forwarding topology more quickly after a link changes.",
+          "acceptedTerms": [
+            "RSTP"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term013",
+          "number": "13",
+          "type": "written",
+          "term": "BPDU Guard",
+          "definition": "A spanning-tree protection that disables an edge port if it receives a spanning-tree control frame.",
+          "acceptedTerms": [
+            "BPDUGuard"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term014",
+          "number": "14",
+          "type": "written",
+          "term": "Virtual local area network",
+          "definition": "A logical Layer 2 broadcast domain whose members can be grouped independently of their physical location.",
+          "acceptedTerms": [
+            "VLAN"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term015",
+          "number": "15",
+          "type": "written",
+          "term": "Trunk port",
+          "definition": "A switch interface that carries traffic for multiple logical broadcast domains over one link, using tags to identify the domain a frame belongs to.",
+          "acceptedTerms": [
+            "VLAN trunk port"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term016",
+          "number": "16",
+          "type": "written",
+          "term": "Switch port security",
+          "definition": "A managed Ethernet feature that can restrict the number or identity of MAC addresses allowed on a specific physical interface.",
+          "acceptedTerms": [
+            "Port security"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term017",
+          "number": "17",
+          "type": "written",
+          "term": "Link aggregation",
+          "definition": "The combination of multiple physical network links into one logical connection with greater total capacity.",
+          "acceptedTerms": [
+            "Port aggregation",
+            "Port channeling"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term018",
+          "number": "18",
+          "type": "written",
+          "term": "Power over Ethernet",
+          "definition": "A technology that supplies electrical power and data to a device such as an access point over the same network cable.",
+          "acceptedTerms": [
+            "PoE"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term019",
+          "number": "19",
+          "type": "written",
+          "term": "Small form-factor pluggable",
+          "definition": "A removable transceiver that fits a compatible switch or router slot and adapts the interface to a supported fiber or copper connection.",
+          "acceptedTerms": [
+            "SFP",
+            "SFP module"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term020",
+          "number": "20",
+          "type": "written",
+          "term": "Multilayer switch",
+          "definition": "A device that combines ordinary Layer 2 frame switching with Layer 3 routing, often to connect VLANs internally.",
+          "acceptedTerms": [
+            "Layer 3 switch"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term021",
+          "number": "21",
+          "type": "written",
+          "term": "Packet forwarding",
+          "definition": "The act of moving a received network-layer data unit to the outgoing router interface selected for its destination."
+        },
+        {
+          "id": "networking-chapter-8-term022",
+          "number": "22",
+          "type": "written",
+          "term": "Next hop",
+          "definition": "The forwarding target identified in a routing entry, typically the IP address of the immediately following router."
+        },
+        {
+          "id": "networking-chapter-8-term023",
+          "number": "23",
+          "type": "written",
+          "term": "Metric",
+          "definition": "A numeric measure that a routing protocol uses to compare paths, based on factors such as link cost or the number of routers traversed.",
+          "acceptedTerms": [
+            "Routing metric"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term024",
+          "number": "24",
+          "type": "written",
+          "term": "Administrative distance",
+          "definition": "A router's numeric preference for the source of a route, where a lower value indicates greater trust for routes to the same prefix."
+        },
+        {
+          "id": "networking-chapter-8-term025",
+          "number": "25",
+          "type": "written",
+          "term": "Directly connected route",
+          "definition": "A routing table entry representing a network attached to one of the router's own interfaces.",
+          "acceptedTerms": [
+            "Connected route"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term026",
+          "number": "26",
+          "type": "written",
+          "term": "Static route",
+          "definition": "A path entry manually specified by an administrator instead of learned from another router."
+        },
+        {
+          "id": "networking-chapter-8-term027",
+          "number": "27",
+          "type": "written",
+          "term": "Default route",
+          "definition": "The routing entry used when the destination IP address matches no more specific route."
+        },
+        {
+          "id": "networking-chapter-8-term028",
+          "number": "28",
+          "type": "written",
+          "term": "Distance-vector routing protocol",
+          "definition": "A class of routing protocols in which routers share known routes and their costs with neighbors, without building a map of the full topology.",
+          "acceptedTerms": [
+            "Distance-vector protocol"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term029",
+          "number": "29",
+          "type": "written",
+          "term": "Routing Information Protocol",
+          "definition": "A distance-vector routing protocol family that judges routes solely by hop count and includes an original version and a second version.",
+          "acceptedTerms": [
+            "RIP"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term030",
+          "number": "30",
+          "type": "written",
+          "term": "Link-state routing protocol",
+          "definition": "A class of routing protocols in which routers distribute information about their interfaces and use a map of the topology to calculate routes.",
+          "acceptedTerms": [
+            "Link-state protocol"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term031",
+          "number": "31",
+          "type": "written",
+          "term": "Open Shortest Path First",
+          "definition": "A link-state interior gateway protocol that builds a topology map and selects paths based on accumulated interface costs.",
+          "acceptedTerms": [
+            "OSPF"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term032",
+          "number": "32",
+          "type": "written",
+          "term": "Convergence",
+          "definition": "The process by which routers reach a consistent view of network reachability after a topology change.",
+          "acceptedTerms": [
+            "Routing convergence"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term033",
+          "number": "33",
+          "type": "written",
+          "term": "Autonomous system",
+          "definition": "An internetwork under one organization's administration for routing purposes.",
+          "acceptedTerms": [
+            "AS"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term034",
+          "number": "34",
+          "type": "written",
+          "term": "Border Gateway Protocol",
+          "definition": "The path-vector routing protocol that exchanges network reachability between autonomous systems on the Internet.",
+          "acceptedTerms": [
+            "BGP"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term035",
+          "number": "35",
+          "type": "written",
+          "term": "Access control list",
+          "definition": "A set of permit or deny rules on a router interface that can evaluate traffic by addresses, protocol, and direction.",
+          "acceptedTerms": [
+            "ACL"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term036",
+          "number": "36",
+          "type": "written",
+          "term": "Console port",
+          "definition": "A dedicated management interface that provides local command-line access to a switch or router for tasks such as initial configuration."
+        },
+        {
+          "id": "networking-chapter-8-term037",
+          "number": "37",
+          "type": "written",
+          "term": "User EXEC mode",
+          "definition": "The initial Cisco IOS command mode with a prompt ending in > and access to a limited set of status commands.",
+          "acceptedTerms": [
+            "User EXEC"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term038",
+          "number": "38",
+          "type": "written",
+          "term": "Privileged EXEC mode",
+          "definition": "The higher-access Cisco IOS command mode with a prompt ending in # that permits operations such as viewing the running configuration.",
+          "acceptedTerms": [
+            "Privileged EXEC"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term039",
+          "number": "39",
+          "type": "written",
+          "term": "Global configuration mode",
+          "definition": "The Cisco IOS mode indicated by (config)# in which commands can change device-wide settings such as the hostname.",
+          "acceptedTerms": [
+            "Global config mode"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term040",
+          "number": "40",
+          "type": "written",
+          "term": "Service set identifier",
+          "definition": "The configured wireless network name a client selects or enters when joining a Wi-Fi network.",
+          "acceptedTerms": [
+            "SSID"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term041",
+          "number": "41",
+          "type": "written",
+          "term": "Wi-Fi Protected Access 3",
+          "definition": "The third-generation Wi-Fi security protocol and the strongest of the four compared in the chapter.",
+          "acceptedTerms": [
+            "WPA3"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term042",
+          "number": "42",
+          "type": "written",
+          "term": "Remote Authentication Dial-In User Service",
+          "definition": "The protocol a wireless access point can use to ask a central server to verify a user's credentials for enterprise Wi-Fi access.",
+          "acceptedTerms": [
+            "RADIUS"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term043",
+          "number": "43",
+          "type": "written",
+          "term": "AP isolation",
+          "definition": "A wireless setting that keeps connected clients from communicating with one another while allowing them to reach the internet.",
+          "acceptedTerms": [
+            "AP isolation mode",
+            "Access point isolation"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term044",
+          "number": "44",
+          "type": "written",
+          "term": "Repeater mode",
+          "definition": "An access point mode that relays traffic for an existing wireless network to extend its coverage.",
+          "acceptedTerms": [
+            "Wireless repeater mode"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term045",
+          "number": "45",
+          "type": "written",
+          "term": "Wireless bridge mode",
+          "definition": "An access point mode in which a radio link connects physically separate wired networks, such as LANs in two buildings.",
+          "acceptedTerms": [
+            "Bridge mode"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term046",
+          "number": "46",
+          "type": "written",
+          "term": "Target Wake Time",
+          "definition": "A Wi-Fi feature that schedules when battery-powered clients leave their sleep state to communicate, improving power and airtime efficiency.",
+          "acceptedTerms": [
+            "TWT"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term047",
+          "number": "47",
+          "type": "written",
+          "term": "Orthogonal frequency-division multiple access",
+          "definition": "The Wi-Fi feature that divides one channel into smaller frequency units so it can serve several clients at once.",
+          "acceptedTerms": [
+            "OFDMA"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term048",
+          "number": "48",
+          "type": "written",
+          "term": "PCI Express",
+          "definition": "A high-speed serial connection for internal devices that can combine lanes, with labels such as x4 indicating the number of lanes.",
+          "acceptedTerms": [
+            "PCIe",
+            "Peripheral Component Interconnect Express"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term049",
+          "number": "49",
+          "type": "written",
+          "term": "RAM buffering",
+          "definition": "A NIC feature that uses memory to hold incoming or outgoing data temporarily when it arrives faster than it can be handled."
+        },
+        {
+          "id": "networking-chapter-8-term050",
+          "number": "50",
+          "type": "written",
+          "term": "Bus mastering",
+          "definition": "A NIC capability to initiate transfers to and from computer memory across the system bus without the CPU managing each transfer."
+        },
+        {
+          "id": "networking-chapter-8-term051",
+          "number": "51",
+          "type": "written",
+          "term": "NIC failover",
+          "definition": "The automatic transfer of network traffic to a standby adapter when the primary adapter fails.",
+          "acceptedTerms": [
+            "Adapter failover",
+            "Network adapter failover"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term052",
+          "number": "52",
+          "type": "written",
+          "term": "Wake-on-LAN",
+          "definition": "A power-management feature that lets a supported computer resume or power on after it receives a specially formatted network packet.",
+          "acceptedTerms": [
+            "WoL"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term053",
+          "number": "53",
+          "type": "written",
+          "term": "Preboot Execution Environment",
+          "definition": "A network boot feature that lets a computer obtain startup software from a server without relying on an operating system already installed on a local drive.",
+          "acceptedTerms": [
+            "PXE"
+          ]
+        },
+        {
+          "id": "networking-chapter-8-term054",
+          "number": "54",
+          "type": "written",
+          "term": "Quality of service",
+          "definition": "Mechanisms that give time-sensitive traffic such as voice a higher delivery priority than less time-sensitive traffic.",
+          "acceptedTerms": [
+            "QoS"
+          ]
+        }
+      ]
+    }
   }
 ]
